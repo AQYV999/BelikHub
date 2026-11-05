@@ -54,7 +54,7 @@ export default async function handler(request, response) {
   // GET /api/partnerships
   if (request.method === 'GET') {
     try {
-      const authResult = await optionalAuth(request, response);
+      const authResult = await requireAdmin(request, response);
       const limit = Math.min(parseInt(request.query.limit) || 50, 100);
       const status = request.query.status;
       
