@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="BelikHub — platform komunitas untuk memantau, memulihkan, dan menjaga mata air Indonesia." />
   <title>BelikHub — Community-Driven Water Restoration</title>
+  <link rel="icon" type="image/webp" href="/icons/logo.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
@@ -99,9 +100,9 @@
       <div class="hidden items-center gap-3 md:flex">
         <button id="lang-toggle" class="flex h-10 items-center justify-center rounded-xl border border-line bg-white px-3 text-xs font-bold text-ink hover:bg-paper transition-colors">ID</button>
         <button id="theme-toggle" class="flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-white text-ink hover:bg-paper transition-colors">
-          <i id="icon-moon" class="ph ph-moon text-lg"></i>
-          <i id="icon-sun" class="ph ph-sun text-lg hidden"></i>
-        </button>
+                <img id="icon-moon" src="/icons/moon.webp" alt="Dark Mode" class="w-5 h-5 object-contain" />
+                <img id="icon-sun" src="/icons/sun.webp" alt="Light Mode" class="w-5 h-5 object-contain hidden" />
+              </button>
         <a href="#" id="login-btn" class="rounded-xl px-5 py-2.5 text-sm font-bold text-ink hover:text-forest transition-colors">Masuk</a>
         <button id="logout-btn" class="hidden rounded-xl px-5 py-2.5 text-sm font-bold text-ink hover:text-forest transition-colors">Keluar</button>
         <a href="#kemitraan" class="rounded-xl bg-forest px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-ink transition-all">Join now</a>
@@ -414,22 +415,25 @@
             </div>
             <div id="courses" class="mt-10 grid gap-5 md:grid-cols-3">
               <article class="border border-line bg-white p-6 rounded-xl">
-                <span class="bg-lime px-2 py-1 text-[10px] font-bold uppercase">Beginner</span>
-                <h3 class="mt-6 font-display text-xl font-bold leading-[1.1] tracking-tighter">Pengenalan Mata Air</h3>
+                              <img src="/icons/water-drop.webp" alt="Mata Air" class="w-12 h-12 object-contain mb-4" />
+                              <span class="bg-lime px-2 py-1 text-[10px] font-bold uppercase">Beginner</span>
+                              <h3 class="mt-6 font-display text-xl font-bold leading-[1.1] tracking-tighter">Pengenalan Mata Air</h3>
                 <p class="mt-3 text-sm leading-relaxed text-ink/70">Dasar ekosistem mata air, jenisnya, dan mengapa penting bagi kehidupan.</p>
                 <div class="mt-6 flex items-center justify-between text-xs text-slate-500"><span>30 menit</span><span>4 modul</span></div>
                 <button data-toast="Kursus Pengenalan Mata Air dipilih." class="mt-5 text-sm font-bold text-blue hover:underline flex items-center gap-2">Mulai kursus <i class="ph ph-arrow-right text-lg"></i></button>
               </article>
               <article class="border border-line bg-white p-6 rounded-xl">
-                <span class="bg-[#d9edf8] px-2 py-1 text-[10px] font-bold uppercase text-blue">Intermediate</span>
+                              <img src="/icons/tree.webp" alt="Tanam Pohon" class="w-12 h-12 object-contain mb-4" />
+                              <span class="bg-[#d9edf8] px-2 py-1 text-[10px] font-bold uppercase text-blue">Intermediate</span>
                 <h3 class="mt-6 font-display text-xl font-bold leading-[1.1] tracking-tighter">Menanam Pohon Endemik</h3>
                 <p class="mt-3 text-sm leading-relaxed text-ink/70">Memilih lokasi, menanam, dan merawat pohon di area resapan.</p>
                 <div class="mt-6 flex items-center justify-between text-xs text-slate-500"><span>45 menit</span><span>4 modul</span></div>
                 <button data-toast="Kursus Menanam Pohon Endemik dipilih." class="mt-5 text-sm font-bold text-blue hover:underline flex items-center gap-2">Mulai kursus <i class="ph ph-arrow-right text-lg"></i></button>
               </article>
               <article class="border border-line bg-white p-6 rounded-xl">
-                <span class="bg-lime px-2 py-1 text-[10px] font-bold uppercase">Beginner</span>
-                <h3 class="mt-6 font-display text-xl font-bold leading-[1.1] tracking-tighter">Membuat Rorak Resapan</h3>
+                              <img src="/icons/rorak.webp" alt="Rorak" class="w-12 h-12 object-contain mb-4" />
+                              <span class="bg-lime px-2 py-1 text-[10px] font-bold uppercase">Beginner</span>
+                              <h3 class="mt-6 font-display text-xl font-bold leading-[1.1] tracking-tighter">Membuat Rorak Resapan</h3>
                 <p class="mt-3 text-sm leading-relaxed text-ink/70">Panduan praktis membuat parit resapan air tanah di lingkungan rumah.</p>
                 <div class="mt-6 flex items-center justify-between text-xs text-slate-500"><span>25 menit</span><span>3 modul</span></div>
                 <button data-toast="Kursus Membuat Rorak Resapan dipilih." class="mt-5 text-sm font-bold text-blue hover:underline flex items-center gap-2">Mulai kursus <i class="ph ph-arrow-right text-lg"></i></button>
@@ -463,7 +467,7 @@
         </div>
         <div class="mt-10 grid gap-5 md:grid-cols-4">
           <article class="card overflow-hidden md:col-span-2">
-            <div class="flex h-44 items-center justify-center bg-ink text-white grayscale hover:grayscale-0 transition-all duration-500"><img src="/icons/play.webp" alt="Play video" class="w-16 h-16 object-contain drop-shadow-sm" /></div>
+            <div class="flex h-44 items-center justify-center bg-ink text-white grayscale hover:grayscale-0 transition-all duration-500 group relative"><i class="ph ph-play-circle text-6xl text-lime group-hover:scale-110 transition-transform"></i></div>
             <div class="p-5">
               <p class="eyebrow text-blue">Video · Apr 2026</p>
               <h3 class="mt-3 font-display text-xl font-bold leading-[1.1] tracking-tighter">Perjalanan restorasi mata air</h3>
