@@ -71,13 +71,113 @@
     .modal-card input,.modal-card textarea,.modal-card select{width:100%;border:1px solid #dbe7df;padding:12px;outline:none}
     .modal-card input:focus,.modal-card textarea:focus,.modal-card select:focus{border-color:#176d55}
     .toast{transform:translateY(20px);opacity:0;pointer-events:none;transition:.25s}
-    .toast.show{transform:translateY(0);opacity:1;pointer-events:auto}
-    @media(min-width: 768px){.map-height{height:540px}}
-    #language-menu{display:none!important;z-index:100!important;color:#10231b!important;background:#fff!important}
-    #language-menu.open{display:block!important}
-    #language-menu button{color:#10231b!important;background:#fff!important}
-    #language-menu button:hover{background:#f1f5f2!important}
-  </style>
+      .toast.show{transform:translateY(0);opacity:1;pointer-events:auto}
+      @media(min-width: 768px){.map-height{height:540px}}
+      #language-menu{display:none!important;z-index:100!important;color:#10231b!important;background:#fff!important}
+      #language-menu.open{display:block!important}
+      #language-menu button{color:#10231b!important;background:#fff!important}
+      #language-menu button:hover{background:#f1f5f2!important}
+
+      /* =====================================================
+         MAP THEME VARIABLES (light/dark) - ADDED PER REQUEST
+         ===================================================== */
+      :root {
+        color-scheme: light dark;
+
+        --font-dasar: 16px;     /* naik dari biasanya 12-13px */
+        --font-legend: 15px;
+        --font-popup: 15px;
+        --font-atribusi: 12px;
+
+        /* Mode SIANG */
+        --teks: #1a1a2e;
+        --teks-lembut: #4a4a68;
+        --panel: #ffffff;
+        --panel-border: #d8d8e4;
+        --panel-atribusi: rgba(255, 255, 255, .92);
+        --link: #0d6efd;
+      }
+
+      /* Mode MALAM - otomatis ikut setting sistem */
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --teks: #f1f1f4;
+          --teks-lembut: #b8b8c6;
+          --panel: #1e1e2a;
+          --panel-border: #3a3a4e;
+          --panel-atribusi: rgba(30, 30, 42, .92);
+          --link: #6ea8fe;
+        }
+      }
+
+      /* Mode MALAM - kalau toggle pakai class (sesuaikan jika beda) */
+      body.dark, body.dark-mode, body[data-theme="dark"],
+      html.dark, html[data-theme="dark"] {
+        --teks: #f1f1f4;
+        --teks-lembut: #b8b8c6;
+        --panel: #1e1e2a;
+        --panel-border: #3a3a4e;
+        --panel-atribusi: rgba(30, 30, 42, .92);
+        --link: #6ea8fe;
+      }
+
+      /* =====================================================
+         BASE FONT SIZES
+         ===================================================== */
+      html  { font-size: var(--font-dasar); }
+      body  { font-size: 1rem; color: var(--teks); line-height: 1.55; }
+      h1    { font-size: 1.4rem; }
+      h2    { font-size: 1.2rem; }
+      small { font-size: .85rem; }
+
+      /* =====================================================
+         LEGEND PANEL
+         ===================================================== */
+      .legenda, .map-legend, .legend,
+      #map-canvas + div .flex.items-center.gap-4,
+      #map-canvas + div .flex.items-center.gap-4 span {
+        font-size: var(--font-legend) !important;
+        line-height: 1.7 !important;
+        color: var(--teks) !important;
+      }
+      #map-canvas + div .flex.items-center.gap-4 {
+        background: var(--panel) !important;          /* WAJIB solid, bukan transparan */
+        border: 1px solid var(--panel-border) !important;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, .14);
+        padding: 10px 14px;
+      }
+
+      /* =====================================================
+         POPUP MARKER
+         ===================================================== */
+      .leaflet-popup-content-wrapper {
+        background: var(--panel) !important;
+        color: var(--teks) !important;
+        border-radius: 12px;
+      }
+      .leaflet-popup-content {
+        font-size: var(--font-popup) !important;
+        line-height: 1.55 !important;
+        margin: 12px 16px !important;
+      }
+      .leaflet-popup-tip { background: var(--panel) !important; }
+
+      /* =====================================================
+         LEAFLET CONTROLS (atribusi, counter "Muat laporan")
+         ===================================================== */
+      .leaflet-control-attribution {
+        font-size: var(--font-atribusi) !important;
+        background: var(--panel-atribusi) !important;
+        color: var(--teks-lembut) !important;
+      }
+      .leaflet-control-attribution a { color: var(--link) !important; }
+      #load-reports {
+        font-size: var(--font-legend) !important;
+        color: var(--teks) !important;
+      }
+      #load-reports i { color: var(--teks-lembut) !important; }
+    </style>
 </head>
 <body class="overflow-x-hidden">
   <header id="site-header" class="fixed inset-x-0 top-0 z-50 transition-all duration-300 border-b border-transparent">
@@ -250,9 +350,9 @@
           <div class="mx-auto max-w-[1280px] px-5 lg:px-8">
             <div class="flex flex-col justify-between gap-6 md:flex-row md:items-end">
               <div>
-                <p class="eyebrow text-blue">Interactive spring map</p>
-                <h2 class="display mt-4 text-4xl font-extrabold sm:text-5xl leading-[1.1] tracking-tighter">Lihat kondisi mata air.</h2>
-                <p class="mt-4 max-w-2xl leading-relaxed text-ink/70">Jelajahi titik yang dipantau komunitas. Lokasi publik disamarkan dalam radius 5 km untuk menjaga keamanan sumber air.</p>
+                <p class="eyebrow" style="color: var(--teks-lembut);">Interactive spring map</p>
+                                <h2 class="display mt-4 text-4xl font-extrabold sm:text-5xl leading-[1.1] tracking-tighter">Lihat kondisi mata air.</h2>
+                                <p class="mt-4 max-w-2xl leading-relaxed" style="color: var(--teks-lembut);">Jelajahi titik yang dipantau komunitas. Lokasi publik disamarkan dalam radius 5 km untuk menjaga keamanan sumber air.</p>
               </div>
               <button id="locate-btn" class="inline-flex items-center self-start border border-line bg-white px-4 py-3 text-sm font-bold rounded-xl md:self-auto hover:bg-paper transition-colors">
                 <i class="ph ph-crosshair mr-2 text-blue text-lg"></i>Gunakan lokasi saya
@@ -272,9 +372,9 @@
                 </select>
               </div>
               <div id="map-canvas" class="map-height"></div>
-              <div class="flex flex-wrap items-center justify-between gap-3 border-t border-line p-4 text-xs text-slate-500 leading-relaxed">
-                <span class="flex items-center gap-4"><span class="flex items-center gap-2"><i class="dot mr-1 bg-forest"></i>Sehat</span><span class="flex items-center gap-2"><i class="dot mr-1 bg-blue"></i>Dipulihkan</span><span class="flex items-center gap-2"><i class="dot mr-1 bg-orange-400"></i>Perhatian</span></span>
-                <button id="load-reports" class="font-bold text-blue flex items-center gap-2">Muat laporan (24/431) <i class="ph ph-arrow-down"></i></button>
+              <div class="flex flex-wrap items-center justify-between gap-3 border-t border-line p-4 text-[12px] leading-relaxed" style="color: var(--teks-lembut);">
+                              <span class="flex items-center gap-4"><span class="flex items-center gap-2"><i class="dot mr-1 bg-forest"></i>Sehat</span><span class="flex items-center gap-2"><i class="dot mr-1 bg-blue"></i>Dipulihkan</span><span class="flex items-center gap-2"><i class="dot mr-1 bg-orange-400"></i>Perhatian</span></span>
+                              <button id="load-reports" class="font-bold flex items-center gap-2" style="color: var(--teks);">Muat laporan (24/431) <i class="ph ph-arrow-down"></i></button>
               </div>
             </div>
           </div>
@@ -734,7 +834,10 @@
     if(window.L){
       const map=L.map('map-canvas',{scrollWheelZoom:false}).setView([-7.35,110.2],7);
       window.belikhubMap=map;
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap contributors © CARTO'}).addTo(map);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
       setTimeout(()=>{ window.belikhubMap?.invalidateSize(); },500);
       window.addEventListener('resize',()=>{ window.belikhubMap?.invalidateSize(); });
       let markers=[];
