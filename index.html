@@ -832,7 +832,7 @@
 
     const points = [{name:'Tuk Bismo',lat:-7.02,lng:109.91,status:'healthy'},{name:'Belik Soka',lat:-8.01,lng:110.61,status:'restored'},{name:'Wonomerto',lat:-7.29,lng:110.09,status:'attention'},{name:'Rowo Santen',lat:-7.91,lng:110.34,status:'healthy'},{name:'Watulumbung',lat:-7.23,lng:109.91,status:'restored'}];
     if(window.L){
-      const map=L.map('map-canvas',{scrollWheelZoom:false}).setView([-7.35,110.2],7);
+      const map=L.map('map-canvas',{scrollWheelZoom:true}).setView([-7.35,110.2],7);
       window.belikhubMap=map;
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -841,7 +841,7 @@
       setTimeout(()=>{ window.belikhubMap?.invalidateSize(); },500);
       window.addEventListener('resize',()=>{ window.belikhubMap?.invalidateSize(); });
       let markers=[];
-      const renderMarkers=(filter='all',query='')=>{markers.forEach(m=>m.remove());markers=points.filter(p=>(filter==='all'||p.status===filter)&&p.name.toLowerCase().includes(query.toLowerCase())).map(p=>{const color=p.status==='healthy'?'#176d55':p.status==='restored'?'#1286bd':'#f59e0b';const icon=L.divIcon({className:'custom-pin',html:`<span style="display:block;width:16px;height:16px;border-radius:50%;background:${color};border:3px solid white;box-shadow:0 1px 5px #333"></span>`,iconSize:[16,16],iconAnchor:[8,8]});return L.marker([p.lat,p.lng],{icon}).addTo(map).bindPopup(`<b>${p.name}</b><br><span style="font-size:12px">Status: ${p.status}</span>`);});};
+      const renderMarkers=(filter='all',query='')=>{markers.forEach(m=>m.remove());markers=points.filter(p=>(filter==='all'||p.status===filter)&&p.name.toLowerCase().includes(query.toLowerCase())).map(p=>{const color=p.status==='healthy'?'#176d55':p.status==='restored'?'#1286bd':'#f59e0b';const icon=L.divIcon({className:'custom-pin',html:`<span style="display:block;width:16px;height:16px;border-radius:50%;background:${color};border:3px solid white;box-shadow:0 1px 5px #333"></span>`,iconSize:[16,16],iconAnchor:[8,8]});return L.marker([p.lat,p.lng],{icon}).addTo(map).bindPopup(`<b>${p.name}</b><br><span style="font-size:14px">Status: ${p.status}</span>`);});};
       renderMarkers();
       $('#map-filter')?.addEventListener('change',e=>renderMarkers(e.target.value,$('#map-search').value));
       $('#map-search')?.addEventListener('input',e=>renderMarkers($('#map-filter').value,e.target.value));
