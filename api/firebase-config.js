@@ -3,7 +3,8 @@
 // GET /api/firebase-config
 
 export default async function handler(request, response) {
-  response.setHeader('Access-Control-Allow-Origin', '*');
+  try {
+    response.setHeader('Access-Control-Allow-Origin', '*');
   response.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -33,4 +34,8 @@ export default async function handler(request, response) {
   }
 
   return response.status(200).json(config);
+  } catch (error) {
+    console.error("API Error:", error);
+    return response.status(500).json({ error: 'Internal server error' });
+  }
 }

@@ -49,12 +49,16 @@ export default async function handler(request, response) {
     return response.status(200).end();
   }
 
-  const db = getAdminDb();
-
   // GET /api/partnerships
   if (request.method === 'GET') {
     try {
       const authResult = await requireAdmin(request, response);
+
+      if (!authResult.success) {
+        return json(response, authResult.status, { error: authResult.error });
+      }
+
+      const db = getAdminDb();
       const limit = Math.min(parseInt(request.query.limit) || 50, 100);
       const status = request.query.status;
       
@@ -75,6 +79,7 @@ export default async function handler(request, response) {
       
       return json(response, 200, { partnerships, total: partnerships.length });
     } catch (error) {
+      console.error("API Error:", error);
       console.error('GET /api/partnerships error:', error);
       return json(response, 500, { error: 'Failed to fetch partnerships' });
     }
@@ -83,6 +88,7 @@ export default async function handler(request, response) {
   // POST /api/partnerships
   if (request.method === 'POST') {
     try {
+      const db = getAdminDb();
       const body = request.body;
       const validationErrors = validatePartnership(body);
       
@@ -109,6 +115,7 @@ export default async function handler(request, response) {
         updatedAt: partnershipData.updatedAt.toISOString()
       });
     } catch (error) {
+      console.error("API Error:", error);
       console.error('POST /api/partnerships error:', error);
       return json(response, 500, { error: 'Failed to create partnership request' });
     }
