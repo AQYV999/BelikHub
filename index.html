@@ -90,11 +90,11 @@
   <header id="site-header" class="fixed inset-x-0 top-0 z-50 transition-all duration-300 border-b border-transparent">
     <nav class="mx-auto flex h-[72px] max-w-[1280px] items-center justify-between gap-6 px-5 lg:px-8" aria-label="Navigasi utama">
       <a href="#top" class="flex shrink-0 items-center gap-2.5 group">
-        <span class="grid h-10 w-10 place-items-center rounded-xl bg-ink shadow-sm transition-transform group-hover:scale-105 overflow-hidden">
-          <img src="/icons/logo.webp" alt="Logo BelikHub" class="w-6 h-6 object-contain" style="image-rendering: pixelated;" />
-        </span>
-        <span class="font-display text-xl font-extrabold tracking-tight">Belik<span class="text-forest">Hub</span></span>
-      </a>
+              <span class="grid h-10 w-10 place-items-center rounded-xl bg-ink shadow-sm transition-transform group-hover:scale-105 overflow-hidden">
+                <img src="/icons/logo.webp" alt="Logo BelikHub" class="w-6 h-6 object-contain drop-shadow-sm" />
+              </span>
+              <span class="font-display text-xl font-extrabold tracking-tight">Belik<span class="text-forest">Hub</span></span>
+            </a>
 
       <div class="hidden items-center gap-8 lg:flex bg-white/70 backdrop-blur-md px-6 py-2.5 rounded-xl border border-line shadow-sm">
         <a href="#map" class="text-sm font-semibold text-ink/80 hover:text-forest transition-colors">Map</a>
@@ -107,16 +107,16 @@
       <div class="hidden items-center gap-3 md:flex">
         <button id="lang-toggle" class="flex h-10 items-center justify-center rounded-xl border border-line bg-white px-3 text-xs font-bold text-ink hover:bg-paper transition-colors">ID</button>
         <button id="theme-toggle" class="flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-white text-ink hover:bg-paper transition-colors">
-          <img id="icon-moon" src="/icons/moon.webp" alt="Mode Gelap" class="w-5 h-5 object-contain" style="image-rendering: pixelated; filter: drop-shadow(0 0 4px rgba(0,0,0,0.1));" />
-          <img id="icon-sun" src="/icons/sun.webp" alt="Mode Terang" class="w-5 h-5 object-contain hidden" style="image-rendering: pixelated; filter: drop-shadow(0 0 4px rgba(0,0,0,0.1));" />
-        </button>
+                  <img id="icon-moon" src="/icons/moon.webp" alt="Mode Gelap" class="w-5 h-5 object-contain drop-shadow-sm" />
+                  <img id="icon-sun" src="/icons/sun.webp" alt="Mode Terang" class="w-5 h-5 object-contain hidden drop-shadow-sm" />
+                </button>
         <a href="#community" class="rounded-xl px-5 py-2.5 text-sm font-bold text-ink hover:text-forest transition-colors">Masuk</a>
         <a href="#kemitraan" class="rounded-xl bg-forest px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-ink transition-all">Join now</a>
       </div>
 
       <button id="menu-toggle" class="grid h-10 w-10 place-items-center rounded-xl border border-line bg-white text-ink md:hidden shadow-sm" aria-label="Buka menu">
-        <img src="/icons/menu.webp" alt="Menu" class="w-6 h-6 object-contain" style="image-rendering: pixelated;" />
-      </button>
+              <img src="/icons/menu.webp" alt="Menu" class="w-6 h-6 object-contain drop-shadow-sm" />
+            </button>
     </nav>
 
     <div id="mobile-menu" class="fixed inset-0 z-[60] hidden bg-ink/95 backdrop-blur-xl md:hidden transition-opacity">
@@ -124,8 +124,8 @@
         <div class="flex items-center justify-between mb-10">
           <span class="font-display text-2xl font-extrabold text-white">Belik<span class="text-lime">Hub</span></span>
           <button id="close-menu" class="grid h-10 w-10 place-items-center rounded-xl bg-white/10 text-white hover:bg-white/20">
-            <img src="/icons/close.webp" alt="Tutup" class="w-6 h-6 object-contain" style="image-rendering: pixelated;" />
-          </button>
+                      <img src="/icons/close.webp" alt="Tutup" class="w-6 h-6 object-contain drop-shadow-sm" />
+                    </button>
         </div>
         <div class="flex flex-col gap-6 text-2xl font-display font-bold text-white">
           <a href="#map" class="mobile-link hover:text-lime transition-colors">Map</a>
@@ -167,9 +167,9 @@
             </p>
 
             <div class="flex flex-col sm:flex-row gap-4">
-              <a href="#map" class="inline-flex items-center justify-center rounded-xl bg-lime px-8 py-4 text-sm font-bold text-ink hover:bg-lime/90 hover:scale-105 transition-all">
-                Mulai monitoring <i class="ph ph-arrow-right ml-2 text-lg"></i>
-              </a>
+              <a href="#map" class="inline-flex items-center justify-center rounded-xl bg-lime px-8 py-4 text-sm font-bold text-ink hover:bg-lime/90 hover:scale-105 transition-all flex items-center gap-2">
+                              Mulai monitoring <img src="/icons/arrow-right.webp" alt="Lanjut" class="w-5 h-5 object-contain drop-shadow-sm" />
+                            </a>
               <a href="#community" class="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/5 px-8 py-4 text-sm font-bold text-white backdrop-blur-md hover:bg-white hover:text-ink transition-all">
                 Gabung komunitas
               </a>
@@ -210,9 +210,9 @@
             <div class="mt-10 grid gap-8 lg:grid-cols-2">
               <div class="border border-line bg-white p-6">
                 <div class="flex items-center justify-between">
-                  <h3 class="font-display text-xl font-bold leading-[1.1] tracking-tighter">Aktivitas bulanan</h3>
-                  <button class="text-xs font-bold text-blue">Lihat arsip <i class="ph ph-arrow-up-right"></i></button>
-                </div>
+                                  <h3 class="font-display text-xl font-bold leading-[1.1] tracking-tighter">Aktivitas bulanan</h3>
+                                  <button class="text-xs font-bold text-blue flex items-center gap-1">Lihat arsip <img src="/icons/arrow-up-right.webp" alt="Lanjut" class="w-3 h-3 object-contain drop-shadow-sm" /></button>
+                                </div>
                 <div class="mt-6 space-y-4">
                   <div class="flex items-center justify-between text-sm leading-relaxed text-ink/70">
                     <span class="flex items-center gap-3"><span class="dot bg-blue"></span>Survei Mata Air</span>
@@ -230,9 +230,9 @@
               </div>
               <div class="border border-line bg-white p-6">
                 <div class="flex items-center justify-between">
-                  <h3 class="font-display text-xl font-bold leading-[1.1] tracking-tighter">Aktivitas terbaru</h3>
-                  <button class="text-xs font-bold text-blue">Semua laporan <i class="ph ph-arrow-up-right"></i></button>
-                </div>
+                                  <h3 class="font-display text-xl font-bold leading-[1.1] tracking-tighter">Aktivitas terbaru</h3>
+                                  <button class="text-xs font-bold text-blue flex items-center gap-1">Semua laporan <img src="/icons/arrow-up-right.webp" alt="Lanjut" class="w-3 h-3 object-contain drop-shadow-sm" /></button>
+                                </div>
                 <div class="mt-6 space-y-4">
                   <div class="flex items-center justify-between text-sm leading-relaxed text-ink/70">
                     <span class="flex items-center gap-3"><span class="dot bg-lime"></span>Tuk Bismo</span>
@@ -261,15 +261,15 @@
                 <p class="mt-4 max-w-2xl leading-relaxed text-ink/70">Jelajahi titik yang dipantau komunitas. Lokasi publik disamarkan dalam radius 5 km untuk menjaga keamanan sumber air.</p>
               </div>
               <button id="locate-btn" class="inline-flex items-center self-start border border-line bg-white px-4 py-3 text-sm font-bold rounded-xl md:self-auto hover:bg-paper transition-colors">
-                <i class="ph ph-crosshair mr-2 text-blue"></i>Gunakan lokasi saya
-              </button>
+                              <img src="/icons/map.webp" alt="Lokasi" class="w-5 h-5 object-contain drop-shadow-sm mr-2" />Gunakan lokasi saya
+                            </button>
             </div>
             <div class="mt-8 overflow-hidden border border-line bg-white rounded-2xl">
               <div class="flex flex-col gap-3 border-b border-line p-4 sm:flex-row">
                 <div class="relative flex-1">
-                  <i class="ph ph-magnifying-glass absolute left-3 top-3.5 text-slate-400"></i>
-                  <input id="map-search" type="search" placeholder="Cari mata air, desa, provinsi..." class="w-full border border-line py-3 pl-10 pr-4 text-sm rounded-xl outline-none focus:border-blue" />
-                </div>
+                                  <img src="/icons/search.webp" alt="Cari" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 object-contain drop-shadow-sm text-slate-400" />
+                                  <input id="map-search" type="search" placeholder="Cari mata air, desa, provinsi..." class="w-full border border-line py-3 pl-12 pr-4 text-sm rounded-xl outline-none focus:border-blue" />
+                                </div>
                 <select id="map-filter" class="border border-line px-4 py-3 text-sm rounded-xl outline-none">
                   <option value="all">Semua titik</option>
                   <option value="healthy">Sehat</option>
@@ -280,7 +280,7 @@
               <div id="map-canvas" class="map-height"></div>
               <div class="flex flex-wrap items-center justify-between gap-3 border-t border-line p-4 text-xs text-slate-500 leading-relaxed">
                 <span class="flex items-center gap-4"><span class="flex items-center gap-2"><i class="dot mr-1 bg-forest"></i>Sehat</span><span class="flex items-center gap-2"><i class="dot mr-1 bg-blue"></i>Dipulihkan</span><span class="flex items-center gap-2"><i class="dot mr-1 bg-orange-400"></i>Perhatian</span></span>
-                <button id="load-reports" class="font-bold text-blue">Muat laporan (24/431) <i class="ph ph-arrow-down"></i></button>
+                <button id="load-reports" class="font-bold text-blue flex items-center gap-2">Muat laporan (24/431) <img src="/icons/arrow-down.webp" alt="Bawah" class="w-4 h-4 object-contain drop-shadow-sm" /></button>
               </div>
             </div>
           </div>
@@ -293,24 +293,24 @@
                 <p class="eyebrow text-lime">Community activity</p>
                 <h2 class="display mt-5 text-4xl font-extrabold sm:text-5xl leading-[1.1] tracking-tighter">Kontribusi kecil. Jejak yang terlihat.</h2>
                 <p class="mt-5 leading-relaxed text-white/70">Isi formulir ringan dari browser, kumpulkan poin, dan bantu tim lapangan memahami kondisi mata air secara berkala.</p>
-                <button id="points-btn" class="mt-8 border border-white/25 px-4 py-3 text-sm font-bold rounded-xl transition hover:bg-white hover:text-ink">Cara dapat poin <i class="ph ph-arrow-up-right ml-2"></i></button>
+                <button id="points-btn" class="mt-8 border border-white/25 px-4 py-3 text-sm font-bold rounded-xl transition hover:bg-white hover:text-ink flex items-center gap-2">Cara dapat poin <img src="/icons/arrow-up-right.webp" alt="Lanjut" class="w-4 h-4 object-contain drop-shadow-sm" /></button>
               </div>
               <div>
                 <div class="grid gap-3 sm:grid-cols-2">
                                   <button data-report="Survei Mata Air" class="report-card flex flex-col items-start justify-between border border-white/15 bg-white/5 p-5 text-left rounded-xl transition hover:bg-white/10">
-                                    <span><img src="/icons/water-drop.webp" alt="Survei Mata Air" class="w-8 h-8 object-contain mb-3" style="image-rendering: pixelated;" /><strong class="block">Survei Mata Air</strong><small class="mt-1 block text-white/50">Cek kondisi dan debit</small></span>
+                                    <span><img src="/icons/water-drop.webp" alt="Survei Mata Air" class="w-8 h-8 object-contain mb-3 drop-shadow-sm" /><strong class="block">Survei Mata Air</strong><small class="mt-1 block text-white/50">Cek kondisi dan debit</small></span>
                                     <b class="text-lime">+100</b>
                                   </button>
                                   <button data-report="Restorasi Mata Air" class="report-card flex flex-col items-start justify-between border border-white/15 bg-white/5 p-5 text-left rounded-xl transition hover:bg-white/10">
-                                    <span><img src="/icons/shovel.webp" alt="Restorasi" class="w-8 h-8 object-contain mb-3" style="image-rendering: pixelated;" /><strong class="block">Restorasi</strong><small class="mt-1 block text-white/50">Laporkan pekerjaan lapangan</small></span>
+                                    <span><img src="/icons/shovel.webp" alt="Restorasi" class="w-8 h-8 object-contain mb-3 drop-shadow-sm" /><strong class="block">Restorasi</strong><small class="mt-1 block text-white/50">Laporkan pekerjaan lapangan</small></span>
                                     <b class="text-lime">+1.000</b>
                                   </button>
                                   <button data-report="Penanaman Pohon" class="report-card flex flex-col items-start justify-between border border-white/15 bg-white/5 p-5 text-left rounded-xl transition hover:bg-white/10">
-                                    <span><img src="/icons/tree.webp" alt="Tanam Pohon" class="w-8 h-8 object-contain mb-3" style="image-rendering: pixelated;" /><strong class="block">Tanam Pohon</strong><small class="mt-1 block text-white/50">Catat bibit yang ditanam</small></span>
+                                    <span><img src="/icons/tree.webp" alt="Tanam Pohon" class="w-8 h-8 object-contain mb-3 drop-shadow-sm" /><strong class="block">Tanam Pohon</strong><small class="mt-1 block text-white/50">Catat bibit yang ditanam</small></span>
                                     <b class="text-lime">+100</b>
                                   </button>
                                   <button data-report="Pembangunan Rorak" class="report-card flex flex-col items-start justify-between border border-white/15 bg-white/5 p-5 text-left rounded-xl transition hover:bg-white/10">
-                                    <span><img src="/icons/rorak.webp" alt="Bangun Rorak" class="w-8 h-8 object-contain mb-3" style="image-rendering: pixelated;" /><strong class="block">Bangun Rorak</strong><small class="mt-1 block text-white/50">Salurkan air hujan ke tanah</small></span>
+                                    <span><img src="/icons/rorak.webp" alt="Bangun Rorak" class="w-8 h-8 object-contain mb-3 drop-shadow-sm" /><strong class="block">Bangun Rorak</strong><small class="mt-1 block text-white/50">Salurkan air hujan ke tanah</small></span>
                                     <b class="text-lime">+500</b>
                                   </button>
                                 </div>
@@ -327,7 +327,7 @@
                 <h2 class="display mt-5 text-4xl font-extrabold sm:text-5xl leading-[1.1] tracking-tighter">Pulangkan air hujan ke rumahnya.</h2>
                 <p class="mt-5 max-w-xl leading-relaxed text-ink/70">Rorak adalah parit kecil yang menahan limpasan hujan agar meresap dan mengisi kembali air tanah yang memberi makan mata air. Warga menggali, komunitas memesan, BelikHub memverifikasi.</p>
                 <div class="mt-8 flex flex-wrap gap-3">
-                  <button data-toast="Permintaan rorak dibuka. Tim kami akan menghubungi Anda." class="inline-flex items-center bg-forest px-5 py-3.5 text-sm font-bold text-white rounded-xl hover:bg-ink transition-colors">Pesan rorak · Rp20.000 <i class="ph ph-arrow-right ml-3"></i></button>
+                  <button data-toast="Permintaan rorak dibuka. Tim kami akan menghubungi Anda." class="inline-flex items-center bg-forest px-5 py-3.5 text-sm font-bold text-white rounded-xl hover:bg-ink transition-colors flex items-center gap-3">Pesan rorak · Rp20.000 <img src="/icons/arrow-right.webp" alt="Lanjut" class="w-4 h-4 object-contain drop-shadow-sm" /></button>
                   <button data-toast="Formulir pembuat rorak siap diisi." class="inline-flex items-center border border-line px-5 py-3.5 text-sm font-bold text-ink rounded-xl hover:bg-paper transition-colors">Jadi pembuat · Rp16.000</button>
                 </div>
                 <div class="mt-9 border-t border-line pt-5 text-sm leading-relaxed text-ink/70"><b class="text-ink">Spesifikasi minimum:</b> searah kontur, di daerah resapan, dengan izin pemilik lahan.</div>
@@ -339,7 +339,7 @@
                   <div class="mt-5 h-2 bg-slate-100 rounded"><div class="h-full w-1/5 bg-forest rounded"></div></div>
                   <div class="mt-3 flex justify-between text-xs text-slate-500 leading-relaxed"><span>Rp1.000.000 terkumpul</span><span>Target Rp5.000.000</span></div>
                 </div>
-                <a href="#kemitraan" class="mt-5 inline-flex items-center text-sm font-bold text-forest hover:underline">Lihat semua proyek <i class="ph ph-arrow-right ml-2"></i></a>
+                <a href="#kemitraan" class="mt-5 inline-flex items-center text-sm font-bold text-forest hover:underline flex items-center gap-2">Lihat semua proyek <img src="/icons/arrow-right.webp" alt="Lanjut" class="w-4 h-4 object-contain drop-shadow-sm" /></a>
               </div>
             </div>
           </div>
@@ -352,26 +352,26 @@
                 <p class="eyebrow text-blue">Upcoming schedule</p>
                 <h2 class="display mt-4 text-4xl font-extrabold leading-[1.1] tracking-tighter">Turun ke lapangan.</h2>
               </div>
-              <button data-toast="Kalender kegiatan dibuka." class="text-sm font-bold text-blue">Lihat kalender <i class="ph ph-arrow-right ml-2"></i></button>
+              <button data-toast="Kalender kegiatan dibuka." class="text-sm font-bold text-blue flex items-center gap-2">Lihat kalender <img src="/icons/arrow-right.webp" alt="Lanjut" class="w-4 h-4 object-contain drop-shadow-sm" /></button>
             </div>
             <div class="mt-10 grid gap-4 md:grid-cols-3">
               <article class="border border-line bg-white p-6 rounded-2xl">
                 <p class="eyebrow text-blue">14 Nov 2026</p>
                 <h3 class="mt-5 font-display text-xl font-bold leading-[1.1] tracking-tighter">Restorasi Mata Air Kulon Progo</h3>
                 <p class="mt-3 text-sm leading-relaxed text-ink/70">Lokasi dibagikan melalui kanal komunitas setelah pendaftaran.</p>
-                <button data-toast="Anda masuk daftar tunggu kegiatan." class="mt-6 inline-flex items-center border border-line px-4 py-2.5 text-sm font-bold text-ink rounded-xl hover:bg-paper transition-colors">Daftar <i class="ph ph-arrow-right ml-2"></i></button>
+                <button data-toast="Anda masuk daftar tunggu kegiatan." class="mt-6 inline-flex items-center border border-line px-4 py-2.5 text-sm font-bold text-ink rounded-xl hover:bg-paper transition-colors flex items-center gap-2">Daftar <img src="/icons/arrow-right.webp" alt="Lanjut" class="w-4 h-4 object-contain drop-shadow-sm" /></button>
               </article>
               <article class="border border-line bg-white p-6 rounded-2xl">
                 <p class="eyebrow text-blue">22 Nov 2026</p>
                 <h3 class="mt-5 font-display text-xl font-bold leading-[1.1] tracking-tighter">Restorasi Mata Air Kediri</h3>
                 <p class="mt-3 text-sm leading-relaxed text-ink/70">Bergabung dengan tim lokal untuk pemulihan titik sumber.</p>
-                <button data-toast="Anda masuk daftar tunggu kegiatan." class="mt-6 inline-flex items-center border border-line px-4 py-2.5 text-sm font-bold text-ink rounded-xl hover:bg-paper transition-colors">Daftar <i class="ph ph-arrow-right ml-2"></i></button>
+                <button data-toast="Anda masuk daftar tunggu kegiatan." class="mt-6 inline-flex items-center border border-line px-4 py-2.5 text-sm font-bold text-ink rounded-xl hover:bg-paper transition-colors flex items-center gap-2">Daftar <img src="/icons/arrow-right.webp" alt="Lanjut" class="w-4 h-4 object-contain drop-shadow-sm" /></button>
               </article>
               <article class="border border-line bg-white p-6 rounded-2xl">
                 <p class="eyebrow text-blue">05 Des 2026</p>
                 <h3 class="mt-5 font-display text-xl font-bold leading-[1.1] tracking-tighter">Restorasi Mata Air Lak</h3>
                 <p class="mt-3 text-sm leading-relaxed text-ink/70">J2 Bowongso, Wonosobo, Jawa Tengah.</p>
-                <button data-toast="Anda masuk daftar tunggu kegiatan." class="mt-6 inline-flex items-center border border-line px-4 py-2.5 text-sm font-bold text-ink rounded-xl hover:bg-paper transition-colors">Daftar <i class="ph ph-arrow-right ml-2"></i></button>
+                <button data-toast="Anda masuk daftar tunggu kegiatan." class="mt-6 inline-flex items-center border border-line px-4 py-2.5 text-sm font-bold text-ink rounded-xl hover:bg-paper transition-colors flex items-center gap-2">Daftar <img src="/icons/arrow-right.webp" alt="Lanjut" class="w-4 h-4 object-contain drop-shadow-sm" /></button>
               </article>
             </div>
           </div>
@@ -385,11 +385,11 @@
                 <h2 class="display mt-5 text-4xl font-extrabold sm:text-5xl leading-[1.1] tracking-tighter">Perbesar dampak di lebih banyak mata air.</h2>
                 <p class="mt-5 leading-relaxed text-ink/70">Sponsor sebuah wilayah, danai satu tipe proyek, atau rancang program relawan bersama kami. Output serta lokasi dilaporkan melalui formulir lapangan terverifikasi.</p>
                 <div class="mt-8 grid gap-3 text-sm font-semibold leading-relaxed text-ink/70">
-                  <span><i class="ph ph-check-circle mr-2 text-forest"></i>Penanaman pohon endemik</span>
-                  <span><i class="ph ph-check-circle mr-2 text-forest"></i>Pembangunan rorak</span>
-                  <span><i class="ph ph-check-circle mr-2 text-forest"></i>Restorasi mata air</span>
-                  <span><i class="ph ph-check-circle mr-2 text-forest"></i>Ekspedisi monitoring</span>
-                </div>
+                                  <span class="flex items-center gap-2"><img src="/icons/check.webp" alt="Check" class="w-4 h-4 object-contain drop-shadow-sm text-forest" />Penanaman pohon endemik</span>
+                                  <span class="flex items-center gap-2"><img src="/icons/check.webp" alt="Check" class="w-4 h-4 object-contain drop-shadow-sm text-forest" />Pembangunan rorak</span>
+                                  <span class="flex items-center gap-2"><img src="/icons/check.webp" alt="Check" class="w-4 h-4 object-contain drop-shadow-sm text-forest" />Restorasi mata air</span>
+                                  <span class="flex items-center gap-2"><img src="/icons/check.webp" alt="Check" class="w-4 h-4 object-contain drop-shadow-sm text-forest" />Ekspedisi monitoring</span>
+                                </div>
               </div>
               <form id="partner-form" class="border border-line bg-white p-7 sm:p-10 rounded-2xl">
                 <h3 class="font-display text-2xl font-bold leading-[1.1] tracking-tighter">Bicarakan program Anda</h3>
@@ -410,10 +410,10 @@
           <div class="mx-auto max-w-[1280px] px-5 lg:px-8">
             <div class="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
               <div>
-                <p class="eyebrow text-blue">Learning hub</p>
-                <h2 class="display mt-4 text-4xl font-extrabold leading-[1.1] tracking-tighter">Belajar sebelum bergerak.</h2>
-                <p class="mt-4 max-w-xl leading-relaxed text-ink/70">Modul singkat tentang ekosistem mata air, pohon endemik, dan cara membuat laporan lapangan.</p>
-              </div>
+                              <p class="eyebrow text-blue flex items-center gap-2"><img src="/icons/learn.webp" alt="Learning" class="w-5 h-5 object-contain drop-shadow-sm" />Learning hub</p>
+                              <h2 class="display mt-4 text-4xl font-extrabold leading-[1.1] tracking-tighter">Belajar sebelum bergerak.</h2>
+                              <p class="mt-4 max-w-xl leading-relaxed text-ink/70">Modul singkat tentang ekosistem mata air, pohon endemik, dan cara membuat laporan lapangan.</p>
+                            </div>
               <div class="flex gap-5 border-b border-line text-sm font-bold">
                 <button class="learn-tab tab-active pb-3" data-tab="courses">Courses</button>
                 <button class="learn-tab pb-3 text-slate-400" data-tab="readings">Readings</button>
@@ -425,36 +425,36 @@
                 <h3 class="mt-6 font-display text-xl font-bold leading-[1.1] tracking-tighter">Pengenalan Mata Air</h3>
                 <p class="mt-3 text-sm leading-relaxed text-ink/70">Dasar ekosistem mata air, jenisnya, dan mengapa penting bagi kehidupan.</p>
                 <div class="mt-6 flex items-center justify-between text-xs text-slate-500"><span>30 menit</span><span>4 modul</span></div>
-                <button data-toast="Kursus Pengenalan Mata Air dipilih." class="mt-5 text-sm font-bold text-blue hover:underline">Mulai kursus <i class="ph ph-arrow-right ml-2"></i></button>
+                <button data-toast="Kursus Pengenalan Mata Air dipilih." class="mt-5 text-sm font-bold text-blue hover:underline flex items-center gap-2">Mulai kursus <img src="/icons/arrow-right.webp" alt="Lanjut" class="w-4 h-4 object-contain drop-shadow-sm" /></button>
               </article>
               <article class="border border-line bg-white p-6 rounded-xl">
                 <span class="bg-[#d9edf8] px-2 py-1 text-[10px] font-bold uppercase text-blue">Intermediate</span>
                 <h3 class="mt-6 font-display text-xl font-bold leading-[1.1] tracking-tighter">Menanam Pohon Endemik</h3>
                 <p class="mt-3 text-sm leading-relaxed text-ink/70">Memilih lokasi, menanam, dan merawat pohon di area resapan.</p>
                 <div class="mt-6 flex items-center justify-between text-xs text-slate-500"><span>45 menit</span><span>4 modul</span></div>
-                <button data-toast="Kursus Menanam Pohon Endemik dipilih." class="mt-5 text-sm font-bold text-blue hover:underline">Mulai kursus <i class="ph ph-arrow-right ml-2"></i></button>
+                <button data-toast="Kursus Menanam Pohon Endemik dipilih." class="mt-5 text-sm font-bold text-blue hover:underline flex items-center gap-2">Mulai kursus <img src="/icons/arrow-right.webp" alt="Lanjut" class="w-4 h-4 object-contain drop-shadow-sm" /></button>
               </article>
               <article class="border border-line bg-white p-6 rounded-xl">
                 <span class="bg-lime px-2 py-1 text-[10px] font-bold uppercase">Beginner</span>
                 <h3 class="mt-6 font-display text-xl font-bold leading-[1.1] tracking-tighter">Membuat Rorak Resapan</h3>
                 <p class="mt-3 text-sm leading-relaxed text-ink/70">Panduan praktis membuat parit resapan air tanah di lingkungan rumah.</p>
                 <div class="mt-6 flex items-center justify-between text-xs text-slate-500"><span>25 menit</span><span>3 modul</span></div>
-                <button data-toast="Kursus Membuat Rorak Resapan dipilih." class="mt-5 text-sm font-bold text-blue hover:underline">Mulai kursus <i class="ph ph-arrow-right ml-2"></i></button>
+                <button data-toast="Kursus Membuat Rorak Resapan dipilih." class="mt-5 text-sm font-bold text-blue hover:underline flex items-center gap-2">Mulai kursus <img src="/icons/arrow-right.webp" alt="Lanjut" class="w-4 h-4 object-contain drop-shadow-sm" /></button>
               </article>
             </div>
             <div id="readings" class="hidden mt-10 grid gap-5 md:grid-cols-3">
               <article class="border border-line bg-white p-6 rounded-xl">
-                <p class="eyebrow text-blue">Artikel</p>
-                <h3 class="mt-3 font-display text-xl font-bold leading-[1.1] tracking-tighter">Mengapa Mata Air Kering?</h3>
-                <p class="mt-2 text-sm leading-relaxed text-ink/70">Faktor utama penurunan debit mata air dan dampaknya bagi petani.</p>
-                <a href="#" data-toast="Artikel akan dibuka saat publikasi tersedia." class="mt-5 inline-block text-sm font-bold text-blue hover:underline">Baca selengkapnya <i class="ph ph-arrow-up-right"></i></a>
-              </article>
+                              <p class="eyebrow text-blue">Artikel</p>
+                              <h3 class="mt-3 font-display text-xl font-bold leading-[1.1] tracking-tighter">Mengapa Mata Air Kering?</h3>
+                              <p class="mt-2 text-sm leading-relaxed text-ink/70">Faktor utama penurunan debit mata air dan dampaknya bagi petani.</p>
+                              <a href="#" data-toast="Artikel akan dibuka saat publikasi tersedia." class="mt-5 inline-block text-sm font-bold text-blue hover:underline flex items-center gap-2">Baca selengkapnya <img src="/icons/arrow-up-right.webp" alt="Lanjut" class="w-4 h-4 object-contain drop-shadow-sm" /></a>
+                            </article>
               <article class="border border-line bg-white p-6 rounded-xl">
-                <p class="eyebrow text-blue">Field story</p>
-                <h3 class="mt-3 font-display text-xl font-bold leading-[1.1] tracking-tighter">30+ mata air, satu gerakan</h3>
-                <p class="mt-2 text-sm leading-relaxed text-ink/70">Dokumentasi perjalanan relawan dan warga memulihkan sumber air.</p>
-                <a href="#" data-toast="Cerita lapangan akan dibuka saat publikasi tersedia." class="mt-5 inline-block text-sm font-bold text-blue hover:underline">Lihat cerita <i class="ph ph-arrow-up-right"></i></a>
-              </article>
+                              <p class="eyebrow text-blue">Field story</p>
+                              <h3 class="mt-3 font-display text-xl font-bold leading-[1.1] tracking-tighter">30+ mata air, satu gerakan</h3>
+                              <p class="mt-2 text-sm leading-relaxed text-ink/70">Dokumentasi perjalanan relawan dan warga memulihkan sumber air.</p>
+                              <a href="#" data-toast="Cerita lapangan akan dibuka saat publikasi tersedia." class="mt-5 inline-block text-sm font-bold text-blue hover:underline flex items-center gap-2">Lihat cerita <img src="/icons/arrow-up-right.webp" alt="Lanjut" class="w-4 h-4 object-contain drop-shadow-sm" /></a>
+                            </article>
             </div>
           </div>
         </section>
@@ -466,11 +466,11 @@
             <p class="eyebrow text-blue">Latest media</p>
             <h2 class="display mt-4 text-4xl font-extrabold leading-[1.1] tracking-tighter">Cerita dari lapangan.</h2>
           </div>
-          <a href="https://www.youtube.com/@jagasemesta" target="_blank" rel="noreferrer" class="text-sm font-bold text-blue hover:underline">Kunjungi YouTube <i class="ph ph-arrow-up-right ml-2"></i></a>
+          <a href="https://www.youtube.com/@jagasemesta" target="_blank" rel="noreferrer" class="text-sm font-bold text-blue hover:underline flex items-center gap-2">Kunjungi YouTube <img src="/icons/arrow-up-right.webp" alt="Lanjut" class="w-4 h-4 object-contain drop-shadow-sm" /></a>
         </div>
         <div class="mt-10 grid gap-5 md:grid-cols-4">
           <article class="card overflow-hidden md:col-span-2">
-            <div class="flex h-44 items-center justify-center bg-ink text-white grayscale hover:grayscale-0 transition-all duration-500"><i class="ph ph-play-circle text-6xl text-lime"></i></div>
+            <div class="flex h-44 items-center justify-center bg-ink text-white grayscale hover:grayscale-0 transition-all duration-500"><img src="/icons/play.webp" alt="Play video" class="w-16 h-16 object-contain drop-shadow-sm text-lime" /></div>
             <div class="p-5">
               <p class="eyebrow text-blue">Video · Apr 2026</p>
               <h3 class="mt-3 font-display text-xl font-bold leading-[1.1] tracking-tighter">Perjalanan restorasi mata air</h3>
@@ -478,17 +478,17 @@
             </div>
           </article>
           <article class="card p-5">
-            <p class="eyebrow text-blue">Publication</p>
-            <h3 class="mt-5 font-display text-lg font-bold leading-[1.1] tracking-tighter">Gerakan pemulihan air berbasis komunitas</h3>
-            <p class="mt-3 text-sm leading-relaxed text-ink/70">Catatan dampak, pembelajaran, dan kolaborasi.</p>
-            <a href="#" data-toast="Artikel akan dibuka saat publikasi tersedia." class="mt-5 inline-block text-sm font-bold text-blue hover:underline">Baca selengkapnya <i class="ph ph-arrow-up-right"></i></a>
-          </article>
+                      <p class="eyebrow text-blue">Publication</p>
+                      <h3 class="mt-5 font-display text-lg font-bold leading-[1.1] tracking-tighter">Gerakan pemulihan air berbasis komunitas</h3>
+                      <p class="mt-3 text-sm leading-relaxed text-ink/70">Catatan dampak, pembelajaran, dan kolaborasi.</p>
+                      <a href="#" data-toast="Artikel akan dibuka saat publikasi tersedia." class="mt-5 inline-block text-sm font-bold text-blue hover:underline flex items-center gap-2">Baca selengkapnya <img src="/icons/arrow-up-right.webp" alt="Lanjut" class="w-4 h-4 object-contain drop-shadow-sm" /></a>
+                    </article>
           <article class="card p-5">
-            <p class="eyebrow text-blue">Field story</p>
-            <h3 class="mt-5 font-display text-lg font-bold leading-[1.1] tracking-tighter">30+ mata air, satu gerakan</h3>
-            <p class="mt-3 text-sm leading-relaxed text-ink/70">Dokumentasi perjalanan relawan dan warga.</p>
-            <a href="#" data-toast="Cerita lapangan akan dibuka saat publikasi tersedia." class="mt-5 inline-block text-sm font-bold text-blue hover:underline">Lihat cerita <i class="ph ph-arrow-up-right"></i></a>
-          </article>
+                      <p class="eyebrow text-blue">Field story</p>
+                      <h3 class="mt-5 font-display text-lg font-bold leading-[1.1] tracking-tighter">30+ mata air, satu gerakan</h3>
+                      <p class="mt-3 text-sm leading-relaxed text-ink/70">Dokumentasi perjalanan relawan dan warga.</p>
+                      <a href="#" data-toast="Cerita lapangan akan dibuka saat publikasi tersedia." class="mt-5 inline-block text-sm font-bold text-blue hover:underline flex items-center gap-2">Lihat cerita <img src="/icons/arrow-up-right.webp" alt="Lanjut" class="w-4 h-4 object-contain drop-shadow-sm" /></a>
+                    </article>
         </div>
       </div>
     </section>
@@ -811,9 +811,12 @@
     });
 
     if (localStorage.getItem('belikhub-theme') === 'dark') {
-      document.documentElement.classList.add('dark');
-      if ($('#theme-toggle')) $('#theme-toggle').innerHTML = '<i class="ph ph-sun"></i>';
-    }
+          document.documentElement.classList.add('dark');
+          if ($('#theme-toggle')) {
+            $('#icon-moon').classList.add('hidden');
+            $('#icon-sun').classList.remove('hidden');
+          }
+        }
   </script>
 </body>
 </html>
