@@ -2,6 +2,15 @@
 <html lang="id" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('belikhub-theme');
+        var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (dark) document.documentElement.classList.add('dark');
+      } catch (e) {}
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="BelikHub — platform komunitas untuk memantau, memulihkan, dan menjaga mata air Indonesia." />
   <title>BelikHub — Community-Driven Water Restoration</title>
@@ -82,7 +91,7 @@
          MAP THEME VARIABLES (light/dark) - ADDED PER REQUEST
          ===================================================== */
       :root {
-        color-scheme: light dark;
+        color-scheme: light;
 
         --font-dasar: 16px;     /* naik dari biasanya 12-13px */
         --font-legend: 15px;
@@ -98,17 +107,7 @@
         --link: #0d6efd;
       }
 
-      /* Mode MALAM - otomatis ikut setting sistem */
-      @media (prefers-color-scheme: dark) {
-        :root:not([data-theme="light"]) {
-          --teks: #f1f1f4;
-          --teks-lembut: #b8b8c6;
-          --panel: #1e1e2a;
-          --panel-border: #3a3a4e;
-          --panel-atribusi: rgba(30, 30, 42, .92);
-          --link: #6ea8fe;
-        }
-      }
+      /* Tema gelap dikendalikan class .dark pada <html> */
 
       /* Mode MALAM - kalau toggle pakai class (sesuaikan jika beda) */
       body.dark, body.dark-mode, body[data-theme="dark"],
@@ -177,6 +176,13 @@
         color: var(--teks) !important;
       }
       #load-reports i { color: var(--teks-lembut) !important; }
+    @keyframes fade-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+      .animate-fade-up{animation:fade-up .7s ease-out both}
+      @media (prefers-reduced-motion: reduce){
+        .animate-fade-up{animation:none}
+        section video{display:none}
+      }
+      #lang-toggle{display:none!important}
     </style>
 </head>
 <body class="overflow-x-hidden">
@@ -231,6 +237,7 @@
         </div>
         <div class="mt-auto flex flex-col gap-3">
           <a href="#" id="login-btn-mobile" class="flex w-full items-center justify-center rounded-xl border border-white/20 bg-white/10 py-4 text-center text-sm font-bold text-white hover:bg-white/20">Masuk</a>
+          <button id="logout-btn-mobile" type="button" class="hidden w-full rounded-xl border border-white/20 bg-white/10 py-4 text-center text-sm font-bold text-white hover:bg-white/20">Keluar</button>
           <a href="#kemitraan" class="mobile-link flex w-full items-center justify-center rounded-xl bg-lime py-4 text-center text-sm font-bold text-ink hover:bg-white">Join now</a>
         </div>
       </div>
@@ -644,7 +651,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
-    import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
+    import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, sendEmailVerification, updateProfile } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 
     const siteHeader = document.getElementById('site-header');
     const syncHeader = () => { if (!siteHeader) return; siteHeader.classList.toggle('hero-nav', window.scrollY < 40); siteHeader.classList.toggle('nav-scrolled', window.scrollY >= 40); };
@@ -722,6 +729,8 @@
       currentUser = user;
       loginBtn?.classList.toggle('hidden', !!user);
       logoutBtn?.classList.toggle('hidden', !user);
+      $('#login-btn-mobile')?.classList.toggle('hidden', !!user);
+      $('#logout-btn-mobile')?.classList.toggle('hidden', !user);
     };
 
     const apiRequest = async (path, payload, options = {}) => {
@@ -771,6 +780,7 @@
     }));
 
     $$('.report-card').forEach(el => el.addEventListener('click', () => {
+      if (!currentUser) { toast('Masuk dulu untuk mengirim laporan.'); openLogin({ preventDefault() {} }); return; }
       openModal(el.dataset.report, reportForm(el.dataset.report, el.textContent.match(/\+[\d.]+/)?.[0] || '100'));
       $('#report-form')?.addEventListener('submit', async e => {
         e.preventDefault();
@@ -830,7 +840,7 @@
       $('#readings').classList.toggle('hidden', tab.dataset.tab !== 'readings');
     }));
 
-    const points = [{name:'Tuk Bismo',lat:-7.02,lng:109.91,status:'healthy'},{name:'Belik Soka',lat:-8.01,lng:110.61,status:'restored'},{name:'Wonomerto',lat:-7.29,lng:110.09,status:'attention'},{name:'Rowo Santen',lat:-7.91,lng:110.34,status:'healthy'},{name:'Watulumbung',lat:-7.23,lng:109.91,status:'restored'}];
+    const points = [];
     if(window.L){
       const map=L.map('map-canvas',{scrollWheelZoom:true}).setView([-7.35,110.2],7);
       window.belikhubMap=map;
@@ -849,6 +859,290 @@
     }
 
     $('#load-reports')?.addEventListener('click', e => { e.currentTarget.textContent='Semua laporan sudah dimuat'; toast('24 laporan tambahan dimuat.'); openModal('Laporan komunitas','<div class="divide-y line text-sm"><div class="py-3"><b>Survei Mata Air</b><span class="ml-3 text-slate-500">Tuk Bismo · 04 Nov 2026</span></div><div class="py-3"><b>Restorasi</b><span class="ml-3 text-slate-500">Rowo Santen · 18 Okt 2026</span></div><div class="py-3"><b>Survei Mata Air</b><span class="ml-3 text-slate-500">Wonomerto · 12 Okt 2026</span></div></div>'); });
+
+    // ===== PAKET 3: data nyata, auth lengkap, form laporan =====
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const fmtDate = (iso) => { const d = new Date(iso); return Number.isNaN(d.getTime()) ? '' : d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }); };
+    setLanguage('id');
+
+    // ---------- Peta & daftar laporan dari API ----------
+    const mapState = { total: 0, cursor: null, loading: false, done: false, reports: [] };
+    const reportToPoint = (r) => ({
+      name: esc(r.location),
+      lat: r.lat,
+      lng: r.lng,
+      status: r.reportType === 'Restorasi Mata Air' ? 'restored' : (r.condition === 'attention' ? 'attention' : 'healthy')
+    });
+    const syncPoints = () => {
+      points.splice(0, points.length, ...mapState.reports.filter((r) => typeof r.lat === 'number' && typeof r.lng === 'number').map(reportToPoint));
+      $('#map-filter')?.dispatchEvent(new Event('change'));
+    };
+    const updateLoadButton = () => {
+      const btn = $('#load-reports');
+      if (!btn) return;
+      const total = Math.max(mapState.total, mapState.reports.length);
+      btn.innerHTML = mapState.done ? 'Semua laporan sudah dimuat' : `Muat laporan (${mapState.reports.length}/${total}) <i class="ph ph-arrow-down"></i>`;
+    };
+    const fetchReports = async () => {
+      if (mapState.loading || mapState.done) return;
+      mapState.loading = true;
+      try {
+        const url = '/api/reports?limit=50' + (mapState.cursor ? '&before=' + encodeURIComponent(mapState.cursor) : '');
+        const res = await fetch(url);
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Gagal memuat laporan.');
+        const items = data.reports || [];
+        mapState.reports.push(...items);
+        if (items.length) mapState.cursor = items[items.length - 1].createdAt;
+        mapState.done = items.length < 50;
+        syncPoints();
+      } catch (err) {
+        toast(err.message);
+      } finally {
+        mapState.loading = false;
+        updateLoadButton();
+      }
+    };
+    const showReportList = () => {
+      const body = mapState.reports.length
+        ? '<div class="divide-y line text-sm">' + mapState.reports.map((r) => `<div class="flex gap-3 py-3">${r.photoUrl ? `<img src="${esc(r.photoUrl)}" alt="" loading="lazy" class="h-14 w-14 rounded-lg object-cover" />` : ''}<div><b>${esc(r.reportType)}</b><span class="ml-3 text-slate-500">${esc(r.location)} · ${esc(fmtDate(r.createdAt))}</span></div></div>`).join('') + '</div>'
+        : '<p class="text-sm text-slate-500">Belum ada laporan terverifikasi.</p>';
+      openModal('Laporan komunitas', body);
+    };
+    (() => {
+      const old = $('#load-reports');
+      if (!old) return;
+      const btn = old.cloneNode(true);
+      old.replaceWith(btn);
+      btn.addEventListener('click', async () => { await fetchReports(); showReportList(); });
+    })();
+
+    // ---------- Dashboard dari /api/stats ----------
+    const loadStats = async () => {
+      try {
+        const res = await fetch('/api/stats');
+        const s = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(s.error || 'stats error');
+        mapState.total = Number(s.totalApproved) || 0;
+        updateLoadButton();
+
+        const monthly = $$('#dashboard h3').find((h) => h.textContent.trim() === 'Aktivitas bulanan');
+        if (monthly) {
+          monthly.textContent = 'Laporan terverifikasi';
+          const list = monthly.closest('.border')?.querySelector('.space-y-4');
+          if (list) {
+            const rows = [['bg-blue', 'Survei Mata Air'], ['bg-forest', 'Restorasi Mata Air'], ['bg-lime', 'Penanaman Pohon'], ['bg-orange-400', 'Pembangunan Rorak']];
+            list.innerHTML = rows.map(([dot, label]) => `<div class="flex items-center justify-between text-sm leading-relaxed text-ink/70"><span class="flex items-center gap-3"><span class="dot ${dot}"></span>${label}</span><b class="text-forest">${Number(s.byType && s.byType[label]) || 0}</b></div>`).join('');
+          }
+        }
+
+        const recent = $$('#dashboard h3').find((h) => h.textContent.trim() === 'Aktivitas terbaru');
+        if (recent) {
+          const list = recent.closest('.border')?.querySelector('.space-y-4');
+          if (list) {
+            const items = s.recent || [];
+            list.innerHTML = items.length
+              ? items.map((r) => `<div class="flex items-center justify-between text-sm leading-relaxed text-ink/70"><span class="flex items-center gap-3"><span class="dot bg-forest"></span>${esc(r.location)}</span><span class="text-slate-400">${esc(fmtDate(r.createdAt))}</span></div>`).join('')
+              : '<p class="text-sm text-slate-500">Belum ada laporan terverifikasi.</p>';
+          }
+        }
+      } catch (err) {
+        console.error('loadStats failed:', err);
+      }
+    };
+    loadStats();
+    fetchReports();
+
+    // ---------- Auth lengkap: masuk, daftar (dengan nama), verifikasi email, reset password ----------
+    const authErrorText = (code, fallback) => ({
+      'auth/invalid-credential': 'Email atau password salah.',
+      'auth/user-not-found': 'Email atau password salah.',
+      'auth/wrong-password': 'Email atau password salah.',
+      'auth/email-already-in-use': 'Email sudah terdaftar. Coba masuk.',
+      'auth/weak-password': 'Password terlalu lemah (minimal 6 karakter).',
+      'auth/invalid-email': 'Format email tidak valid.',
+      'auth/too-many-requests': 'Terlalu banyak percobaan. Coba lagi beberapa saat lagi.',
+      'auth/network-request-failed': 'Koneksi bermasalah. Periksa internet Anda.'
+    }[code] || fallback);
+
+    const openAuth = (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      menu?.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+      openModal('Masuk', `
+        <form id="auth-form" data-custom="1">
+          <label class="block text-sm font-semibold">Nama (hanya untuk akun baru)<input name="name" maxlength="60" placeholder="Nama lengkap" class="mt-2" /></label>
+          <label class="mt-4 block text-sm font-semibold">Email<input required type="email" name="email" placeholder="nama@email.com" class="mt-2" /></label>
+          <label class="mt-4 block text-sm font-semibold">Password<input name="password" required minlength="6" type="password" placeholder="••••••••" class="mt-2" /></label>
+          <button class="mt-5 w-full bg-forest px-4 py-3 font-bold text-white hover:bg-forest/90 transition-colors" type="submit">Masuk</button>
+          <button id="auth-register" class="mt-3 w-full border border-line px-4 py-3 font-bold text-ink hover:bg-slate-50 transition-colors" type="button">Daftar akun baru</button>
+          <button id="auth-reset" class="mt-3 w-full text-sm font-semibold text-blue hover:underline" type="button">Lupa password?</button>
+        </form>
+      `);
+      const form = modal.querySelector('#auth-form');
+      const guard = () => { if (!auth) { toast('Firebase belum siap. Muat ulang halaman.'); return false; } return true; };
+
+      form.addEventListener('submit', async (ev) => {
+        ev.preventDefault();
+        if (!guard()) return;
+        const btn = form.querySelector('[type=submit]');
+        btn.disabled = true; btn.textContent = '…';
+        try {
+          const cred = await signInWithEmailAndPassword(auth, form.elements.email.value, form.elements.password.value);
+          closeModal();
+          toast(cred.user.emailVerified ? `Selamat datang, ${cred.user.displayName || cred.user.email.split('@')[0]}.` : 'Masuk berhasil. Verifikasi email Anda untuk bisa mengirim laporan.');
+        } catch (error) {
+          btn.disabled = false; btn.textContent = 'Masuk';
+          toast(authErrorText(error.code, error.message));
+        }
+      });
+
+      form.querySelector('#auth-register').addEventListener('click', async (ev) => {
+        if (!guard() || !form.reportValidity()) return;
+        const name = form.elements.name.value.trim();
+        if (!name) { toast('Isi nama untuk akun baru.'); return; }
+        const btn = ev.currentTarget;
+        btn.disabled = true; btn.textContent = '…';
+        try {
+          const cred = await createUserWithEmailAndPassword(auth, form.elements.email.value, form.elements.password.value);
+          try { await updateProfile(cred.user, { displayName: name }); } catch (e) { console.error(e); }
+          try { await sendEmailVerification(cred.user); } catch (e) { console.error(e); }
+          closeModal();
+          toast('Akun dibuat. Cek email Anda untuk verifikasi.');
+        } catch (error) {
+          btn.disabled = false; btn.textContent = 'Daftar akun baru';
+          toast(authErrorText(error.code, error.message));
+        }
+      });
+
+      form.querySelector('#auth-reset').addEventListener('click', async () => {
+        if (!guard() || !form.elements.email.reportValidity()) return;
+        try {
+          await sendPasswordResetEmail(auth, form.elements.email.value);
+          toast('Jika email terdaftar, tautan reset password sudah dikirim.');
+        } catch (error) {
+          if (error.code === 'auth/user-not-found') { toast('Jika email terdaftar, tautan reset password sudah dikirim.'); return; }
+          toast(authErrorText(error.code, error.message));
+        }
+      });
+    };
+
+    // Tangkap klik tombol Masuk (desktop & mobile) sebelum handler lama
+    document.addEventListener('click', (e) => {
+      const target = e.target.closest && e.target.closest('#login-btn, #login-btn-mobile');
+      if (!target) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      openAuth();
+    }, true);
+
+    $('#logout-btn-mobile')?.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+        menu?.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        toast('Anda telah keluar.');
+      } catch (error) {
+        toast(error.message);
+      }
+    });
+
+    // ---------- Form laporan: koordinat, kondisi, foto ----------
+    const resizeImage = (file) => new Promise((resolve, reject) => {
+      if (!file.type || !file.type.startsWith('image/')) { reject(new Error('File harus berupa gambar.')); return; }
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        const scale = Math.min(1, 1280 / Math.max(img.width, img.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        URL.revokeObjectURL(url);
+        resolve(canvas.toDataURL('image/jpeg', 0.8));
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Gambar tidak bisa dibaca.')); };
+      img.src = url;
+    });
+
+    const openReportModal = (name, pts) => {
+      const conditionField = name === 'Survei Mata Air'
+        ? '<label class="mt-4 block text-sm font-semibold">Kondisi mata air<select name="condition" class="mt-2"><option value="healthy">Sehat</option><option value="attention">Perlu perhatian</option></select></label>'
+        : '';
+      openModal(name, `
+        <form id="report-form" data-custom="1">
+          <p class="text-sm leading-6 text-slate-500">Lengkapi laporan ${esc(name.toLowerCase())} untuk mendapatkan <b>${esc(pts)} poin</b> setelah diverifikasi tim.</p>
+          <label class="mt-5 block text-sm font-semibold">Nama lokasi<input name="location" required maxlength="200" placeholder="Nama mata air / desa" class="mt-2" /></label>
+          <div class="mt-4 grid grid-cols-2 gap-3">
+            <label class="block text-sm font-semibold">Latitude<input name="lat" required inputmode="decimal" placeholder="-7.35" class="mt-2" /></label>
+            <label class="block text-sm font-semibold">Longitude<input name="lng" required inputmode="decimal" placeholder="110.20" class="mt-2" /></label>
+          </div>
+          <button type="button" id="report-geo" class="mt-2 text-sm font-bold text-blue hover:underline">Pakai lokasi saya</button>
+          <p class="mt-1 text-xs leading-relaxed text-slate-500">Koordinat tepat hanya terlihat oleh tim verifikasi. Peta publik menampilkan titik yang disamarkan beberapa kilometer.</p>
+          ${conditionField}
+          <label class="mt-4 block text-sm font-semibold">Foto (opsional)<input name="photo" type="file" accept="image/*" class="mt-2" /></label>
+          <label class="mt-4 block text-sm font-semibold">Catatan lapangan<textarea name="notes" required rows="3" maxlength="2000" placeholder="Apa yang Anda temukan?" class="mt-2"></textarea></label>
+          <button type="submit" class="mt-5 w-full bg-forest px-4 py-3 font-bold text-white hover:bg-forest/90 transition-colors">Kirim laporan</button>
+        </form>
+      `);
+      const form = modal.querySelector('#report-form');
+
+      form.querySelector('#report-geo').addEventListener('click', () => {
+        if (!navigator.geolocation) { toast('Browser tidak mendukung lokasi.'); return; }
+        toast('Meminta izin lokasi…');
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            form.elements.lat.value = pos.coords.latitude.toFixed(5);
+            form.elements.lng.value = pos.coords.longitude.toFixed(5);
+          },
+          () => toast('Lokasi tidak tersedia atau izin ditolak.')
+        );
+      });
+
+      form.addEventListener('submit', async (ev) => {
+        ev.preventDefault();
+        const lat = parseFloat(String(form.elements.lat.value).replace(',', '.'));
+        const lng = parseFloat(String(form.elements.lng.value).replace(',', '.'));
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) { toast('Koordinat tidak valid.'); return; }
+        const submit = form.querySelector('[type=submit]');
+        submit.disabled = true; submit.textContent = 'Menyimpan…';
+        try {
+          const file = form.elements.photo.files[0];
+          const photo = file ? await resizeImage(file) : undefined;
+          const data = await apiRequest('/api/reports', {
+            reportType: name,
+            location: form.elements.location.value,
+            lat,
+            lng,
+            condition: form.elements.condition ? form.elements.condition.value : undefined,
+            notes: form.elements.notes.value,
+            photo
+          }, { auth: true });
+          closeModal();
+          toast(`Laporan tersimpan. +${data.points} poin setelah verifikasi.`);
+        } catch (error) {
+          submit.disabled = false; submit.textContent = 'Kirim laporan';
+          toast(error.message);
+        }
+      });
+    };
+
+    let verifyMailSent = false;
+    $$('.report-card').forEach((old) => {
+      const el = old.cloneNode(true);
+      old.replaceWith(el);
+      el.addEventListener('click', async () => {
+        if (!currentUser) { toast('Masuk dulu untuk mengirim laporan.'); openAuth(); return; }
+        try { await currentUser.reload(); } catch (e) { console.error(e); }
+        if (!currentUser.emailVerified) {
+          if (!verifyMailSent) { try { await sendEmailVerification(currentUser); verifyMailSent = true; } catch (e) { console.error(e); } }
+          toast('Verifikasi email dulu. Cek kotak masuk ' + currentUser.email + ', lalu coba lagi.');
+          return;
+        }
+        try { await currentUser.getIdToken(true); } catch (e) { console.error(e); }
+        openReportModal(el.dataset.report, (el.textContent.match(/\+[\d.]+/) || ['+100'])[0]);
+      });
+    });
 
     // Login / Daftar
     const openLogin = (e) => {
@@ -887,8 +1181,7 @@
       try { await signOut(auth); toast('Anda telah keluar.'); } catch (error) { toast(error.message); }
     });
 
-    if (localStorage.getItem('belikhub-theme') === 'dark') {
-      document.documentElement.classList.add('dark');
+    if (document.documentElement.classList.contains('dark')) {
       $('#icon-moon')?.classList.add('hidden');
       $('#icon-sun')?.classList.remove('hidden');
     }

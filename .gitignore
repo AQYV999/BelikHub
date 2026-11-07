@@ -13,3 +13,7 @@ yarn-error.log
 
 .vercel
 .env*
+
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

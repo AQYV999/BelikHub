@@ -1,146 +1,69 @@
 # BelikHub Platform
 
-Community-driven water restoration platform - Vercel + Firebase Architecture
+Platform komunitas untuk memantau dan memulihkan mata air Indonesia.
+Arsitektur: Frontend statis (`index.html`) -> Vercel Serverless Functions (`/api/*`) -> Firebase Auth + Firestore.
 
-## Architecture Overview
+## Struktur
 
-Frontend (index.html)  -->  Vercel Serverless Functions  -->  Firebase Auth, Firestore, Storage
+    api/
+      health.js
+      firebase-config.js
+      me.js
+      reports.js
+      partnerships.js
+      admin/reports/[id]/status.js
+    lib/
+      auth.js
+      firebase-admin.js
+    index.html
+    firestore.rules
+    firestore.indexes.json
+    firebase.json
+    vercel.json
 
-- Frontend: Static index.html served by Vercel (no build step)
-- API: Vercel Serverless Functions (/api/*)
-- Auth: Firebase Authentication (Email/Password, Google, etc.)
-- Database: Cloud Firestore (NoSQL, real-time)
-- Storage: Firebase Storage (for report photos)
+## Pengembangan lokal
 
-## Quick Start
+    npm install
+    vercel env pull .env.local
+    npm run dev
 
-### Prerequisites
+## Environment variable (set di Vercel, jangan di-commit)
 
-- Node.js 20+
-- Firebase project (create at https://console.firebase.google.com)
-- Vercel account (for deployment)
+Server: GEO_SALT (rahasia acak untuk menyamarkan koordinat publik), FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY (pakai \n untuk baris baru), FIREBASE_STORAGE_BUCKET
+Client (dikirim lewat /api/firebase-config): VITE_FIREBASE_API_KEY, VITE_FIREBASE_AUTH_DOMAIN, VITE_FIREBASE_PROJECT_ID, VITE_FIREBASE_STORAGE_BUCKET, VITE_FIREBASE_MESSAGING_SENDER_ID, VITE_FIREBASE_APP_ID
 
-### Local Development
+## Firestore
 
-cd belikhub-project
-npm install
-cp .env.example .env.local
-# Edit .env.local with your Firebase credentials
-firebase emulators:start
-npm run dev
+Semua akses data lewat API (Admin SDK). Rules menolak semua akses langsung dari client.
 
-### Firebase Setup
+    firebase deploy --only firestore:rules,firestore:indexes
 
-1. Create Firebase Project
-   - Go to Firebase Console -> Add Project
-   - Enable Authentication -> Sign-in method -> Email/Password
-   - Enable Firestore Database -> Start in test mode
-   - Enable Storage -> Start in test mode
+## Endpoint
 
-2. Get Client Config (Frontend)
-   - Project Settings -> General -> Your Apps -> Web App
-   - Copy config values to .env.local as VITE_FIREBASE_*
+- GET /api/health
+- GET /api/firebase-config
+- GET /api/me (login)
+- GET /api/stats (publik: hitungan laporan terverifikasi)
+- GET /api/reports (publik: hanya approved, field terbatas; ?mine=1 untuk milik sendiri; admin melihat semua)
+- POST /api/reports (login; tipe laporan di-whitelist, poin dihitung server)
+- POST /api/partnerships
+- GET /api/partnerships (admin)
+- PATCH /api/admin/reports/:id/status (admin; poin dikreditkan saat approved)
 
-3. Get Admin SDK Credentials (Backend)
-   - Project Settings -> Service Accounts -> Generate New Private Key
-   - Save JSON securely -> Extract values for .env.local:
-     - FIREBASE_PROJECT_ID
-     - FIREBASE_CLIENT_EMAIL
-     - FIREBASE_PRIVATE_KEY (include \n for newlines)
-     - FIREBASE_STORAGE_BUCKET
+## Admin
 
-4. Configure Firestore Rules (production)
-   rules_version = '2';
-   service cloud.firestore {
-     match /databases/{database}/documents {
-       match /reports/{reportId} {
-         allow read: if resource.data.status == 'approved' || request.auth != null;
-         allow create: if request.auth != null && request.resource.data.userId == request.auth.uid && request.resource.data.keys().hasAll(['reportType', 'location', 'notes']);
-         allow update: if request.auth != null && (request.auth.uid == resource.data.userId || request.auth.token.admin == true);
-       }
-       match /partnerships/{partnershipId} {
-         allow create: if true;
-         allow read, update: if request.auth != null && request.auth.token.admin == true;
-       }
-       match /users/{userId} {
-         allow read, write: if request.auth != null && request.auth.uid == userId;
-       }
-     }
-   }
+Beri custom claim admin lewat Admin SDK:
 
-5. Set Admin Role (optional)
-   await admin.auth().setCustomUserClaims(uid, { admin: true });
+    await admin.auth().setCustomUserClaims(uid, { admin: true });
 
-## Project Structure
+## Keamanan
 
-belikhub-project/
-api/
-  health.js
-  reports.js
-  partnerships.js
-  me.js
-  admin/
-    reports/
-      status.js
-lib/
-  firebase-admin.js
-  firebase-client.js
-  auth.js
-index.html
-package.json
-vercel.json
-.env.example
-.gitignore
-README.md
+- Jangan commit .env.local atau service account.
+- Aktifkan Firebase App Check.
+- Batasi CORS ke domain produksi sebelum rilis publik.
 
-## API Endpoints
+## Skrip
 
-GET /api/health - Health check
-POST /api/reports - Create report (auth required)
-GET /api/reports - List reports (optional auth)
-POST /api/partnerships - Submit partnership request
-GET /api/partnerships - List partnerships
-GET /api/me - Current user profile (auth required)
-PATCH /api/admin/reports/:id/status - Update report status (admin required)
-
-## Deployment to Vercel
-
-1. Push to GitHub/GitLab/Bitbucket
-2. Import project in Vercel Dashboard
-3. Add Environment Variables in Vercel Project Settings
-4. Deploy
-
-## Environment Variables
-
-FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY, FIREBASE_STORAGE_BUCKET (Server)
-VITE_FIREBASE_API_KEY, VITE_FIREBASE_AUTH_DOMAIN, VITE_FIREBASE_PROJECT_ID, VITE_FIREBASE_STORAGE_BUCKET, VITE_FIREBASE_MESSAGING_SENDER_ID, VITE_FIREBASE_APP_ID (Client)
-
-## Security
-
-- Never commit .env.local or service account JSON
-- Use Vercel Environment Variables for all secrets
-- Configure Firestore Security Rules before production
-- Enable App Check in Firebase
-- Use HTTPS only (Vercel provides automatically)
-
-## Migration from v1 (Express + SQLite)
-
-Old -> New
-server.js (Express) -> /api/*.js (Vercel Serverless)
-better-sqlite3 -> Cloud Firestore
-bcryptjs + custom JWT -> Firebase Authentication
-JWT_SECRET in .env -> Firebase ID Tokens
-data/belikhub.sqlite -> Cloud Firestore collections
-Manual rate limiting -> Vercel built-in + Firebase App Check
-Local file uploads -> Firebase Storage
-
-## Scripts
-
-npm run dev - Start Vercel dev server
-npm run build - No-op (static frontend)
-npm run deploy - Deploy to Vercel production
-npm run lint - ESLint on api/ and lib/
-
-## License
-
-MIT - Built for community-led water restoration in Indonesia.
+- npm run dev: vercel dev
+- npm run deploy: vercel --prod
+- npm run lint: ESLint untuk api/ dan lib/

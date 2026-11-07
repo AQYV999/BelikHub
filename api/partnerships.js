@@ -4,7 +4,7 @@
 // GET /api/partnerships - List partnerships (admin only for full list)
 
 import { getAdminDb } from '../lib/firebase-admin.js';
-import { requireAuth, requireAdmin, optionalAuth, json } from '../lib/auth.js';
+import { requireAdmin, json } from '../lib/auth.js';
 
 function validatePartnership(data) {
   const errors = {};
@@ -27,7 +27,9 @@ function validatePartnership(data) {
     errors.need = 'need must be 500 characters or less';
   }
   
-  if (data.email && typeof data.email === 'string') {
+  if (!data.email || typeof data.email !== 'string') {
+    errors.email = 'email is required';
+  } else {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(data.email)) {
       errors.email = 'email must be a valid email address';
