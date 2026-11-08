@@ -81,8 +81,10 @@
     .tick.br{bottom:-1px;right:-1px;border-bottom-width:2px;border-right-width:2px}
 
     /* Garis kontur topografi */
-    .topo{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600' fill='none' stroke='%230E7C86' stroke-opacity='.2' stroke-width='1'%3E%3Cg transform='rotate(-18 200 220)'%3E%3Cellipse cx='200' cy='220' rx='40' ry='26'/%3E%3Cellipse cx='200' cy='220' rx='80' ry='54'/%3E%3Cellipse cx='200' cy='220' rx='125' ry='86'/%3E%3Cellipse cx='200' cy='220' rx='175' ry='122'/%3E%3C/g%3E%3Cg transform='rotate(24 440 430)'%3E%3Cellipse cx='440' cy='430' rx='36' ry='22'/%3E%3Cellipse cx='440' cy='430' rx='76' ry='50'/%3E%3Cellipse cx='440' cy='430' rx='120' ry='82'/%3E%3C/g%3E%3C/svg%3E");background-size:600px 600px}
-    .topo-light{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600' fill='none' stroke='%23FFFFFF' stroke-opacity='.13' stroke-width='1'%3E%3Cg transform='rotate(-18 200 220)'%3E%3Cellipse cx='200' cy='220' rx='40' ry='26'/%3E%3Cellipse cx='200' cy='220' rx='80' ry='54'/%3E%3Cellipse cx='200' cy='220' rx='125' ry='86'/%3E%3Cellipse cx='200' cy='220' rx='175' ry='122'/%3E%3C/g%3E%3Cg transform='rotate(24 440 430)'%3E%3Cellipse cx='440' cy='430' rx='36' ry='22'/%3E%3Cellipse cx='440' cy='430' rx='76' ry='50'/%3E%3Cellipse cx='440' cy='430' rx='120' ry='82'/%3E%3C/g%3E%3C/svg%3E");background-size:600px 600px}
+    .topo{position:relative;isolation:isolate;background-color:var(--bg)}
+    .topo::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:url('/images/topo-light.webp') center/cover no-repeat;mix-blend-mode:multiply;opacity:.55}
+    .dark .topo::before{background-image:url('/images/topo-dark.webp');mix-blend-mode:screen;opacity:.5}
+    .topo-light{background:url('/images/topo-dark.webp') center/cover no-repeat;mix-blend-mode:screen;pointer-events:none}
 
     /* Tombol */
     .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.9rem 1.5rem;font-weight:700;font-size:.875rem;border:1px solid transparent;border-radius:2px;cursor:pointer;transition:filter .2s,background .2s,color .2s}
@@ -230,13 +232,13 @@
   <main id="top">
     <!-- HERO -->
     <section class="relative flex min-h-[100svh] flex-col overflow-hidden bg-ink pt-[72px] text-white">
-      <video autoplay loop muted playsinline preload="metadata" class="absolute inset-0 h-full w-full object-cover opacity-50">
+      <video autoplay loop muted playsinline preload="metadata" class="absolute inset-0 h-full w-full object-cover opacity-70">
         <source src="https://cdn.coverr.co/videos/coverr-waterfall-in-the-forest-9382/1080p.mp4" type="video/mp4">
       </video>
-      <div class="absolute inset-0" style="background:rgba(6,40,48,.68)"></div>
+      <div class="absolute inset-0" style="background:rgba(6,40,48,.45)"></div>
       <div class="topo-light absolute inset-0"></div>
 
-      <div class="wrap relative z-10 flex flex-1 items-center py-16">
+      <div class="wrap relative z-10 flex w-full flex-1 items-center py-16">
         <div class="rise max-w-4xl">
           <p class="label mb-8 flex items-center gap-3 text-white/80"><span class="stamp">Edisi 2026</span> Pemulihan air berbasis komunitas</p>
           <h1 class="h1">Air yang hidup.<br><em class="c-sun" style="font-weight:500">Komunitas yang bergerak.</em></h1>
