@@ -8,7 +8,7 @@
   <link rel="icon" type="image/webp" href="/icons/logo.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <link rel="stylesheet" type="text/css" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -16,551 +16,589 @@
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans:['DM Sans','sans-serif'], display:['Manrope','sans-serif'], mono:['DM Mono','monospace'] },
-          colors:{
-            ink:'#0B2A33',
-            forest:'#0E7C86',
-            aqua:'#2BB3C0',
-            blue:'#0B8DA0',
-            lime:'#FFD166',
-            paper:'#F4FBFC',
-            line:'#D5E8EC'
-          },
-          boxShadow: { soft:'0 10px 40px -12px rgba(14,124,134,.18)', hover:'0 22px 44px -12px rgba(14,124,134,.28)' },
-          borderRadius: { xl:'1rem', '2xl':'1.5rem', '3xl':'2rem' }
+          fontFamily: { sans:['DM Sans','sans-serif'], serif:['Fraunces','serif'], mono:['DM Mono','monospace'] },
+          colors:{ ink:'#0B2A33', forest:'#0E7C86', aqua:'#2BB3C0', sun:'#FFD166' }
         }
       }
     };
   </script>
   <style>
     /* =====================================================
-       TEMA — Mata Air Jernih (terang + gelap)
+       TEMA — Mata Air Jernih · gaya editorial + catatan lapangan
        ===================================================== */
     :root{
       color-scheme:light;
-      --bg:#F4FBFC; --card:#FFFFFF; --border:#D5E8EC;
+      --bg:#F4FBFC; --card:#FFFFFF; --tint:#E3F4F6; --line:#C9DEE3;
       --teks:#0B2A33; --teks-lembut:#456872;
-      --panel:#FFFFFF; --panel-border:#D5E8EC; --panel-atribusi:rgba(255,255,255,.92);
-      --link:#0B8DA0;
-      --font-dasar:16px; --font-legend:15px; --font-popup:15px; --font-atribusi:12px;
+      --accent:#0E7C86; --accent-fill:#0E7C86;
+      --panel:#FFFFFF; --panel-atribusi:rgba(255,255,255,.92); --link:#0B8DA0;
+      --font-popup:15px; --font-atribusi:12px;
     }
     .dark{
       color-scheme:dark;
-      --bg:#071A20; --card:#0F2A33; --border:#1D4651;
+      --bg:#071A20; --card:#0F2A33; --tint:#0A222A; --line:#1D4651;
       --teks:#E6F6F8; --teks-lembut:#9CC3CB;
-      --panel:#0F2A33; --panel-border:#1D4651; --panel-atribusi:rgba(15,42,51,.92);
-      --link:#5FD3E0;
+      --accent:#5FD3E0; --accent-fill:#2BB3C0;
+      --panel:#0F2A33; --panel-atribusi:rgba(15,42,51,.92); --link:#5FD3E0;
     }
 
     *{box-sizing:border-box}
-    html{font-size:var(--font-dasar)}
-    body{background:var(--bg);color:var(--teks);font-size:1rem;line-height:1.55;-webkit-font-smoothing:antialiased}
-    .display{font-family:Manrope,sans-serif;letter-spacing:-.055em}
-    .eyebrow{font:500 11px/1.2 'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase}
+    html{font-size:16px}
+    body{background:var(--bg);color:var(--teks);line-height:1.6;-webkit-font-smoothing:antialiased;font-family:'DM Sans',sans-serif}
+    ::selection{background:#FFD166;color:#0B2A33}
+    :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+    .wrap{max-width:1280px;margin:0 auto;padding:0 1.25rem}
+    @media(min-width:1024px){.wrap{padding:0 2rem}}
+    .sec{border-top:1px solid var(--line);padding:5rem 0}
+    @media(min-width:1024px){.sec{padding:7rem 0}}
+
+    /* Tipografi */
+    .serif{font-family:'Fraunces',serif}
+    .h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(3rem,8.2vw,7.2rem);line-height:.98;letter-spacing:-.03em}
+    .h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.1rem,4.6vw,3.8rem);line-height:1.05;letter-spacing:-.02em}
+    .h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.35rem;line-height:1.15;letter-spacing:-.01em}
+    .label{font:500 11px/1.3 'DM Mono',monospace;letter-spacing:.14em;text-transform:uppercase}
     .muted{color:var(--teks-lembut)}
+    .c-accent{color:var(--accent)}
+    .c-sun{color:#FFD166}
 
-    .dark .bg-white,.dark .card{background:var(--card)!important;border-color:var(--border)!important}
-    .dark .bg-paper{background:var(--bg)}
-    .dark .text-ink{color:var(--teks)}
-    .dark .text-ink\/70{color:var(--teks-lembut)}
-    .dark .text-slate-400,.dark .text-slate-500,.dark .text-slate-600{color:var(--teks-lembut)}
-    .dark .border-line,.dark .line{border-color:var(--border)}
-    .dark input,.dark select,.dark textarea{background:#0B2229;color:var(--teks);border-color:var(--border)}
-    .dark #kemitraan{background:#0A222A}
-    .dark .grid-paper{background-color:#0A222A}
-    .line{border-color:var(--border)}
-    .card{border:1px solid var(--border);background:var(--card)}
-    .soft-card{border:1px solid var(--border);background:var(--card);border-radius:1.5rem;box-shadow:0 10px 40px -14px rgba(14,124,134,.14);transition:transform .25s,box-shadow .25s}
-    .soft-card:hover{transform:translateY(-3px);box-shadow:0 22px 44px -14px rgba(14,124,134,.26)}
+    /* Kepala bagian bergaya koran */
+    .sec-head{display:grid;gap:1rem 2rem;border-top:2px solid var(--teks);padding-top:1rem;margin-bottom:3rem}
+    @media(min-width:1024px){
+      .sec-head{grid-template-columns:3fr 9fr;margin-bottom:4rem}
+      .sec-head > .sec-lead{grid-column:2}
+    }
+    .sec-head.on-dark{border-top-color:#fff}
 
-    .aqua-gradient{background:linear-gradient(135deg,#0E7C86,#2BB3C0)}
-    .text-gradient{background:linear-gradient(90deg,#FFD166,#8FE3EC);-webkit-background-clip:text;background-clip:text;color:transparent}
-    .grid-paper{background-color:#E6F5F7;background-image:linear-gradient(rgba(14,124,134,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(14,124,134,.07) 1px,transparent 1px);background-size:28px 28px}
-    .dot{width:10px;height:10px;border-radius:999px;display:inline-block}
-    .tab-active{color:#0E7C86;border-bottom:2px solid #0E7C86}
-    .dark .tab-active{color:#5FD3E0;border-color:#5FD3E0}
+    /* Elemen penanda lapangan */
+    .stamp{display:inline-block;border:1px dashed currentColor;padding:3px 9px;font:500 10px/1.3 'DM Mono',monospace;letter-spacing:.14em;text-transform:uppercase}
+    .sq{display:inline-block;width:9px;height:9px}
+    .tick{position:absolute;width:12px;height:12px;border-color:var(--teks);border-style:solid;border-width:0}
+    .tick.tl{top:-1px;left:-1px;border-top-width:2px;border-left-width:2px}
+    .tick.tr{top:-1px;right:-1px;border-top-width:2px;border-right-width:2px}
+    .tick.bl{bottom:-1px;left:-1px;border-bottom-width:2px;border-left-width:2px}
+    .tick.br{bottom:-1px;right:-1px;border-bottom-width:2px;border-right-width:2px}
+
+    /* Garis kontur topografi */
+    .topo{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600' fill='none' stroke='%230E7C86' stroke-opacity='.2' stroke-width='1'%3E%3Cg transform='rotate(-18 200 220)'%3E%3Cellipse cx='200' cy='220' rx='40' ry='26'/%3E%3Cellipse cx='200' cy='220' rx='80' ry='54'/%3E%3Cellipse cx='200' cy='220' rx='125' ry='86'/%3E%3Cellipse cx='200' cy='220' rx='175' ry='122'/%3E%3C/g%3E%3Cg transform='rotate(24 440 430)'%3E%3Cellipse cx='440' cy='430' rx='36' ry='22'/%3E%3Cellipse cx='440' cy='430' rx='76' ry='50'/%3E%3Cellipse cx='440' cy='430' rx='120' ry='82'/%3E%3C/g%3E%3C/svg%3E");background-size:600px 600px}
+    .topo-light{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600' fill='none' stroke='%23FFFFFF' stroke-opacity='.13' stroke-width='1'%3E%3Cg transform='rotate(-18 200 220)'%3E%3Cellipse cx='200' cy='220' rx='40' ry='26'/%3E%3Cellipse cx='200' cy='220' rx='80' ry='54'/%3E%3Cellipse cx='200' cy='220' rx='125' ry='86'/%3E%3Cellipse cx='200' cy='220' rx='175' ry='122'/%3E%3C/g%3E%3Cg transform='rotate(24 440 430)'%3E%3Cellipse cx='440' cy='430' rx='36' ry='22'/%3E%3Cellipse cx='440' cy='430' rx='76' ry='50'/%3E%3Cellipse cx='440' cy='430' rx='120' ry='82'/%3E%3C/g%3E%3C/svg%3E");background-size:600px 600px}
+
+    /* Tombol */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.9rem 1.5rem;font-weight:700;font-size:.875rem;border:1px solid transparent;border-radius:2px;cursor:pointer;transition:filter .2s,background .2s,color .2s}
+    .btn-teal{background:#0E7C86;color:#fff}
+    .btn-teal:hover{filter:brightness(1.15)}
+    .btn-sun{background:#FFD166;color:#0B2A33}
+    .btn-sun:hover{filter:brightness(1.06)}
+    .btn-line{background:transparent;color:var(--teks);border-color:var(--teks)}
+    .btn-line:hover{background:var(--teks);color:var(--bg)}
+    .btn-line-light{background:transparent;color:#fff;border-color:rgba(255,255,255,.7)}
+    .btn-line-light:hover{background:#fff;color:#0B2A33}
+    .link-arrow{display:inline-flex;align-items:center;gap:.4rem;font-weight:700;font-size:.875rem;color:var(--accent);border-bottom:1px solid currentColor;padding-bottom:2px;background:none;cursor:pointer}
+    .link-arrow:hover{opacity:.75}
+
+    /* Input garis bawah */
+    .field,.modal-card input,.modal-card textarea,.modal-card select{width:100%;background:transparent;border:0;border-bottom:1px solid var(--teks);border-radius:0;padding:.7rem 0;outline:none;color:inherit;font:inherit}
+    .field:focus,.modal-card input:focus,.modal-card textarea:focus,.modal-card select:focus{border-bottom-color:var(--accent);box-shadow:0 1px 0 var(--accent)}
+    .field option,.modal-card select option{color:#0B2A33}
+    .field::placeholder,.modal-card input::placeholder,.modal-card textarea::placeholder{color:var(--teks-lembut);opacity:.7}
+
+    /* Navigasi */
+    #site-header{transition:background .25s,border-color .25s;border-bottom:1px solid transparent}
+    #site-header.hero-nav{background:transparent;border-bottom-color:rgba(255,255,255,.2);color:#fff}
+    #site-header.nav-scrolled{background:var(--bg);border-bottom-color:var(--teks);color:var(--teks)}
+    .nav-links a{display:inline-flex;gap:.5rem;align-items:baseline;font-size:.8rem;font-weight:600;letter-spacing:.02em;padding:.25rem 0;border-bottom:1px solid transparent;transition:border-color .2s}
+    .nav-links a:hover{border-bottom-color:currentColor}
+    .nav-num{font:500 10px 'DM Mono',monospace;opacity:.6}
+    .nav-btn{display:flex;align-items:center;justify-content:center;height:2.5rem;border:1px solid color-mix(in srgb,currentColor 40%,transparent);background:transparent;color:inherit;border-radius:2px;font-size:.75rem;font-weight:700;transition:background .2s}
+    .nav-btn:hover{background:color-mix(in srgb,currentColor 12%,transparent)}
+    .logo-mark{display:grid;place-items:center;width:2.5rem;height:2.5rem;border:1px solid currentColor;border-radius:2px}
+
+    /* Tabel statistik */
+    .stat-row{display:grid;gap:.5rem 1.5rem;align-items:end;padding:1.75rem 0;border-top:1px solid var(--line);grid-template-columns:1fr}
+    .stat-row:last-child{border-bottom:1px solid var(--line)}
+    @media(min-width:768px){.stat-row{grid-template-columns:4rem 1fr auto;align-items:center}}
+    .stat-num{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(3.2rem,8vw,6rem);line-height:1;letter-spacing:-.04em;color:var(--accent)}
+    .stat-num small{font-size:.45em;letter-spacing:0}
+
+    /* Baris daftar */
+    .row{display:grid;gap:.75rem 1.25rem;align-items:center;padding:1.25rem 0;border-top:1px solid var(--line);transition:background .2s}
+    .row:last-child{border-bottom:1px solid var(--line)}
+    .log-line{display:flex;justify-content:space-between;gap:1rem;align-items:baseline;padding:.9rem 0;border-top:1px dashed var(--line)}
+    .bar{height:3px;background:var(--line)}
+    .bar > i{display:block;height:100%;background:var(--accent-fill)}
+
+    /* Baris laporan (komunitas, di atas latar gelap) */
+    .report-card{display:grid;grid-template-columns:2.2rem 2rem 1fr auto 1.4rem;gap:1rem;align-items:center;width:100%;text-align:left;padding:1.4rem .25rem;border-top:1px solid rgba(255,255,255,.2);color:#fff;transition:background .2s,padding .2s;background:transparent;cursor:pointer}
+    .report-card:last-child{border-bottom:1px solid rgba(255,255,255,.2)}
+    .report-card:hover{background:rgba(255,255,255,.06);padding-left:.9rem}
+    .report-card img{mix-blend-mode:screen}
+    .report-card .pts{font:500 1.15rem 'DM Mono',monospace;color:#FFD166}
+
+    /* Agenda & kursus */
+    .agenda-row{grid-template-columns:1fr}
+    @media(min-width:768px){.agenda-row{grid-template-columns:8rem 1fr auto}}
+    .course-row{grid-template-columns:1fr}
+    @media(min-width:768px){.course-row{grid-template-columns:3rem 3rem 1fr 11rem auto}}
+    .tab-active{color:var(--accent);border-bottom:2px solid var(--accent)}
+    .tab-idle{color:var(--teks-lembut);border-bottom:2px solid transparent}
+
+    .frame{position:relative;border:1px solid var(--teks);background:var(--card)}
     .map-height{height:540px}
+    .sheet{position:relative;border:1px dashed var(--teks);background:var(--card)}
 
-    @keyframes fade-up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-    .animate-fade-up{animation:fade-up .8s ease both}
-
-    #site-header{transition:background .3s,border-color .3s,box-shadow .3s}
-    #site-header.hero-nav{background:transparent;border-color:transparent}
-    #site-header.hero-nav .brand-text{color:#fff}
-    #site-header.hero-nav .brand-accent{color:#FFD166}
-    #site-header.hero-nav .nav-ghost{color:#fff}
-    #site-header.nav-scrolled{background:rgba(244,251,252,.82);backdrop-filter:blur(18px);border-color:var(--border);box-shadow:0 8px 30px -18px rgba(14,124,134,.35)}
-    #site-header.nav-scrolled .brand-text{color:var(--teks)}
-    #site-header.nav-scrolled .brand-accent{color:#0E7C86}
-    #site-header.nav-scrolled .nav-ghost{color:var(--teks)}
-    .dark #site-header.nav-scrolled{background:rgba(7,26,32,.85)}
-    .dark #site-header.nav-scrolled .brand-accent{color:#5FD3E0}
-    .nav-pill{background:rgba(255,255,255,.72);backdrop-filter:blur(14px);border:1px solid var(--border)}
-    .dark .nav-pill{background:rgba(15,42,51,.8)}
-    .nav-link{color:var(--teks);opacity:.85;transition:color .2s,opacity .2s}
-    .nav-link:hover{color:#0E7C86;opacity:1}
-    .dark .nav-link:hover{color:#5FD3E0}
-    .nav-btn{background:var(--card);border:1px solid var(--border);color:var(--teks)}
-    .nav-btn:hover{background:var(--bg)}
-
-    .modal-backdrop{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(4,22,28,.7);backdrop-filter:blur(5px)}
+    /* Modal & toast */
+    .modal-backdrop{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(4,22,28,.72)}
     .modal-backdrop.open{display:flex}
-    .modal-card{width:min(100%,520px);max-height:90vh;overflow:auto;background:var(--card);color:var(--teks);border-radius:1.5rem;box-shadow:0 24px 80px rgba(0,0,0,.28)}
-    .modal-card input,.modal-card textarea,.modal-card select{width:100%;border:1px solid var(--border);border-radius:.75rem;padding:12px;outline:none;background:transparent;color:inherit}
-    .modal-card input:focus,.modal-card textarea:focus,.modal-card select:focus{border-color:#0E7C86}
-    .toast{transform:translateY(20px);opacity:0;pointer-events:none;transition:.25s}
-    .toast.show{transform:translateY(0);opacity:1;pointer-events:auto}
+    .modal-card{width:min(100%,520px);max-height:90vh;overflow:auto;background:var(--card);color:var(--teks);border:1px solid var(--teks);border-radius:2px}
+    .toast{position:fixed;left:50%;bottom:1.25rem;z-index:70;transform:translate(-50%,20px);opacity:0;pointer-events:none;transition:.25s;background:#0B2A33;color:#fff;border-left:4px solid #FFD166;padding:.8rem 1.25rem;font-size:.875rem;font-weight:600;max-width:calc(100vw - 2rem)}
+    .toast.show{transform:translate(-50%,0);opacity:1;pointer-events:auto}
 
-    #language-menu{display:none!important;z-index:100!important;color:#0B2A33!important;background:#fff!important;border-radius:.75rem}
+    #language-menu{display:none!important;z-index:100!important;color:#0B2A33!important;background:#fff!important;border:1px solid #0B2A33}
     #language-menu.open{display:block!important}
-    #language-menu button{color:#0B2A33!important;background:#fff!important;border-radius:.5rem}
-    #language-menu button:hover{background:#E6F5F7!important}
+    #language-menu button{color:#0B2A33!important;background:#fff!important}
+    #language-menu button:hover{background:#E3F4F6!important}
 
+    @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+    .rise{animation:rise .7s ease both}
+    @media(prefers-reduced-motion:reduce){.rise{animation:none}html{scroll-behavior:auto!important}}
+
+    /* Peta */
     .leaflet-container{font-family:'DM Sans',sans-serif}
-    .leaflet-popup-content-wrapper{background:var(--panel)!important;color:var(--teks)!important;border-radius:12px}
+    .leaflet-popup-content-wrapper{background:var(--panel)!important;color:var(--teks)!important;border-radius:2px!important;border:1px solid var(--teks)}
     .leaflet-popup-content{font-size:var(--font-popup)!important;line-height:1.55!important;margin:12px 16px!important}
     .leaflet-popup-tip{background:var(--panel)!important}
+    .leaflet-bar a{border-radius:0!important}
     .leaflet-control-attribution{font-size:var(--font-atribusi)!important;background:var(--panel-atribusi)!important;color:var(--teks-lembut)!important}
     .leaflet-control-attribution a{color:var(--link)!important}
-    .map-legend{font-size:var(--font-legend);color:var(--teks)}
-    #load-reports{font-size:var(--font-legend);color:var(--teks)}
+    #load-reports{color:var(--teks)}
   </style>
 </head>
 <body class="overflow-x-hidden">
-  <header id="site-header" class="fixed inset-x-0 top-0 z-50 border-b border-transparent">
-    <nav class="mx-auto flex h-[72px] max-w-[1280px] items-center justify-between gap-6 px-5 lg:px-8" aria-label="Navigasi utama">
-      <a href="#top" class="group flex shrink-0 items-center gap-2.5">
-        <span class="aqua-gradient grid h-10 w-10 place-items-center overflow-hidden rounded-xl shadow-sm transition-transform group-hover:scale-105">
-          <i class="ph ph-drop text-2xl text-white"></i>
-        </span>
-        <span class="brand-text font-display text-xl font-extrabold tracking-tight">Belik<span class="brand-accent">Hub</span></span>
+  <header id="site-header" class="hero-nav fixed inset-x-0 top-0 z-50">
+    <nav class="wrap flex h-[72px] items-center justify-between gap-6" aria-label="Navigasi utama">
+      <a href="#top" class="flex shrink-0 items-center gap-3">
+        <span class="logo-mark"><i class="ph ph-drop text-xl"></i></span>
+        <span class="serif text-xl font-semibold tracking-tight">BelikHub</span>
       </a>
 
-      <div class="nav-pill hidden items-center gap-8 rounded-2xl px-6 py-2.5 shadow-sm lg:flex">
-        <a href="#map" class="nav-link text-sm font-semibold">Map</a>
-        <a href="#dashboard" class="nav-link text-sm font-semibold">Dashboard</a>
-        <a href="#community" class="nav-link text-sm font-semibold">Community</a>
-        <a href="#pulangkan-air" class="nav-link text-sm font-semibold">Pulangkan Air</a>
-        <a href="#learn" class="nav-link text-sm font-semibold">Learn</a>
+      <div class="nav-links hidden items-center gap-8 lg:flex">
+        <a href="#map"><span class="nav-num">01</span><span class="nav-label">Map</span></a>
+        <a href="#dashboard"><span class="nav-num">02</span><span class="nav-label">Dashboard</span></a>
+        <a href="#community"><span class="nav-num">03</span><span class="nav-label">Community</span></a>
+        <a href="#pulangkan-air"><span class="nav-num">04</span><span class="nav-label">Pulangkan Air</span></a>
+        <a href="#learn"><span class="nav-num">05</span><span class="nav-label">Learn</span></a>
       </div>
 
       <div class="hidden items-center gap-3 md:flex">
-        <button id="lang-toggle" class="nav-btn flex h-10 items-center justify-center rounded-xl px-3 text-xs font-bold transition-colors">ID</button>
-        <button id="theme-toggle" class="nav-btn flex h-10 w-10 items-center justify-center rounded-xl transition-colors" aria-label="Ganti tema">
+        <button id="lang-toggle" class="nav-btn px-3" aria-label="Bahasa">ID</button>
+        <button id="theme-toggle" class="nav-btn w-10" aria-label="Ganti tema">
           <img id="icon-moon" src="/icons/moon.webp" alt="Dark Mode" class="h-5 w-5 object-contain" />
           <img id="icon-sun" src="/icons/sun.webp" alt="Light Mode" class="hidden h-5 w-5 object-contain" />
         </button>
-        <a href="#" id="login-btn" class="nav-ghost rounded-xl px-5 py-2.5 text-sm font-bold transition-colors hover:opacity-80">Masuk</a>
-        <button id="logout-btn" class="nav-ghost hidden rounded-xl px-5 py-2.5 text-sm font-bold transition-colors hover:opacity-80">Keluar</button>
-        <a href="#kemitraan" class="aqua-gradient rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:shadow-hover hover:brightness-110">Join now</a>
+        <a href="#" id="login-btn" class="px-3 py-2 text-sm font-bold hover:opacity-70">Masuk</a>
+        <button id="logout-btn" class="hidden px-3 py-2 text-sm font-bold hover:opacity-70">Keluar</button>
+        <a href="#kemitraan" class="btn btn-teal">Join now</a>
       </div>
 
-      <button id="menu-toggle" class="nav-btn grid h-10 w-10 place-items-center rounded-xl shadow-sm md:hidden" aria-label="Buka menu">
-        <i class="ph ph-list text-xl"></i>
-      </button>
+      <button id="menu-toggle" class="nav-btn w-10 md:hidden" aria-label="Buka menu"><i class="ph ph-list text-xl"></i></button>
     </nav>
 
-    <div id="mobile-menu" class="fixed inset-0 z-[60] hidden bg-ink/95 backdrop-blur-xl transition-opacity md:hidden">
-      <div class="flex h-full flex-col px-6 py-6">
+    <div id="mobile-menu" class="fixed inset-0 z-[60] hidden bg-ink md:hidden">
+      <div class="topo-light absolute inset-0"></div>
+      <div class="relative flex h-full flex-col px-6 py-6 text-white">
         <div class="mb-10 flex items-center justify-between">
-          <span class="font-display text-2xl font-extrabold text-white">Belik<span class="text-lime">Hub</span></span>
-          <button id="close-menu" class="grid h-10 w-10 place-items-center rounded-xl bg-white/10 text-white hover:bg-white/20" aria-label="Tutup menu">
-            <i class="ph ph-x text-xl"></i>
-          </button>
+          <span class="serif text-2xl font-semibold">BelikHub</span>
+          <button id="close-menu" class="nav-btn w-10" aria-label="Tutup menu"><i class="ph ph-x text-xl"></i></button>
         </div>
-        <div class="flex flex-col gap-6 font-display text-2xl font-bold text-white">
-          <a href="#map" class="mobile-link transition-colors hover:text-lime">Map</a>
-          <a href="#dashboard" class="mobile-link transition-colors hover:text-lime">Dashboard</a>
-          <a href="#community" class="mobile-link transition-colors hover:text-lime">Community</a>
-          <a href="#pulangkan-air" class="mobile-link transition-colors hover:text-lime">Pulangkan Air</a>
-          <a href="#learn" class="mobile-link transition-colors hover:text-lime">Learn</a>
-          <a href="#media" class="mobile-link transition-colors hover:text-lime">Media</a>
+        <div class="serif flex flex-col text-3xl font-semibold">
+          <a href="#map" class="mobile-link border-t border-white/20 py-4 hover:text-sun">Map</a>
+          <a href="#dashboard" class="mobile-link border-t border-white/20 py-4 hover:text-sun">Dashboard</a>
+          <a href="#community" class="mobile-link border-t border-white/20 py-4 hover:text-sun">Community</a>
+          <a href="#pulangkan-air" class="mobile-link border-t border-white/20 py-4 hover:text-sun">Pulangkan Air</a>
+          <a href="#learn" class="mobile-link border-t border-white/20 py-4 hover:text-sun">Learn</a>
+          <a href="#media" class="mobile-link border-y border-white/20 py-4 hover:text-sun">Media</a>
         </div>
         <div class="mt-auto flex flex-col gap-3">
-          <a href="#" id="login-btn-mobile" class="flex w-full items-center justify-center rounded-xl border border-white/20 bg-white/10 py-4 text-center text-sm font-bold text-white hover:bg-white/20">Masuk</a>
-          <a href="#kemitraan" class="mobile-link flex w-full items-center justify-center rounded-xl bg-lime py-4 text-center text-sm font-bold text-ink hover:bg-white">Join now</a>
+          <a href="#" id="login-btn-mobile" class="btn btn-line-light w-full">Masuk</a>
+          <a href="#kemitraan" class="mobile-link btn btn-sun w-full">Join now</a>
         </div>
       </div>
     </div>
   </header>
 
   <main id="top">
-    <section class="relative flex min-h-[100svh] items-center overflow-hidden bg-ink pt-20">
-      <video autoplay loop muted playsinline preload="metadata" class="absolute inset-0 h-full w-full object-cover opacity-60">
+    <!-- HERO -->
+    <section class="relative flex min-h-[100svh] flex-col overflow-hidden bg-ink pt-[72px] text-white">
+      <video autoplay loop muted playsinline preload="metadata" class="absolute inset-0 h-full w-full object-cover opacity-50">
         <source src="https://cdn.coverr.co/videos/coverr-waterfall-in-the-forest-9382/1080p.mp4" type="video/mp4">
       </video>
-      <div class="absolute inset-0 bg-gradient-to-r from-[#062830]/90 via-[#0E7C86]/45 to-transparent"></div>
-      <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#F4FBFC]/20 to-transparent"></div>
+      <div class="absolute inset-0" style="background:rgba(6,40,48,.68)"></div>
+      <div class="topo-light absolute inset-0"></div>
 
-      <div class="relative z-10 mx-auto w-full max-w-[1280px] px-5 py-20 lg:px-8">
-        <div class="animate-fade-up max-w-3xl">
-          <div class="mb-8 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 backdrop-blur-md">
-            <span class="flex h-2 w-2 animate-pulse rounded-full bg-lime"></span>
-            <p class="font-mono text-xs uppercase tracking-widest text-white">Community-driven restoration</p>
+      <div class="wrap relative z-10 flex flex-1 items-center py-16">
+        <div class="rise max-w-4xl">
+          <p class="label mb-8 flex items-center gap-3 text-white/80"><span class="stamp">Edisi 2026</span> Pemulihan air berbasis komunitas</p>
+          <h1 class="h1">Air yang hidup.<br><em class="c-sun" style="font-weight:500">Komunitas yang bergerak.</em></h1>
+          <p class="mt-8 max-w-xl text-lg leading-relaxed text-white/80 md:text-xl">Pantau mata air, ikut memulihkan ekosistemnya, dan lihat kontribusi komunitas tumbuh dalam satu ruang terbuka.</p>
+          <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+            <a href="#map" class="btn btn-sun"><span id="hero-monitor-text">Mulai monitoring</span> <i class="ph ph-arrow-right text-lg"></i></a>
+            <a href="#community" class="btn btn-line-light"><span id="hero-join-text">Gabung komunitas</span></a>
           </div>
+        </div>
+      </div>
 
-          <h1 class="mb-6 font-display text-5xl font-extrabold leading-[1.1] tracking-tighter text-white md:text-7xl lg:text-8xl" style="font-size:revert-layer">
-            Air yang hidup.<br>
-            <span class="text-gradient">Komunitas yang bergerak.</span>
-          </h1>
-
-          <p class="mb-10 max-w-xl text-lg leading-relaxed text-white/80 md:text-xl">
-            Pantau mata air, ikut memulihkan ekosistemnya, dan lihat kontribusi komunitas tumbuh dalam satu ruang terbuka.
-          </p>
-
-          <div class="flex flex-col gap-4 sm:flex-row">
-            <a href="#map" class="inline-flex items-center justify-center gap-2 rounded-xl bg-lime px-8 py-4 text-sm font-bold text-ink transition-all hover:scale-105 hover:bg-lime/90">
-              <span id="hero-monitor-text">Mulai monitoring</span> <i class="ph ph-arrow-right text-lg"></i>
-            </a>
-            <a href="#community" class="inline-flex items-center justify-center rounded-xl border border-white/40 bg-white/10 px-8 py-4 text-sm font-bold text-white backdrop-blur-md transition-all hover:bg-white hover:text-ink">
-              <span id="hero-join-text">Gabung komunitas</span>
-            </a>
-          </div>
+      <div class="relative z-10 border-t border-white/25">
+        <div class="wrap grid grid-cols-1 sm:grid-cols-3">
+          <p class="label border-white/25 py-4 text-white/70 sm:border-r sm:pr-4">Jawa Tengah · DIY · Jawa Timur</p>
+          <p class="label border-white/25 py-4 text-white/70 sm:border-r sm:px-4">Koordinat publik dibulatkan ±5 km</p>
+          <p class="label py-4 text-white/70 sm:pl-4">Data diperbarui oleh relawan</p>
         </div>
       </div>
     </section>
 
-    <section id="dashboard" class="border-y border-line bg-white py-20 lg:py-32">
-      <div class="mx-auto max-w-[1280px] px-5 lg:px-8">
-        <div class="mb-12 text-center">
-          <p class="eyebrow text-blue">Real-time impact</p>
-          <h2 class="display mt-4 text-4xl font-extrabold leading-[1.1] tracking-tighter sm:text-5xl">Dampak yang bisa dilihat.</h2>
-          <p class="mx-auto mt-5 max-w-2xl leading-relaxed text-ink/70">Setiap laporan lapangan menjadi bagian dari gambaran yang lebih besar tentang pemulihan air di Indonesia.</p>
+    <!-- 01 MAP -->
+    <section id="map" class="sec topo">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="label"><span class="c-accent">§ 01</span> — Peta mata air</p>
+          <h2 class="h2">Lihat kondisi mata air.</h2>
+          <p class="muted sec-lead max-w-2xl">Jelajahi titik yang dipantau komunitas. Lokasi publik disamarkan dalam radius 5 km untuk menjaga keamanan sumber air.</p>
         </div>
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div class="soft-card p-7">
-            <span class="aqua-gradient mb-4 grid h-10 w-10 place-items-center rounded-xl text-white"><i class="ph ph-binoculars text-xl"></i></span>
-            <p class="eyebrow text-slate-400">Monitored springs</p>
-            <p class="display mt-3 text-5xl font-extrabold leading-[1.1] tracking-tighter text-blue">500<span class="text-2xl">+</span></p>
-            <p class="mt-2 text-sm leading-relaxed text-ink/70">mata air terpantau komunitas</p>
-          </div>
-          <div class="soft-card p-7">
-            <span class="aqua-gradient mb-4 grid h-10 w-10 place-items-center rounded-xl text-white"><i class="ph ph-drop text-xl"></i></span>
-            <p class="eyebrow text-slate-400">Restored springs</p>
-            <p class="display mt-3 text-5xl font-extrabold leading-[1.1] tracking-tighter text-forest">30<span class="text-2xl">+</span></p>
-            <p class="mt-2 text-sm leading-relaxed text-ink/70">lokasi dengan tindakan pemulihan</p>
-          </div>
-          <div class="soft-card p-7">
-            <span class="aqua-gradient mb-4 grid h-10 w-10 place-items-center rounded-xl text-white"><i class="ph ph-tree text-xl"></i></span>
-            <p class="eyebrow text-slate-400">Native trees</p>
-            <p class="display mt-3 text-5xl font-extrabold leading-[1.1] tracking-tighter text-forest">20k<span class="text-2xl">+</span></p>
-            <p class="mt-2 text-sm leading-relaxed text-ink/70">pohon endemik ditanam</p>
-          </div>
-          <div class="soft-card p-7">
-            <span class="aqua-gradient mb-4 grid h-10 w-10 place-items-center rounded-xl text-white"><i class="ph ph-stack text-xl"></i></span>
-            <p class="eyebrow text-slate-400">Infiltration pits</p>
-            <p class="display mt-3 text-5xl font-extrabold leading-[1.1] tracking-tighter text-forest">200<span class="text-2xl">+</span></p>
-            <p class="mt-2 text-sm leading-relaxed text-ink/70">rorak untuk recharge air tanah</p>
-          </div>
-        </div>
-        <div class="mt-10 grid gap-6 lg:grid-cols-2">
-          <div class="soft-card p-6">
-            <div class="flex items-center justify-between">
-              <h3 class="font-display text-xl font-bold leading-[1.1] tracking-tighter">Aktivitas bulanan</h3>
-              <button class="flex items-center gap-1 text-xs font-bold text-blue">Lihat arsip <i class="ph ph-arrow-up-right"></i></button>
-            </div>
-            <div class="mt-6 space-y-4">
-              <div class="flex items-center justify-between text-sm leading-relaxed text-ink/70">
-                <span class="flex items-center gap-3"><span class="dot bg-aqua"></span>Survei Mata Air</span>
-                <b class="text-forest">42</b>
-              </div>
-              <div class="flex items-center justify-between text-sm leading-relaxed text-ink/70">
-                <span class="flex items-center gap-3"><span class="dot bg-forest"></span>Penanaman Pohon</span>
-                <b class="text-forest">18</b>
-              </div>
-              <div class="flex items-center justify-between text-sm leading-relaxed text-ink/70">
-                <span class="flex items-center gap-3"><span class="dot bg-orange-400"></span>Pembangunan Rorak</span>
-                <b class="text-forest">7</b>
-              </div>
-            </div>
-          </div>
-          <div class="soft-card p-6">
-            <div class="flex items-center justify-between">
-              <h3 class="font-display text-xl font-bold leading-[1.1] tracking-tighter">Aktivitas terbaru</h3>
-              <button class="flex items-center gap-1 text-xs font-bold text-blue">Semua laporan <i class="ph ph-arrow-up-right"></i></button>
-            </div>
-            <div class="mt-6 space-y-4">
-              <div class="flex items-center justify-between text-sm leading-relaxed text-ink/70">
-                <span class="flex items-center gap-3"><span class="dot bg-lime"></span>Tuk Bismo</span>
-                <span class="text-slate-400">04 Nov</span>
-              </div>
-              <div class="flex items-center justify-between text-sm leading-relaxed text-ink/70">
-                <span class="flex items-center gap-3"><span class="dot bg-forest"></span>Rowo Santen</span>
-                <span class="text-slate-400">18 Okt</span>
-              </div>
-              <div class="flex items-center justify-between text-sm leading-relaxed text-ink/70">
-                <span class="flex items-center gap-3"><span class="dot bg-aqua"></span>Wonomerto</span>
-                <span class="text-slate-400">12 Okt</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <section id="map" class="py-20 lg:py-32">
-      <div class="mx-auto max-w-[1280px] px-5 lg:px-8">
-        <div class="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <div>
-            <p class="eyebrow text-blue">Interactive spring map</p>
-            <h2 class="display mt-4 text-4xl font-extrabold leading-[1.1] tracking-tighter sm:text-5xl">Lihat kondisi mata air.</h2>
-            <p class="muted mt-4 max-w-2xl leading-relaxed">Jelajahi titik yang dipantau komunitas. Lokasi publik disamarkan dalam radius 5 km untuk menjaga keamanan sumber air.</p>
-          </div>
-          <button id="locate-btn" class="nav-btn inline-flex items-center self-start rounded-xl px-4 py-3 text-sm font-bold transition-colors md:self-auto">
-            <i class="ph ph-crosshair mr-2 text-lg text-blue"></i>Gunakan lokasi saya
-          </button>
-        </div>
-        <div class="soft-card mt-8 overflow-hidden">
-          <div class="flex flex-col gap-3 border-b border-line p-4 sm:flex-row">
-            <div class="relative flex-1">
-              <i class="ph ph-magnifying-glass absolute left-3 top-3.5 text-lg text-slate-400"></i>
-              <input id="map-search" type="search" placeholder="Cari mata air, desa, provinsi..." class="w-full rounded-xl border border-line bg-transparent py-3 pl-10 pr-4 text-sm outline-none focus:border-forest" />
-            </div>
-            <select id="map-filter" class="rounded-xl border border-line bg-transparent px-4 py-3 text-sm outline-none focus:border-forest">
-              <option value="all">Semua titik</option>
-              <option value="healthy">Sehat</option>
-              <option value="restored">Dipulihkan</option>
-              <option value="attention">Perlu perhatian</option>
-            </select>
+        <div class="frame">
+          <i class="tick tl"></i><i class="tick tr"></i><i class="tick bl"></i><i class="tick br"></i>
+          <div class="flex flex-col gap-4 border-b p-4 sm:flex-row sm:items-end" style="border-color:var(--teks)">
+            <label class="block flex-1"><span class="label muted">Cari titik</span>
+              <input id="map-search" type="search" placeholder="Mata air, desa, provinsi…" class="field" /></label>
+            <label class="block sm:w-56"><span class="label muted">Filter status</span>
+              <select id="map-filter" class="field">
+                <option value="all">Semua titik</option>
+                <option value="healthy">Sehat</option>
+                <option value="restored">Dipulihkan</option>
+                <option value="attention">Perlu perhatian</option>
+              </select></label>
+            <button id="locate-btn" class="btn btn-line sm:self-end"><i class="ph ph-crosshair text-lg"></i>Gunakan lokasi saya</button>
           </div>
           <div id="map-canvas" class="map-height"></div>
-          <div class="flex flex-wrap items-center justify-between gap-3 border-t border-line p-4 text-[12px] leading-relaxed">
-            <span class="map-legend flex items-center gap-4">
-              <span class="flex items-center gap-2"><i class="dot bg-aqua"></i>Sehat</span>
-              <span class="flex items-center gap-2"><i class="dot bg-forest"></i>Dipulihkan</span>
-              <span class="flex items-center gap-2"><i class="dot bg-orange-400"></i>Perhatian</span>
+          <div class="flex flex-wrap items-center justify-between gap-3 border-t p-4 text-sm" style="border-color:var(--teks)">
+            <span class="label flex flex-wrap items-center gap-5">
+              <span class="flex items-center gap-2"><i class="sq" style="background:#2BB3C0"></i>Sehat</span>
+              <span class="flex items-center gap-2"><i class="sq" style="background:#0E7C86"></i>Dipulihkan</span>
+              <span class="flex items-center gap-2"><i class="sq" style="background:#f59e0b"></i>Perhatian</span>
             </span>
             <button id="load-reports" class="flex items-center gap-2 font-bold">Muat laporan (24/431) <i class="ph ph-arrow-down"></i></button>
           </div>
         </div>
+        <p class="label muted mt-3">Fig. 1 — Titik pantau komunitas. Sumber peta: OpenStreetMap.</p>
       </div>
     </section>
 
-    <section id="community" class="bg-ink py-20 text-white lg:py-32" style="background-image:radial-gradient(circle at 85% 10%,rgba(43,179,192,.28),transparent 45%)">
-      <div class="mx-auto max-w-[1280px] px-5 lg:px-8">
-        <div class="grid gap-14 lg:grid-cols-[.75fr_1.25fr]">
+    <!-- 02 DASHBOARD -->
+    <section id="dashboard" class="sec">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="label"><span class="c-accent">§ 02</span> — Dampak nyata</p>
+          <h2 class="h2">Dampak yang bisa dilihat.</h2>
+          <p class="muted sec-lead max-w-2xl">Setiap laporan lapangan menjadi bagian dari gambaran yang lebih besar tentang pemulihan air di Indonesia.</p>
+        </div>
+
+        <div>
+          <div class="stat-row">
+            <p class="label muted">01</p>
+            <div><p class="h3">Monitored springs</p><p class="muted mt-1 text-sm">mata air terpantau komunitas</p></div>
+            <p class="stat-num">500<small>+</small></p>
+          </div>
+          <div class="stat-row">
+            <p class="label muted">02</p>
+            <div><p class="h3">Restored springs</p><p class="muted mt-1 text-sm">lokasi dengan tindakan pemulihan</p></div>
+            <p class="stat-num">30<small>+</small></p>
+          </div>
+          <div class="stat-row">
+            <p class="label muted">03</p>
+            <div><p class="h3">Native trees</p><p class="muted mt-1 text-sm">pohon endemik ditanam</p></div>
+            <p class="stat-num">20k<small>+</small></p>
+          </div>
+          <div class="stat-row">
+            <p class="label muted">04</p>
+            <div><p class="h3">Infiltration pits</p><p class="muted mt-1 text-sm">rorak untuk recharge air tanah</p></div>
+            <p class="stat-num">200<small>+</small></p>
+          </div>
+        </div>
+
+        <div class="mt-16 grid gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
-            <p class="eyebrow text-lime">Community activity</p>
-            <h2 class="display mt-5 text-4xl font-extrabold leading-[1.1] tracking-tighter sm:text-5xl">Kontribusi kecil. Jejak yang terlihat.</h2>
-            <p class="mt-5 leading-relaxed text-white/70">Isi formulir ringan dari browser, kumpulkan poin, dan bantu tim lapangan memahami kondisi mata air secara berkala.</p>
-            <button id="points-btn" class="mt-8 flex items-center gap-2 rounded-xl border border-white/30 px-4 py-3 text-sm font-bold transition hover:bg-white hover:text-ink"><span id="points-text">Cara dapat poin</span> <i class="ph ph-arrow-up-right text-lg"></i></button>
+            <div class="flex items-baseline justify-between border-b-2 pb-3" style="border-color:var(--teks)">
+              <h3 class="h3">Aktivitas bulanan</h3>
+              <button class="link-arrow">Lihat arsip <i class="ph ph-arrow-up-right"></i></button>
+            </div>
+            <div class="mt-6 space-y-6">
+              <div><div class="mb-2 flex items-baseline justify-between text-sm"><span>Survei Mata Air</span><b class="label c-accent">42</b></div><div class="bar"><i style="width:100%"></i></div></div>
+              <div><div class="mb-2 flex items-baseline justify-between text-sm"><span>Penanaman Pohon</span><b class="label c-accent">18</b></div><div class="bar"><i style="width:43%"></i></div></div>
+              <div><div class="mb-2 flex items-baseline justify-between text-sm"><span>Pembangunan Rorak</span><b class="label c-accent">07</b></div><div class="bar"><i style="width:17%"></i></div></div>
+            </div>
           </div>
           <div>
-            <div class="grid gap-3 sm:grid-cols-2">
-              <button data-report="Survei Mata Air" class="report-card flex flex-col items-start justify-between rounded-2xl border border-white/15 bg-white/5 p-5 text-left transition hover:-translate-y-0.5 hover:bg-white/10">
-                <span><img src="/icons/water-drop.webp" alt="Survei Mata Air" class="mb-3 h-8 w-8 object-contain drop-shadow-sm" /><strong class="block">Survei Mata Air</strong><small class="mt-1 block text-white/60">Cek kondisi dan debit</small></span>
-                <b class="text-lime">+100</b>
-              </button>
-              <button data-report="Restorasi Mata Air" class="report-card flex flex-col items-start justify-between rounded-2xl border border-white/15 bg-white/5 p-5 text-left transition hover:-translate-y-0.5 hover:bg-white/10">
-                <span><img src="/icons/shovel.webp" alt="Restorasi" class="mb-3 h-8 w-8 object-contain drop-shadow-sm" /><strong class="block">Restorasi</strong><small class="mt-1 block text-white/60">Laporkan pekerjaan lapangan</small></span>
-                <b class="text-lime">+1.000</b>
-              </button>
-              <button data-report="Penanaman Pohon" class="report-card flex flex-col items-start justify-between rounded-2xl border border-white/15 bg-white/5 p-5 text-left transition hover:-translate-y-0.5 hover:bg-white/10">
-                <span><img src="/icons/tree.webp" alt="Tanam Pohon" class="mb-3 h-8 w-8 object-contain drop-shadow-sm" /><strong class="block">Tanam Pohon</strong><small class="mt-1 block text-white/60">Catat bibit yang ditanam</small></span>
-                <b class="text-lime">+100</b>
-              </button>
-              <button data-report="Pembangunan Rorak" class="report-card flex flex-col items-start justify-between rounded-2xl border border-white/15 bg-white/5 p-5 text-left transition hover:-translate-y-0.5 hover:bg-white/10">
-                <span><img src="/icons/rorak.webp" alt="Bangun Rorak" class="mb-3 h-8 w-8 object-contain drop-shadow-sm" /><strong class="block">Bangun Rorak</strong><small class="mt-1 block text-white/60">Salurkan air hujan ke tanah</small></span>
-                <b class="text-lime">+500</b>
-              </button>
+            <div class="flex items-baseline justify-between border-b-2 pb-3" style="border-color:var(--teks)">
+              <h3 class="h3">Logbook terbaru</h3>
+              <button class="link-arrow">Semua laporan <i class="ph ph-arrow-up-right"></i></button>
             </div>
+            <div class="mt-2">
+              <div class="log-line"><span class="label muted">No. 014</span><span class="flex-1"><b>Tuk Bismo</b><span class="label muted ml-3">7.0°S 109.9°E</span></span><span class="label muted">04 Nov</span></div>
+              <div class="log-line"><span class="label muted">No. 013</span><span class="flex-1"><b>Rowo Santen</b><span class="label muted ml-3">7.9°S 110.3°E</span></span><span class="label muted">18 Okt</span></div>
+              <div class="log-line"><span class="label muted">No. 012</span><span class="flex-1"><b>Wonomerto</b><span class="label muted ml-3">7.3°S 110.1°E</span></span><span class="label muted">12 Okt</span></div>
+            </div>
+            <p class="label muted mt-4">Koordinat dibulatkan demi keamanan sumber air.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="pulangkan-air" class="py-20 lg:py-32">
-      <div class="mx-auto max-w-[1280px] px-5 lg:px-8">
-        <div class="grid items-center gap-12 lg:grid-cols-[1fr_.85fr]">
+    <!-- 03 COMMUNITY -->
+    <section id="community" class="sec relative overflow-hidden bg-ink text-white" style="border-top-color:#0B2A33">
+      <div class="topo-light absolute inset-0"></div>
+      <div class="wrap relative">
+        <div class="sec-head on-dark">
+          <p class="label c-sun">§ 03 — Aktivitas komunitas</p>
+          <h2 class="h2">Kontribusi kecil. Jejak yang terlihat.</h2>
+          <p class="sec-lead max-w-2xl text-white/70">Isi formulir ringan dari browser, kumpulkan poin, dan bantu tim lapangan memahami kondisi mata air secara berkala.</p>
+        </div>
+
+        <div class="grid gap-10 lg:grid-cols-[1fr_2fr] lg:gap-16">
           <div>
-            <p class="eyebrow text-forest">Real action</p>
-            <h2 class="display mt-5 text-4xl font-extrabold leading-[1.1] tracking-tighter sm:text-5xl">Pulangkan air hujan ke rumahnya.</h2>
-            <p class="mt-5 max-w-xl leading-relaxed text-ink/70">Rorak adalah parit kecil yang menahan limpasan hujan agar meresap dan mengisi kembali air tanah yang memberi makan mata air. Warga menggali, komunitas memesan, BelikHub memverifikasi.</p>
-            <div class="mt-8 flex flex-wrap gap-3">
-              <button data-toast="Permintaan rorak dibuka. Tim kami akan menghubungi Anda." class="aqua-gradient inline-flex items-center gap-2 rounded-xl px-5 py-3.5 text-sm font-bold text-white transition-all hover:shadow-hover hover:brightness-110">Pesan rorak · Rp20.000 <i class="ph ph-arrow-right text-lg"></i></button>
-              <button data-toast="Formulir pembuat rorak siap diisi." class="inline-flex items-center rounded-xl border border-line px-5 py-3.5 text-sm font-bold text-ink transition-colors hover:bg-paper">Jadi pembuat · Rp16.000</button>
-            </div>
-            <div class="mt-9 border-t border-line pt-5 text-sm leading-relaxed text-ink/70"><b class="text-ink">Spesifikasi minimum:</b> searah kontur, di daerah resapan, dengan izin pemilik lahan.</div>
+            <p class="label mb-4 text-white/60">Poin per laporan</p>
+            <button id="points-btn" class="btn btn-line-light"><span id="points-text">Cara dapat poin</span> <i class="ph ph-arrow-up-right text-lg"></i></button>
           </div>
-          <div class="grid-paper rounded-3xl border border-line p-6 sm:p-8">
-            <p class="eyebrow text-forest">Open tasks</p>
-            <div class="mt-5 rounded-2xl border border-line bg-white p-5 shadow-soft">
-              <div class="flex items-start justify-between"><div><p class="text-xs text-slate-500">Gunung Kidul · DIY</p><h3 class="mt-2 font-display text-xl font-bold leading-[1.1] tracking-tighter">100 rorak untuk Belik Soka</h3></div><span class="rounded-full bg-lime px-2.5 py-1 text-xs font-bold text-ink">20%</span></div>
-              <div class="mt-5 h-2 rounded-full bg-slate-100"><div class="aqua-gradient h-full w-1/5 rounded-full"></div></div>
-              <div class="mt-3 flex justify-between text-xs leading-relaxed text-slate-500"><span>Rp1.000.000 terkumpul</span><span>Target Rp5.000.000</span></div>
-            </div>
-            <a href="#kemitraan" class="mt-5 inline-flex items-center gap-2 text-sm font-bold text-forest hover:underline">Lihat semua proyek <i class="ph ph-arrow-right text-lg"></i></a>
+          <div>
+            <button data-report="Survei Mata Air" class="report-card">
+              <span class="label text-white/50">01</span>
+              <img src="/icons/water-drop.webp" alt="Survei Mata Air" class="h-8 w-8 object-contain" />
+              <span><strong class="h3 block">Survei Mata Air</strong><small class="text-white/60">Cek kondisi dan debit</small></span>
+              <b class="pts">+100</b><i class="ph ph-arrow-up-right text-lg text-white/60"></i>
+            </button>
+            <button data-report="Restorasi Mata Air" class="report-card">
+              <span class="label text-white/50">02</span>
+              <img src="/icons/shovel.webp" alt="Restorasi" class="h-8 w-8 object-contain" />
+              <span><strong class="h3 block">Restorasi</strong><small class="text-white/60">Laporkan pekerjaan lapangan</small></span>
+              <b class="pts">+1.000</b><i class="ph ph-arrow-up-right text-lg text-white/60"></i>
+            </button>
+            <button data-report="Penanaman Pohon" class="report-card">
+              <span class="label text-white/50">03</span>
+              <img src="/icons/tree.webp" alt="Tanam Pohon" class="h-8 w-8 object-contain" />
+              <span><strong class="h3 block">Tanam Pohon</strong><small class="text-white/60">Catat bibit yang ditanam</small></span>
+              <b class="pts">+100</b><i class="ph ph-arrow-up-right text-lg text-white/60"></i>
+            </button>
+            <button data-report="Pembangunan Rorak" class="report-card">
+              <span class="label text-white/50">04</span>
+              <img src="/icons/rorak.webp" alt="Bangun Rorak" class="h-8 w-8 object-contain" />
+              <span><strong class="h3 block">Bangun Rorak</strong><small class="text-white/60">Salurkan air hujan ke tanah</small></span>
+              <b class="pts">+500</b><i class="ph ph-arrow-up-right text-lg text-white/60"></i>
+            </button>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="agenda" class="border-y border-line bg-white py-20 lg:py-32">
-      <div class="mx-auto max-w-[1280px] px-5 lg:px-8">
-        <div class="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-          <div>
-            <p class="eyebrow text-blue">Upcoming schedule</p>
-            <h2 class="display mt-4 text-4xl font-extrabold leading-[1.1] tracking-tighter">Turun ke lapangan.</h2>
-          </div>
-          <button data-toast="Kalender kegiatan dibuka." class="flex items-center gap-2 text-sm font-bold text-blue">Lihat kalender <i class="ph ph-arrow-right text-lg"></i></button>
+    <!-- 04 PULANGKAN AIR -->
+    <section id="pulangkan-air" class="sec">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="label"><span class="c-accent">§ 04</span> — Aksi nyata</p>
+          <h2 class="h2">Pulangkan air hujan ke rumahnya.</h2>
+          <p class="muted sec-lead max-w-2xl">Rorak adalah parit kecil yang menahan limpasan hujan agar meresap dan mengisi kembali air tanah yang memberi makan mata air. Warga menggali, komunitas memesan, BelikHub memverifikasi.</p>
         </div>
-        <div class="mt-10 grid gap-5 md:grid-cols-3">
-          <article class="soft-card p-6">
-            <p class="eyebrow text-blue">14 Nov 2026</p>
-            <h3 class="mt-5 font-display text-xl font-bold leading-[1.1] tracking-tighter">Restorasi Mata Air Kulon Progo</h3>
-            <p class="mt-3 text-sm leading-relaxed text-ink/70">Lokasi dibagikan melalui kanal komunitas setelah pendaftaran.</p>
-            <button data-toast="Anda masuk daftar tunggu kegiatan." class="mt-6 inline-flex items-center gap-2 rounded-xl border border-line px-4 py-2.5 text-sm font-bold text-ink transition-colors hover:bg-paper">Daftar <i class="ph ph-arrow-right text-lg"></i></button>
-          </article>
-          <article class="soft-card p-6">
-            <p class="eyebrow text-blue">22 Nov 2026</p>
-            <h3 class="mt-5 font-display text-xl font-bold leading-[1.1] tracking-tighter">Restorasi Mata Air Kediri</h3>
-            <p class="mt-3 text-sm leading-relaxed text-ink/70">Bergabung dengan tim lokal untuk pemulihan titik sumber.</p>
-            <button data-toast="Anda masuk daftar tunggu kegiatan." class="mt-6 inline-flex items-center gap-2 rounded-xl border border-line px-4 py-2.5 text-sm font-bold text-ink transition-colors hover:bg-paper">Daftar <i class="ph ph-arrow-right text-lg"></i></button>
-          </article>
-          <article class="soft-card p-6">
-            <p class="eyebrow text-blue">05 Des 2026</p>
-            <h3 class="mt-5 font-display text-xl font-bold leading-[1.1] tracking-tighter">Restorasi Mata Air Lak</h3>
-            <p class="mt-3 text-sm leading-relaxed text-ink/70">J2 Bowongso, Wonosobo, Jawa Tengah.</p>
-            <button data-toast="Anda masuk daftar tunggu kegiatan." class="mt-6 inline-flex items-center gap-2 rounded-xl border border-line px-4 py-2.5 text-sm font-bold text-ink transition-colors hover:bg-paper">Daftar <i class="ph ph-arrow-right text-lg"></i></button>
-          </article>
+
+        <div class="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+          <div>
+            <div class="flex flex-wrap gap-3">
+              <button data-toast="Permintaan rorak dibuka. Tim kami akan menghubungi Anda." class="btn btn-teal">Pesan rorak · Rp20.000 <i class="ph ph-arrow-right text-lg"></i></button>
+              <button data-toast="Formulir pembuat rorak siap diisi." class="btn btn-line">Jadi pembuat · Rp16.000</button>
+            </div>
+            <div class="mt-10 border-t pt-5 text-sm" style="border-color:var(--line)"><p class="label c-accent mb-2">Spesifikasi minimum</p><p class="muted">Searah kontur, di daerah resapan, dengan izin pemilik lahan.</p></div>
+          </div>
+
+          <div class="sheet topo p-6 sm:p-8">
+            <div class="flex items-center justify-between"><p class="label c-accent">Lembar tugas terbuka</p><span class="stamp c-accent">Open</span></div>
+            <div class="mt-6">
+              <p class="label muted">Gunung Kidul · DIY</p>
+              <h3 class="h3 mt-2">100 rorak untuk Belik Soka</h3>
+              <div class="mt-6 flex items-baseline justify-between"><span class="label muted">Progres</span><b class="serif text-3xl c-accent">20%</b></div>
+              <div class="bar mt-2" style="height:6px"><i style="width:20%"></i></div>
+              <div class="label muted mt-3 flex justify-between"><span>Rp1.000.000 terkumpul</span><span>Target Rp5.000.000</span></div>
+            </div>
+            <a href="#kemitraan" class="link-arrow mt-8">Lihat semua proyek <i class="ph ph-arrow-right"></i></a>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="kemitraan" class="bg-[#E3F4F6] py-20 lg:py-32">
-      <div class="mx-auto max-w-[1280px] px-5 lg:px-8">
-        <div class="grid gap-12 lg:grid-cols-[.85fr_1.15fr] lg:gap-24">
+    <!-- 05 AGENDA -->
+    <section id="agenda" class="sec">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="label"><span class="c-accent">§ 05</span> — Jadwal lapangan</p>
+          <h2 class="h2">Turun ke lapangan.</h2>
+          <div class="sec-lead"><button data-toast="Kalender kegiatan dibuka." class="link-arrow">Lihat kalender <i class="ph ph-arrow-right"></i></button></div>
+        </div>
+
+        <div>
+          <div class="row agenda-row">
+            <div><p class="serif text-5xl font-semibold leading-none c-accent">14</p><p class="label muted mt-1">Nov 2026</p></div>
+            <div><h3 class="h3">Restorasi Mata Air Kulon Progo</h3><p class="muted mt-1 text-sm">Lokasi dibagikan melalui kanal komunitas setelah pendaftaran.</p></div>
+            <button data-toast="Anda masuk daftar tunggu kegiatan." class="btn btn-line">Daftar <i class="ph ph-arrow-right text-lg"></i></button>
+          </div>
+          <div class="row agenda-row">
+            <div><p class="serif text-5xl font-semibold leading-none c-accent">22</p><p class="label muted mt-1">Nov 2026</p></div>
+            <div><h3 class="h3">Restorasi Mata Air Kediri</h3><p class="muted mt-1 text-sm">Bergabung dengan tim lokal untuk pemulihan titik sumber.</p></div>
+            <button data-toast="Anda masuk daftar tunggu kegiatan." class="btn btn-line">Daftar <i class="ph ph-arrow-right text-lg"></i></button>
+          </div>
+          <div class="row agenda-row">
+            <div><p class="serif text-5xl font-semibold leading-none c-accent">05</p><p class="label muted mt-1">Des 2026</p></div>
+            <div><h3 class="h3">Restorasi Mata Air Lak</h3><p class="muted mt-1 text-sm">J2 Bowongso, Wonosobo, Jawa Tengah.</p></div>
+            <button data-toast="Anda masuk daftar tunggu kegiatan." class="btn btn-line">Daftar <i class="ph ph-arrow-right text-lg"></i></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 KEMITRAAN -->
+    <section id="kemitraan" class="sec" style="background:var(--tint)">
+      <div class="wrap">
+        <div class="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-24">
           <div>
-            <p class="eyebrow text-forest">Partner / sponsor / donor</p>
-            <h2 class="display mt-5 text-4xl font-extrabold leading-[1.1] tracking-tighter sm:text-5xl">Perbesar dampak di lebih banyak mata air.</h2>
-            <p class="mt-5 leading-relaxed text-ink/70">Sponsor sebuah wilayah, danai satu tipe proyek, atau rancang program relawan bersama kami. Output serta lokasi dilaporkan melalui formulir lapangan terverifikasi.</p>
-            <div class="mt-8 grid gap-3 text-sm font-semibold leading-relaxed text-ink/70">
-              <span class="flex items-center gap-2"><i class="ph ph-check-circle text-lg text-forest"></i>Penanaman pohon endemik</span>
-              <span class="flex items-center gap-2"><i class="ph ph-check-circle text-lg text-forest"></i>Pembangunan rorak</span>
-              <span class="flex items-center gap-2"><i class="ph ph-check-circle text-lg text-forest"></i>Restorasi mata air</span>
-              <span class="flex items-center gap-2"><i class="ph ph-check-circle text-lg text-forest"></i>Ekspedisi monitoring</span>
+            <p class="label border-t-2 pt-4" style="border-color:var(--teks)"><span class="c-accent">§ 06</span> — Partner / sponsor / donor</p>
+            <h2 class="h2 mt-6">Perbesar dampak di lebih banyak mata air.</h2>
+            <p class="muted mt-5 leading-relaxed">Sponsor sebuah wilayah, danai satu tipe proyek, atau rancang program relawan bersama kami. Output serta lokasi dilaporkan melalui formulir lapangan terverifikasi.</p>
+            <div class="mt-8">
+              <p class="log-line text-sm font-semibold"><span>Penanaman pohon endemik</span><i class="ph ph-check c-accent"></i></p>
+              <p class="log-line text-sm font-semibold"><span>Pembangunan rorak</span><i class="ph ph-check c-accent"></i></p>
+              <p class="log-line text-sm font-semibold"><span>Restorasi mata air</span><i class="ph ph-check c-accent"></i></p>
+              <p class="log-line text-sm font-semibold" style="border-bottom:1px dashed var(--line)"><span>Ekspedisi monitoring</span><i class="ph ph-check c-accent"></i></p>
             </div>
           </div>
-          <form id="partner-form" class="rounded-3xl border border-line bg-white p-7 shadow-soft sm:p-10">
-            <h3 class="font-display text-2xl font-bold leading-[1.1] tracking-tighter">Bicarakan program Anda</h3>
-            <div class="mt-6 grid gap-5 sm:grid-cols-2">
-              <label class="text-sm font-semibold">Nama<input name="name" required class="mt-2 w-full rounded-xl border border-line bg-transparent px-4 py-3 outline-none focus:border-forest" placeholder="Nama lengkap" /></label>
-              <label class="text-sm font-semibold">Institusi<input name="institution" required class="mt-2 w-full rounded-xl border border-line bg-transparent px-4 py-3 outline-none focus:border-forest" placeholder="Nama organisasi" /></label>
+
+          <form id="partner-form" class="frame p-7 sm:p-10">
+            <i class="tick tl"></i><i class="tick tr"></i><i class="tick bl"></i><i class="tick br"></i>
+            <h3 class="h3 text-2xl">Bicarakan program Anda</h3>
+            <div class="mt-6 grid gap-6 sm:grid-cols-2">
+              <label class="block"><span class="label muted">Nama</span><input name="name" required class="field" placeholder="Nama lengkap" /></label>
+              <label class="block"><span class="label muted">Institusi</span><input name="institution" required class="field" placeholder="Nama organisasi" /></label>
             </div>
-            <label class="mt-5 block text-sm font-semibold">Email<input name="email" required type="email" class="mt-2 w-full rounded-xl border border-line bg-transparent px-4 py-3 outline-none focus:border-forest" placeholder="nama@institusi.com" /></label>
-            <label class="mt-5 block text-sm font-semibold">Kebutuhan<select name="need" class="mt-2 w-full rounded-xl border border-line bg-transparent px-4 py-3 outline-none focus:border-forest"><option>Adopsi mata air</option><option>Program relawan</option><option>Pendanaan proyek</option><option>Data & monitoring</option></select></label>
-            <button class="aqua-gradient mt-8 w-full rounded-xl px-4 py-3 text-sm font-bold text-white transition-all hover:shadow-hover hover:brightness-110">Kirim minat kemitraan</button>
-            <p id="partner-note" class="mt-4 text-sm leading-relaxed text-slate-500"></p>
+            <label class="mt-6 block"><span class="label muted">Email</span><input name="email" required type="email" class="field" placeholder="nama@institusi.com" /></label>
+            <label class="mt-6 block"><span class="label muted">Kebutuhan</span><select name="need" class="field"><option>Adopsi mata air</option><option>Program relawan</option><option>Pendanaan proyek</option><option>Data &amp; monitoring</option></select></label>
+            <button class="btn btn-teal mt-8 w-full">Kirim minat kemitraan</button>
+            <p id="partner-note" class="muted mt-4 text-sm"></p>
           </form>
         </div>
       </div>
     </section>
 
-    <section id="learn" class="py-20 lg:py-32">
-      <div class="mx-auto max-w-[1280px] px-5 lg:px-8">
-        <div class="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-          <div>
-            <p class="eyebrow flex items-center gap-2 text-blue"><img src="/icons/learn.webp" alt="Learning" class="h-5 w-5 object-contain drop-shadow-sm" />Learning hub</p>
-            <h2 class="display mt-4 text-4xl font-extrabold leading-[1.1] tracking-tighter">Belajar sebelum bergerak.</h2>
-            <p class="mt-4 max-w-xl leading-relaxed text-ink/70">Modul singkat tentang ekosistem mata air, pohon endemik, dan cara membuat laporan lapangan.</p>
-          </div>
-          <div class="flex gap-5 border-b border-line text-sm font-bold">
-            <button class="learn-tab tab-active pb-3" data-tab="courses">Courses</button>
-            <button class="learn-tab pb-3 text-slate-400" data-tab="readings">Readings</button>
+    <!-- 07 LEARN -->
+    <section id="learn" class="sec">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="label flex items-center gap-2"><span class="c-accent">§ 07</span> — Learning hub</p>
+          <h2 class="h2">Belajar sebelum bergerak.</h2>
+          <div class="sec-lead">
+            <p class="muted max-w-xl">Modul singkat tentang ekosistem mata air, pohon endemik, dan cara membuat laporan lapangan.</p>
+            <div class="mt-6 flex gap-6 text-sm font-bold">
+              <button class="learn-tab tab-active pb-2" data-tab="courses">Courses</button>
+              <button class="learn-tab tab-idle pb-2" data-tab="readings">Readings</button>
+            </div>
           </div>
         </div>
-        <div id="courses" class="mt-10 grid gap-5 md:grid-cols-3">
-          <article class="soft-card p-6">
-            <img src="/icons/water-drop.webp" alt="Mata Air" class="mb-4 h-12 w-12 object-contain" />
-            <span class="rounded-full bg-lime px-2.5 py-1 text-[10px] font-bold uppercase text-ink">Beginner</span>
-            <h3 class="mt-6 font-display text-xl font-bold leading-[1.1] tracking-tighter">Pengenalan Mata Air</h3>
-            <p class="mt-3 text-sm leading-relaxed text-ink/70">Dasar ekosistem mata air, jenisnya, dan mengapa penting bagi kehidupan.</p>
-            <div class="mt-6 flex items-center justify-between text-xs text-slate-500"><span>30 menit</span><span>4 modul</span></div>
-            <button data-toast="Kursus Pengenalan Mata Air dipilih." class="mt-5 flex items-center gap-2 text-sm font-bold text-blue hover:underline">Mulai kursus <i class="ph ph-arrow-right text-lg"></i></button>
-          </article>
-          <article class="soft-card p-6">
-            <img src="/icons/tree.webp" alt="Tanam Pohon" class="mb-4 h-12 w-12 object-contain" />
-            <span class="rounded-full bg-[#CDEFF3] px-2.5 py-1 text-[10px] font-bold uppercase text-forest">Intermediate</span>
-            <h3 class="mt-6 font-display text-xl font-bold leading-[1.1] tracking-tighter">Menanam Pohon Endemik</h3>
-            <p class="mt-3 text-sm leading-relaxed text-ink/70">Memilih lokasi, menanam, dan merawat pohon di area resapan.</p>
-            <div class="mt-6 flex items-center justify-between text-xs text-slate-500"><span>45 menit</span><span>4 modul</span></div>
-            <button data-toast="Kursus Menanam Pohon Endemik dipilih." class="mt-5 flex items-center gap-2 text-sm font-bold text-blue hover:underline">Mulai kursus <i class="ph ph-arrow-right text-lg"></i></button>
-          </article>
-          <article class="soft-card p-6">
-            <img src="/icons/rorak.webp" alt="Rorak" class="mb-4 h-12 w-12 object-contain" />
-            <span class="rounded-full bg-lime px-2.5 py-1 text-[10px] font-bold uppercase text-ink">Beginner</span>
-            <h3 class="mt-6 font-display text-xl font-bold leading-[1.1] tracking-tighter">Membuat Rorak Resapan</h3>
-            <p class="mt-3 text-sm leading-relaxed text-ink/70">Panduan praktis membuat parit resapan air tanah di lingkungan rumah.</p>
-            <div class="mt-6 flex items-center justify-between text-xs text-slate-500"><span>25 menit</span><span>3 modul</span></div>
-            <button data-toast="Kursus Membuat Rorak Resapan dipilih." class="mt-5 flex items-center gap-2 text-sm font-bold text-blue hover:underline">Mulai kursus <i class="ph ph-arrow-right text-lg"></i></button>
-          </article>
+
+        <div id="courses">
+          <div class="row course-row">
+            <span class="label muted">01</span>
+            <img src="/icons/water-drop.webp" alt="Mata Air" class="h-10 w-10 object-contain" />
+            <div><h3 class="h3">Pengenalan Mata Air</h3><p class="muted mt-1 text-sm">Dasar ekosistem mata air, jenisnya, dan mengapa penting bagi kehidupan.</p></div>
+            <div class="label muted"><span class="stamp c-accent">Beginner</span><p class="mt-2">30 menit · 4 modul</p></div>
+            <button data-toast="Kursus Pengenalan Mata Air dipilih." class="link-arrow">Mulai kursus <i class="ph ph-arrow-right"></i></button>
+          </div>
+          <div class="row course-row">
+            <span class="label muted">02</span>
+            <img src="/icons/tree.webp" alt="Tanam Pohon" class="h-10 w-10 object-contain" />
+            <div><h3 class="h3">Menanam Pohon Endemik</h3><p class="muted mt-1 text-sm">Memilih lokasi, menanam, dan merawat pohon di area resapan.</p></div>
+            <div class="label muted"><span class="stamp c-accent">Intermediate</span><p class="mt-2">45 menit · 4 modul</p></div>
+            <button data-toast="Kursus Menanam Pohon Endemik dipilih." class="link-arrow">Mulai kursus <i class="ph ph-arrow-right"></i></button>
+          </div>
+          <div class="row course-row">
+            <span class="label muted">03</span>
+            <img src="/icons/rorak.webp" alt="Rorak" class="h-10 w-10 object-contain" />
+            <div><h3 class="h3">Membuat Rorak Resapan</h3><p class="muted mt-1 text-sm">Panduan praktis membuat parit resapan air tanah di lingkungan rumah.</p></div>
+            <div class="label muted"><span class="stamp c-accent">Beginner</span><p class="mt-2">25 menit · 3 modul</p></div>
+            <button data-toast="Kursus Membuat Rorak Resapan dipilih." class="link-arrow">Mulai kursus <i class="ph ph-arrow-right"></i></button>
+          </div>
         </div>
-        <div id="readings" class="mt-10 hidden grid gap-5 md:grid-cols-3">
-          <article class="soft-card p-6">
-            <p class="eyebrow text-blue">Artikel</p>
-            <h3 class="mt-3 font-display text-xl font-bold leading-[1.1] tracking-tighter">Mengapa Mata Air Kering?</h3>
-            <p class="mt-2 text-sm leading-relaxed text-ink/70">Faktor utama penurunan debit mata air dan dampaknya bagi petani.</p>
-            <a href="#" data-toast="Artikel akan dibuka saat publikasi tersedia." class="mt-5 flex items-center gap-2 text-sm font-bold text-blue hover:underline">Baca selengkapnya <i class="ph ph-arrow-up-right text-lg"></i></a>
-          </article>
-          <article class="soft-card p-6">
-            <p class="eyebrow text-blue">Field story</p>
-            <h3 class="mt-3 font-display text-xl font-bold leading-[1.1] tracking-tighter">30+ mata air, satu gerakan</h3>
-            <p class="mt-2 text-sm leading-relaxed text-ink/70">Dokumentasi perjalanan relawan dan warga memulihkan sumber air.</p>
-            <a href="#" data-toast="Cerita lapangan akan dibuka saat publikasi tersedia." class="mt-5 flex items-center gap-2 text-sm font-bold text-blue hover:underline">Lihat cerita <i class="ph ph-arrow-up-right text-lg"></i></a>
-          </article>
+
+        <div id="readings" class="hidden">
+          <div class="row agenda-row">
+            <div><p class="label c-accent">Artikel</p></div>
+            <div><h3 class="h3">Mengapa Mata Air Kering?</h3><p class="muted mt-1 text-sm">Faktor utama penurunan debit mata air dan dampaknya bagi petani.</p></div>
+            <a href="#" data-toast="Artikel akan dibuka saat publikasi tersedia." class="link-arrow">Baca selengkapnya <i class="ph ph-arrow-up-right"></i></a>
+          </div>
+          <div class="row agenda-row">
+            <div><p class="label c-accent">Field story</p></div>
+            <div><h3 class="h3">30+ mata air, satu gerakan</h3><p class="muted mt-1 text-sm">Dokumentasi perjalanan relawan dan warga memulihkan sumber air.</p></div>
+            <a href="#" data-toast="Cerita lapangan akan dibuka saat publikasi tersedia." class="link-arrow">Lihat cerita <i class="ph ph-arrow-up-right"></i></a>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="media" class="border-y border-line bg-white py-24 lg:py-32">
-      <div class="mx-auto max-w-[1280px] px-5 lg:px-8">
-        <div class="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-          <div>
-            <p class="eyebrow text-blue">Latest media</p>
-            <h2 class="display mt-4 text-4xl font-extrabold leading-[1.1] tracking-tighter">Cerita dari lapangan.</h2>
-          </div>
-          <a href="https://www.youtube.com/@jagasemesta" target="_blank" rel="noreferrer" class="flex items-center gap-2 text-sm font-bold text-blue hover:underline">Kunjungi YouTube <i class="ph ph-arrow-up-right text-lg"></i></a>
+    <!-- 08 MEDIA -->
+    <section id="media" class="sec">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="label"><span class="c-accent">§ 08</span> — Media terbaru</p>
+          <h2 class="h2">Cerita dari lapangan.</h2>
+          <div class="sec-lead"><a href="https://www.youtube.com/@jagasemesta" target="_blank" rel="noreferrer" class="link-arrow">Kunjungi YouTube <i class="ph ph-arrow-up-right"></i></a></div>
         </div>
-        <div class="mt-10 grid gap-5 md:grid-cols-4">
-          <article class="soft-card overflow-hidden md:col-span-2">
-            <div class="group relative flex h-44 items-center justify-center bg-ink text-white" style="background-image:linear-gradient(135deg,#0E7C86,#0B2A33)"><i class="ph ph-play-circle text-6xl text-lime transition-transform group-hover:scale-110"></i></div>
-            <div class="p-5">
-              <p class="eyebrow text-blue">Video · Apr 2026</p>
-              <h3 class="mt-3 font-display text-xl font-bold leading-[1.1] tracking-tighter">Perjalanan restorasi mata air</h3>
-              <p class="mt-2 text-sm leading-relaxed text-ink/70">Dari komunitas, untuk sumber air yang pulih.</p>
+
+        <div class="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
+          <article>
+            <div class="topo-light relative flex h-64 items-center justify-center bg-ink sm:h-80">
+              <i class="ph ph-play-circle text-7xl text-sun"></i>
+              <span class="stamp absolute left-4 top-4 text-white/80">Video</span>
             </div>
+            <p class="label muted mt-4">Apr 2026</p>
+            <h3 class="h3 mt-2 text-2xl">Perjalanan restorasi mata air</h3>
+            <p class="muted mt-2 text-sm">Dari komunitas, untuk sumber air yang pulih.</p>
           </article>
-          <article class="soft-card p-5">
-            <p class="eyebrow text-blue">Publication</p>
-            <h3 class="mt-5 font-display text-lg font-bold leading-[1.1] tracking-tighter">Gerakan pemulihan air berbasis komunitas</h3>
-            <p class="mt-3 text-sm leading-relaxed text-ink/70">Catatan dampak, pembelajaran, dan kolaborasi.</p>
-            <a href="#" data-toast="Artikel akan dibuka saat publikasi tersedia." class="mt-5 flex items-center gap-2 text-sm font-bold text-blue hover:underline">Baca selengkapnya <i class="ph ph-arrow-up-right text-lg"></i></a>
-          </article>
-          <article class="soft-card p-5">
-            <p class="eyebrow text-blue">Field story</p>
-            <h3 class="mt-5 font-display text-lg font-bold leading-[1.1] tracking-tighter">30+ mata air, satu gerakan</h3>
-            <p class="mt-3 text-sm leading-relaxed text-ink/70">Dokumentasi perjalanan relawan dan warga.</p>
-            <a href="#" data-toast="Cerita lapangan akan dibuka saat publikasi tersedia." class="mt-5 flex items-center gap-2 text-sm font-bold text-blue hover:underline">Lihat cerita <i class="ph ph-arrow-up-right text-lg"></i></a>
-          </article>
+          <div>
+            <article class="row" style="grid-template-columns:1fr">
+              <p class="label c-accent">Publication</p>
+              <h3 class="h3">Gerakan pemulihan air berbasis komunitas</h3>
+              <p class="muted text-sm">Catatan dampak, pembelajaran, dan kolaborasi.</p>
+              <a href="#" data-toast="Artikel akan dibuka saat publikasi tersedia." class="link-arrow justify-self-start">Baca selengkapnya <i class="ph ph-arrow-up-right"></i></a>
+            </article>
+            <article class="row" style="grid-template-columns:1fr">
+              <p class="label c-accent">Field story</p>
+              <h3 class="h3">30+ mata air, satu gerakan</h3>
+              <p class="muted text-sm">Dokumentasi perjalanan relawan dan warga.</p>
+              <a href="#" data-toast="Cerita lapangan akan dibuka saat publikasi tersedia." class="link-arrow justify-self-start">Lihat cerita <i class="ph ph-arrow-up-right"></i></a>
+            </article>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="bg-ink py-14 text-white">
-    <div class="mx-auto max-w-[1280px] px-5 lg:px-8">
+    <div class="wrap">
       <div class="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
-          <a href="#top" class="font-display text-2xl font-extrabold tracking-[-.05em]">Belik<span class="text-lime">Hub</span></a>
+          <a href="#top" class="serif text-3xl font-semibold">BelikHub</a>
           <p class="mt-5 max-w-sm leading-relaxed text-white/60">Memberdayakan komunitas Indonesia untuk melindungi dan memulihkan sumber air melalui aksi konservasi kolaboratif.</p>
-          <form id="newsletter" class="mt-7 flex max-w-sm overflow-hidden rounded-xl">
-            <input required type="email" placeholder="Email Anda" class="min-w-0 flex-1 bg-white/10 px-4 py-3 text-sm text-white outline-none placeholder:text-white/40" />
-            <button class="bg-lime px-4 py-3 text-sm font-bold text-ink transition-colors hover:bg-lime/90">Subscribe</button>
+          <form id="newsletter" class="mt-7 flex max-w-sm items-end gap-3 border-b border-white/50">
+            <input required type="email" placeholder="Email Anda" class="min-w-0 flex-1 bg-transparent py-3 text-sm text-white outline-none placeholder:text-white/40" />
+            <button class="py-3 text-sm font-bold text-sun hover:opacity-80">Subscribe →</button>
           </form>
         </div>
         <div>
-          <p class="eyebrow text-lime">Platform</p>
-          <div class="mt-5 grid gap-3 text-sm leading-relaxed text-white/65">
+          <p class="label c-sun">Platform</p>
+          <div class="mt-5 grid gap-3 text-sm text-white/65">
             <a href="#map" class="hover:text-white">Interactive map</a>
             <a href="#dashboard" class="hover:text-white">Real-time impact</a>
             <a href="#community" class="hover:text-white">Volunteer</a>
@@ -569,8 +607,8 @@
           </div>
         </div>
         <div>
-          <p class="eyebrow text-lime">Support</p>
-          <div class="mt-5 grid gap-3 text-sm leading-relaxed text-white/65">
+          <p class="label c-sun">Support</p>
+          <div class="mt-5 grid gap-3 text-sm text-white/65">
             <a href="#kemitraan" class="hover:text-white">Help center</a>
             <a href="#kemitraan" class="hover:text-white">Contact us</a>
             <a href="#community" class="hover:text-white">Report issue</a>
@@ -578,8 +616,8 @@
           </div>
         </div>
         <div>
-          <p class="eyebrow text-lime">About</p>
-          <div class="mt-5 grid gap-3 text-sm leading-relaxed text-white/65">
+          <p class="label c-sun">About</p>
+          <div class="mt-5 grid gap-3 text-sm text-white/65">
             <a href="#top" class="hover:text-white">Our mission</a>
             <a href="#kemitraan" class="hover:text-white">Become a partner</a>
             <a href="#dashboard" class="hover:text-white">Impact report</a>
@@ -587,7 +625,7 @@
           </div>
         </div>
       </div>
-      <div class="mt-14 flex flex-col justify-between gap-4 border-t border-white/15 pt-6 text-xs text-white/45 sm:flex-row">
+      <div class="label mt-14 flex flex-col justify-between gap-4 border-t border-white/20 pt-6 text-white/50 sm:flex-row">
         <span>© 2026 BelikHub. Built for community-led restoration.</span>
         <span>Jakarta · Indonesia · hello@belikhub.id</span>
       </div>
@@ -595,7 +633,7 @@
   </footer>
 
   <div id="modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true"><div class="modal-card"><div id="modal-content"></div></div></div>
-  <div id="toast" class="toast fixed bottom-5 left-1/2 z-[70] -translate-x-1/2 rounded-xl border border-forest bg-ink px-5 py-3 text-sm font-semibold text-white shadow-2xl" role="status"></div>
+  <div id="toast" class="toast" role="status"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script type="module">
@@ -628,7 +666,7 @@
     const languageButton = $('#lang-toggle');
     const languageMenu = document.createElement('div');
     languageMenu.id = 'language-menu';
-    languageMenu.className = 'absolute right-12 top-12 z-[80] w-36 border border-line bg-white p-1 text-ink shadow-xl';
+    languageMenu.className = 'absolute right-12 top-12 z-[80] w-36 p-1 shadow-xl';
     languageMenu.innerHTML = '<button data-language="id" class="block w-full px-3 py-2 text-left text-xs font-bold">Bahasa Indonesia</button><button data-language="en" class="block w-full px-3 py-2 text-left text-xs font-bold">English</button>';
     languageButton?.parentElement?.appendChild(languageMenu);
     if (languageButton?.parentElement) languageButton.parentElement.style.position = 'relative';
@@ -650,7 +688,12 @@
       document.title = lang === 'en' ? 'BelikHub — Community-Driven Water Restoration' : 'BelikHub — Pemulihan Sumber Air Berbasis Komunitas';
       if (languageButton) languageButton.textContent = lang.toUpperCase();
       const navLabels = {'#map': c.nav[0], '#dashboard': c.nav[1], '#community': c.nav[2], '#pulangkan-air': c.nav[3], '#learn': c.nav[4], '#media': c.nav[5]};
-      document.querySelectorAll('header .mobile-link, header .lg\\:flex a').forEach(a => { const label = navLabels[a.getAttribute('href')]; if (label) a.textContent = label; });
+      document.querySelectorAll('header .mobile-link, header .nav-links a').forEach(a => {
+        const label = navLabels[a.getAttribute('href')];
+        if (!label) return;
+        const target = a.querySelector('.nav-label') || a;
+        target.textContent = label;
+      });
       const set = (selector, value) => { const el=document.querySelector(selector); if (el) el.textContent=value; };
       set('#hero-monitor-text', c.monitor);
       set('#hero-join-text', c.join);
@@ -707,7 +750,7 @@
     const modal = $('#modal'), modalContent = $('#modal-content');
     const closeModal = () => { modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); modalContent.innerHTML=''; };
     const openModal = (title, body) => {
-      modalContent.innerHTML = `<div class="flex items-start justify-between border-b line p-6"><div><p class="eyebrow text-blue">BelikHub</p><h3 class="mt-2 font-display text-2xl font-bold">${title}</h3></div><button type="button" data-close-modal class="grid h-9 w-9 place-items-center rounded-xl border line text-xl">×</button></div><div class="p-6">${body}</div>`;
+      modalContent.innerHTML = `<div class="flex items-start justify-between border-b p-6" style="border-color:var(--teks)"><div><p class="label c-accent">BelikHub</p><h3 class="h3 mt-2 text-2xl">${title}</h3></div><button type="button" data-close-modal class="nav-btn w-9 text-xl" aria-label="Tutup">×</button></div><div class="p-6">${body}</div>`;
       modal.classList.add('open');
       modal.setAttribute('aria-hidden','false');
       modal.querySelector('[data-close-modal]')?.addEventListener('click', closeModal);
@@ -719,11 +762,11 @@
     modal?.addEventListener('click', e => { if (e.target === modal) closeModal(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-    const reportForm = (name, points) => `<form id="report-form" data-api="reports"><p class="text-sm leading-6 muted">Lengkapi laporan ${name.toLowerCase()} untuk mendapatkan <b>${points} poin</b>. Data ini akan diteruskan ke tim verifikasi.</p><label class="mt-5 block text-sm font-semibold">Nama lokasi<input required placeholder="Nama mata air / desa" class="mt-2" /></label><label class="mt-4 block text-sm font-semibold">Catatan lapangan<textarea required rows="3" placeholder="Apa yang Anda temukan?" class="mt-2"></textarea></label><button class="aqua-gradient mt-5 w-full rounded-xl px-4 py-3 font-bold text-white transition hover:brightness-110">Kirim laporan</button></form>`;
+    const reportForm = (name, points) => `<form id="report-form" data-api="reports"><p class="text-sm leading-6 muted">Lengkapi laporan ${name.toLowerCase()} untuk mendapatkan <b>${points} poin</b>. Data ini akan diteruskan ke tim verifikasi.</p><label class="mt-5 block text-sm font-semibold">Nama lokasi<input required placeholder="Nama mata air / desa" class="mt-1" /></label><label class="mt-4 block text-sm font-semibold">Catatan lapangan<textarea required rows="3" placeholder="Apa yang Anda temukan?" class="mt-1"></textarea></label><button class="btn btn-teal mt-6 w-full">Kirim laporan</button></form>`;
 
     $$('[data-toast]').forEach(el => el.addEventListener('click', e => {
       e.preventDefault();
-      openModal('Mulai kontribusi', `<form><p class="text-sm leading-6 muted">${el.dataset.toast}</p><label class="mt-5 block text-sm font-semibold">Email<input required type="email" placeholder="nama@email.com" class="mt-2" /></label><button class="aqua-gradient mt-5 w-full rounded-xl px-4 py-3 font-bold text-white transition hover:brightness-110">Lanjutkan</button></form>`);
+      openModal('Mulai kontribusi', `<form><p class="text-sm leading-6 muted">${el.dataset.toast}</p><label class="mt-5 block text-sm font-semibold">Email<input required type="email" placeholder="nama@email.com" class="mt-1" /></label><button class="btn btn-teal mt-6 w-full">Lanjutkan</button></form>`);
     }));
 
     $$('.report-card').forEach(el => el.addEventListener('click', () => {
@@ -750,7 +793,7 @@
       });
     }));
 
-    $('#points-btn')?.addEventListener('click', () => openModal('Cara mendapatkan poin', '<div class="divide-y line text-sm"><div class="flex justify-between py-3"><span>Survei Mata Air</span><b class="text-forest">+100 pts</b></div><div class="flex justify-between py-3"><span>Restorasi Mata Air</span><b class="text-forest">+1.000 pts</b></div><div class="flex justify-between py-3"><span>Pembangunan Rorak</span><b class="text-forest">+500 pts</b></div><div class="flex justify-between py-3"><span>Penanaman Pohon</span><b class="text-forest">+100 pts</b></div></div><p class="mt-5 text-xs leading-relaxed muted">Setelah mencapai 20.000 poin, Anda dapat mengajukan proyek komunitas untuk ditinjau admin.</p>'));
+    $('#points-btn')?.addEventListener('click', () => openModal('Cara mendapatkan poin', '<div class="text-sm"><div class="log-line"><span>Survei Mata Air</span><b class="label c-accent">+100 pts</b></div><div class="log-line"><span>Restorasi Mata Air</span><b class="label c-accent">+1.000 pts</b></div><div class="log-line"><span>Pembangunan Rorak</span><b class="label c-accent">+500 pts</b></div><div class="log-line"><span>Penanaman Pohon</span><b class="label c-accent">+100 pts</b></div></div><p class="mt-5 text-xs leading-relaxed muted">Setelah mencapai 20.000 poin, Anda dapat mengajukan proyek komunitas untuk ditinjau admin.</p>'));
 
     $('#partner-form')?.addEventListener('submit', async e => {
       e.preventDefault();
@@ -780,8 +823,8 @@
     $('#newsletter')?.addEventListener('submit', e => { e.preventDefault(); toast('Anda sudah masuk daftar pembaruan BelikHub.'); e.target.reset(); });
 
     $$('.learn-tab').forEach(tab => tab.addEventListener('click', () => {
-      $$('.learn-tab').forEach(t => { t.classList.remove('tab-active'); t.classList.add('text-slate-400'); });
-      tab.classList.add('tab-active'); tab.classList.remove('text-slate-400');
+      $$('.learn-tab').forEach(t => { t.classList.remove('tab-active'); t.classList.add('tab-idle'); });
+      tab.classList.add('tab-active'); tab.classList.remove('tab-idle');
       $('#courses').classList.toggle('hidden', tab.dataset.tab !== 'courses');
       $('#readings').classList.toggle('hidden', tab.dataset.tab !== 'readings');
     }));
@@ -797,24 +840,25 @@
       setTimeout(()=>{ window.belikhubMap?.invalidateSize(); },500);
       window.addEventListener('resize',()=>{ window.belikhubMap?.invalidateSize(); });
       let markers=[];
-      const renderMarkers=(filter='all',query='')=>{markers.forEach(m=>m.remove());markers=points.filter(p=>(filter==='all'||p.status===filter)&&p.name.toLowerCase().includes(query.toLowerCase())).map(p=>{const color=p.status==='healthy'?'#2BB3C0':p.status==='restored'?'#0E7C86':'#f59e0b';const icon=L.divIcon({className:'custom-pin',html:`<span style="display:block;width:16px;height:16px;border-radius:50%;background:${color};border:3px solid white;box-shadow:0 1px 5px #333"></span>`,iconSize:[16,16],iconAnchor:[8,8]});return L.marker([p.lat,p.lng],{icon}).addTo(map).bindPopup(`<b>${p.name}</b><br><span style="font-size:14px">Status: ${p.status}</span>`);});};
+      const renderMarkers=(filter='all',query='')=>{markers.forEach(m=>m.remove());markers=points.filter(p=>(filter==='all'||p.status===filter)&&p.name.toLowerCase().includes(query.toLowerCase())).map(p=>{const color=p.status==='healthy'?'#2BB3C0':p.status==='restored'?'#0E7C86':'#f59e0b';const icon=L.divIcon({className:'custom-pin',html:`<span style="display:block;width:14px;height:14px;background:${color};border:2px solid #fff;outline:1px solid #0B2A33;transform:rotate(45deg)"></span>`,iconSize:[14,14],iconAnchor:[7,7]});return L.marker([p.lat,p.lng],{icon}).addTo(map).bindPopup(`<b>${p.name}</b><br><span style="font-size:14px">Status: ${p.status}</span>`);});};
       renderMarkers();
       $('#map-filter')?.addEventListener('change',e=>renderMarkers(e.target.value,$('#map-search').value));
       $('#map-search')?.addEventListener('input',e=>renderMarkers($('#map-filter').value,e.target.value));
       $('#locate-btn')?.addEventListener('click',()=>{if(!navigator.geolocation){toast('Browser tidak mendukung lokasi.');return;}toast('Meminta izin lokasi…');navigator.geolocation.getCurrentPosition(pos=>{const {latitude,longitude}=pos.coords;window.belikhubMap?.setView([latitude,longitude],12);toast('Peta dipusatkan ke lokasi Anda.');},()=>toast('Lokasi tidak tersedia atau izin ditolak.'));});
     }
 
-    $('#load-reports')?.addEventListener('click', e => { e.currentTarget.textContent='Semua laporan sudah dimuat'; toast('24 laporan tambahan dimuat.'); openModal('Laporan komunitas','<div class="divide-y line text-sm"><div class="py-3"><b>Survei Mata Air</b><span class="ml-3 muted">Tuk Bismo · 04 Nov 2026</span></div><div class="py-3"><b>Restorasi</b><span class="ml-3 muted">Rowo Santen · 18 Okt 2026</span></div><div class="py-3"><b>Survei Mata Air</b><span class="ml-3 muted">Wonomerto · 12 Okt 2026</span></div></div>'); });
+    $('#load-reports')?.addEventListener('click', e => { e.currentTarget.textContent='Semua laporan sudah dimuat'; toast('24 laporan tambahan dimuat.'); openModal('Laporan komunitas','<div class="text-sm"><div class="log-line"><b>Survei Mata Air</b><span class="label muted">Tuk Bismo · 04 Nov 2026</span></div><div class="log-line"><b>Restorasi</b><span class="label muted">Rowo Santen · 18 Okt 2026</span></div><div class="log-line"><b>Survei Mata Air</b><span class="label muted">Wonomerto · 12 Okt 2026</span></div></div>'); });
 
+    // Login / Daftar
     const openLogin = (e) => {
       e.preventDefault();
       menu?.classList.add('hidden'); document.body.style.overflow='auto';
       openModal('Masuk', `
         <form id="login-form" data-custom="1">
-          <label class="block text-sm font-semibold">Email<input required type="email" name="email" placeholder="nama@email.com" class="mt-2" /></label>
-          <label class="mt-4 block text-sm font-semibold">Password<input name="password" required minlength="6" type="password" placeholder="••••••••" class="mt-2" /></label>
-          <button class="aqua-gradient mt-5 w-full rounded-xl px-4 py-3 font-bold text-white transition hover:brightness-110" type="submit">Masuk</button>
-          <button id="register-btn" class="mt-3 w-full rounded-xl border border-line px-4 py-3 font-bold transition-colors hover:bg-slate-50/10" type="button">Daftar akun baru</button>
+          <label class="block text-sm font-semibold">Email<input required type="email" name="email" placeholder="nama@email.com" class="mt-1" /></label>
+          <label class="mt-4 block text-sm font-semibold">Password<input name="password" required minlength="6" type="password" placeholder="••••••••" class="mt-1" /></label>
+          <button class="btn btn-teal mt-6 w-full" type="submit">Masuk</button>
+          <button id="register-btn" class="btn btn-line mt-3 w-full" type="button">Daftar akun baru</button>
         </form>
       `);
       const form = modal.querySelector('#login-form');
