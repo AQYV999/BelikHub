@@ -22,6 +22,36 @@
       }
     };
   </script>
+  <script>
+    (() => {
+      const legacyRoutes = {
+        map: '/peta',
+        dashboard: '/dampak',
+        community: '/komunitas',
+        agenda: '/komunitas',
+        'pulangkan-air': '/aksi',
+        learn: '/belajar',
+        media: '/media',
+        kemitraan: '/kemitraan'
+      };
+      if (location.pathname === '/' && legacyRoutes[location.hash.slice(1)]) {
+        history.replaceState(null, '', `${legacyRoutes[location.hash.slice(1)]}${location.hash}`);
+      }
+
+      const routes = {
+        '/': 'home',
+        '/peta': 'peta',
+        '/dampak': 'dampak',
+        '/komunitas': 'komunitas',
+        '/aksi': 'aksi',
+        '/belajar': 'belajar',
+        '/media': 'media',
+        '/kemitraan': 'kemitraan'
+      };
+      const path = location.pathname.replace(/\/+$/, '') || '/';
+      document.documentElement.dataset.page = routes[path] || 'not-found';
+    })();
+  </script>
   <style>
     /* =====================================================
        TEMA — Mata Air Jernih · gaya editorial + catatan lapangan
@@ -150,6 +180,20 @@
     .sheet{position:relative;border:1px dashed var(--teks);background:var(--card)}
     .media-fallback{background:linear-gradient(rgba(6,40,48,.25),rgba(6,40,48,.8)),url('/images/topo-dark.webp') center/cover no-repeat}
     .media-video-ready ~ .media-fallback{display:none}
+    .page-card{display:block;height:100%;border:1px solid var(--teks);padding:1.5rem;background:var(--card);transition:background .2s,transform .2s}
+    .page-card:hover{background:var(--tint);transform:translateY(-2px)}
+    .nav-links a[aria-current="page"]{border-bottom-color:currentColor}
+    html[data-page="home"] #top > section:not(#hero):not(#home-links),
+    html[data-page="peta"] #top > section:not(#map),
+    html[data-page="dampak"] #top > section:not(#dashboard),
+    html[data-page="komunitas"] #top > section:not(#community):not(#agenda),
+    html[data-page="aksi"] #top > section:not(#pulangkan-air),
+    html[data-page="belajar"] #top > section:not(#learn),
+    html[data-page="media"] #top > section:not(#media),
+    html[data-page="kemitraan"] #top > section:not(#kemitraan),
+    html[data-page="not-found"] #top > section:not(#not-found){display:none!important}
+    #not-found{display:none}
+    html[data-page="not-found"] #not-found{display:block!important}
 
     /* Modal & toast */
     .modal-backdrop{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(4,22,28,.72)}
@@ -181,17 +225,17 @@
 <body class="overflow-x-hidden">
   <header id="site-header" class="hero-nav fixed inset-x-0 top-0 z-50">
     <nav class="wrap flex h-[72px] items-center justify-between gap-6" aria-label="Navigasi utama">
-      <a href="#top" class="flex shrink-0 items-center gap-3">
+      <a href="/" class="flex shrink-0 items-center gap-3">
         <img src="/icons/logo.webp" alt="BelikHub" class="h-10 w-10 object-contain" />
         <span class="serif text-xl font-semibold tracking-tight">BelikHub</span>
       </a>
 
       <div class="nav-links hidden items-center gap-8 lg:flex">
-        <a href="#map"><span class="nav-num">01</span><span class="nav-label">Peta</span></a>
-        <a href="#dashboard"><span class="nav-num">02</span><span class="nav-label">Dashboard</span></a>
-        <a href="#community"><span class="nav-num">03</span><span class="nav-label">Komunitas</span></a>
-        <a href="#pulangkan-air"><span class="nav-num">04</span><span class="nav-label">Pulangkan Air</span></a>
-        <a href="#learn"><span class="nav-num">05</span><span class="nav-label">Belajar</span></a>
+        <a href="/peta"><span class="nav-num">01</span><span class="nav-label">Peta</span></a>
+        <a href="/dampak"><span class="nav-num">02</span><span class="nav-label">Dampak</span></a>
+        <a href="/komunitas"><span class="nav-num">03</span><span class="nav-label">Komunitas</span></a>
+        <a href="/aksi"><span class="nav-num">04</span><span class="nav-label">Aksi</span></a>
+        <a href="/belajar"><span class="nav-num">05</span><span class="nav-label">Belajar</span></a>
       </div>
 
       <div class="hidden items-center gap-3 md:flex">
@@ -202,30 +246,31 @@
         </button>
         <a href="#" id="login-btn" class="px-3 py-2 text-sm font-bold hover:opacity-70">Masuk</a>
         <button id="logout-btn" class="hidden px-3 py-2 text-sm font-bold hover:opacity-70">Keluar</button>
-        <a href="#kemitraan" class="btn btn-teal">Gabung</a>
+        <a href="/kemitraan" class="btn btn-teal">Jadi mitra</a>
       </div>
 
-      <button id="menu-toggle" class="nav-btn w-10 md:hidden" aria-label="Buka menu"><i class="ph ph-list text-xl"></i></button>
+      <button id="menu-toggle" class="nav-btn w-10 lg:hidden" aria-label="Buka menu"><i class="ph ph-list text-xl"></i></button>
     </nav>
 
     <div id="mobile-menu" class="fixed inset-0 z-[60] hidden bg-ink md:hidden">
       <div class="topo-light absolute inset-0"></div>
-      <div class="relative flex h-full flex-col px-6 py-6 text-white">
+      <div class="relative flex h-full flex-col overflow-y-auto px-6 py-6 text-white">
         <div class="mb-10 flex items-center justify-between">
           <span class="serif text-2xl font-semibold">BelikHub</span>
           <button id="close-menu" class="nav-btn w-10" aria-label="Tutup menu"><i class="ph ph-x text-xl"></i></button>
         </div>
         <div class="serif flex flex-col text-3xl font-semibold">
-          <a href="#map" class="mobile-link border-t border-white/20 py-4 hover:text-sun">Peta</a>
-          <a href="#dashboard" class="mobile-link border-t border-white/20 py-4 hover:text-sun">Dashboard</a>
-          <a href="#community" class="mobile-link border-t border-white/20 py-4 hover:text-sun">Komunitas</a>
-          <a href="#pulangkan-air" class="mobile-link border-t border-white/20 py-4 hover:text-sun">Pulangkan Air</a>
-          <a href="#learn" class="mobile-link border-t border-white/20 py-4 hover:text-sun">Belajar</a>
-          <a href="#media" class="mobile-link border-y border-white/20 py-4 hover:text-sun">Media</a>
+          <a href="/peta" class="mobile-link border-t border-white/20 py-3 hover:text-sun">Peta</a>
+          <a href="/dampak" class="mobile-link border-t border-white/20 py-3 hover:text-sun">Dampak</a>
+          <a href="/komunitas" class="mobile-link border-t border-white/20 py-3 hover:text-sun">Komunitas</a>
+          <a href="/aksi" class="mobile-link border-t border-white/20 py-3 hover:text-sun">Aksi rorak</a>
+          <a href="/belajar" class="mobile-link border-t border-white/20 py-3 hover:text-sun">Belajar</a>
+          <a href="/media" class="mobile-link border-t border-white/20 py-3 hover:text-sun">Media</a>
+          <a href="/kemitraan" class="mobile-link border-y border-white/20 py-3 hover:text-sun">Kemitraan</a>
         </div>
         <div class="mt-auto flex flex-col gap-3">
           <a href="#" id="login-btn-mobile" class="btn btn-line-light w-full">Masuk</a>
-          <a href="#kemitraan" class="mobile-link btn btn-sun w-full">Gabung</a>
+          <a href="/kemitraan" class="mobile-link btn btn-sun w-full">Jadi mitra</a>
         </div>
       </div>
     </div>
@@ -233,7 +278,7 @@
 
   <main id="top">
     <!-- HERO -->
-    <section class="relative flex min-h-[100svh] flex-col overflow-hidden bg-ink pt-[72px] text-white">
+    <section id="hero" class="relative flex min-h-[100svh] flex-col overflow-hidden bg-ink pt-[72px] text-white">
       <video autoplay loop muted playsinline preload="metadata" class="absolute inset-0 h-full w-full object-cover opacity-70">
         <source src="/videos/hero.mp4" type="video/mp4">
       </video>
@@ -246,8 +291,8 @@
           <h1 class="h1">Air yang hidup.<br><em class="c-sun" style="font-weight:500">Komunitas yang bergerak.</em></h1>
           <p class="mt-8 max-w-xl text-lg leading-relaxed text-white/80 md:text-xl">Pantau mata air, ikut memulihkan ekosistemnya, dan lihat kontribusi komunitas tumbuh dalam satu ruang terbuka.</p>
           <div class="mt-10 flex flex-col gap-3 sm:flex-row">
-            <a href="#map" class="btn btn-sun"><span id="hero-monitor-text">Mulai monitoring</span> <i class="ph ph-arrow-right text-lg"></i></a>
-            <a href="#community" class="btn btn-line-light"><span id="hero-join-text">Gabung komunitas</span></a>
+            <a href="/peta" class="btn btn-sun"><span id="hero-monitor-text">Mulai monitoring</span> <i class="ph ph-arrow-right text-lg"></i></a>
+            <a href="/komunitas" class="btn btn-line-light"><span id="hero-join-text">Gabung komunitas</span></a>
           </div>
         </div>
       </div>
@@ -257,6 +302,25 @@
           <p class="label border-white/25 py-4 text-white/70 sm:border-r sm:pr-4">Jawa Tengah · DIY · Jawa Timur</p>
           <p class="label border-white/25 py-4 text-white/70 sm:border-r sm:px-4">Koordinat publik dibulatkan ±5 km</p>
           <p class="label py-4 text-white/70 sm:pl-4">Data diperbarui oleh relawan</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="home-links" class="sec">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="label"><span class="c-accent">Jelajahi</span> — Ruang BelikHub</p>
+          <h2 class="h2">Mulai dari yang ingin Anda lakukan.</h2>
+          <p class="muted sec-lead max-w-2xl">Pantau mata air, lihat dampak, atau ikut bergerak bersama komunitas.</p>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <a href="/peta" class="page-card"><span class="label c-accent">01 — Pantau</span><h3 class="h3 mt-4">Peta mata air</h3><p class="muted mt-2 text-sm">Jelajahi titik mata air dan status pemulihannya.</p></a>
+          <a href="/dampak" class="page-card"><span class="label c-accent">02 — Tinjau</span><h3 class="h3 mt-4">Dampak</h3><p class="muted mt-2 text-sm">Lihat perkembangan pemulihan dan laporan komunitas.</p></a>
+          <a href="/komunitas" class="page-card"><span class="label c-accent">03 — Berkontribusi</span><h3 class="h3 mt-4">Komunitas</h3><p class="muted mt-2 text-sm">Ikut kegiatan dan bantu mencatat kondisi mata air.</p></a>
+          <a href="/aksi" class="page-card"><span class="label c-accent">04 — Bertindak</span><h3 class="h3 mt-4">Aksi rorak</h3><p class="muted mt-2 text-sm">Dukung kegiatan resapan air di wilayah sekitar.</p></a>
+          <a href="/belajar" class="page-card"><span class="label c-accent">05 — Pelajari</span><h3 class="h3 mt-4">Pusat belajar</h3><p class="muted mt-2 text-sm">Kenali ekosistem mata air dan praktik pemulihannya.</p></a>
+          <a href="/kemitraan" class="page-card"><span class="label c-accent">06 — Berkolaborasi</span><h3 class="h3 mt-4">Kemitraan</h3><p class="muted mt-2 text-sm">Rancang program pemulihan bersama BelikHub.</p></a>
+          <a href="/media" class="page-card sm:col-span-2 lg:col-span-1"><span class="label c-accent">07 — Ikuti cerita</span><h3 class="h3 mt-4">Media</h3><p class="muted mt-2 text-sm">Lihat video, publikasi, dan kisah dari lapangan.</p></a>
         </div>
       </div>
     </section>
@@ -457,7 +521,7 @@
               <div class="bar mt-2" style="height:6px"><i style="width:20%"></i></div>
               <div class="label muted mt-3 flex justify-between"><span>Rp1.000.000 terkumpul</span><span>Target Rp5.000.000</span></div>
             </div>
-            <a href="#kemitraan" class="link-arrow mt-8">Lihat semua proyek <i class="ph ph-arrow-right"></i></a>
+            <a href="/kemitraan" class="link-arrow mt-8">Lihat semua proyek <i class="ph ph-arrow-right"></i></a>
           </div>
         </div>
       </div>
@@ -627,13 +691,20 @@
         </div>
       </div>
     </section>
+    <section id="not-found" class="sec">
+      <div class="wrap">
+        <p class="label c-accent">404 — Halaman tidak ditemukan</p>
+        <h1 class="h2 mt-4">Sepertinya halaman ini tidak tersedia.</h1>
+        <a href="/" class="btn btn-teal mt-8">Kembali ke beranda</a>
+      </div>
+    </section>
   </main>
 
   <footer class="bg-ink py-14 text-white">
     <div class="wrap">
       <div class="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
-          <a href="#top" class="serif text-3xl font-semibold">BelikHub</a>
+          <a href="/" class="serif text-3xl font-semibold">BelikHub</a>
           <p class="mt-5 max-w-sm leading-relaxed text-white/60">Memberdayakan komunitas Indonesia untuk melindungi dan memulihkan sumber air melalui aksi konservasi kolaboratif.</p>
           <form id="newsletter" class="mt-7 flex max-w-sm items-end gap-3 border-b border-white/50">
             <input required type="email" placeholder="Email Anda" class="min-w-0 flex-1 bg-transparent py-3 text-sm text-white outline-none placeholder:text-white/40" />
@@ -643,29 +714,29 @@
         <div>
           <p class="label c-sun">Jelajahi</p>
           <div class="mt-5 grid gap-3 text-sm text-white/65">
-            <a href="#map" class="hover:text-white">Peta interaktif</a>
-            <a href="#dashboard" class="hover:text-white">Dampak terkini</a>
-            <a href="#community" class="hover:text-white">Relawan</a>
-            <a href="#learn" class="hover:text-white">Materi belajar</a>
-            <a href="#media" class="hover:text-white">Kabar terbaru</a>
+            <a href="/peta" class="hover:text-white">Peta interaktif</a>
+            <a href="/dampak" class="hover:text-white">Dampak terkini</a>
+            <a href="/komunitas" class="hover:text-white">Relawan</a>
+            <a href="/belajar" class="hover:text-white">Materi belajar</a>
+            <a href="/media" class="hover:text-white">Kabar terbaru</a>
           </div>
         </div>
         <div>
           <p class="label c-sun">Bantuan</p>
           <div class="mt-5 grid gap-3 text-sm text-white/65">
-            <a href="#kemitraan" class="hover:text-white">Pusat bantuan</a>
-            <a href="#kemitraan" class="hover:text-white">Hubungi kami</a>
-            <a href="#community" class="hover:text-white">Laporkan masalah</a>
-            <a href="#top" class="hover:text-white">Tanya jawab</a>
+            <a href="/kemitraan" class="hover:text-white">Pusat bantuan</a>
+            <a href="/kemitraan" class="hover:text-white">Hubungi kami</a>
+            <a href="/komunitas" class="hover:text-white">Laporkan masalah</a>
+            <a href="/#top" class="hover:text-white">Tanya jawab</a>
           </div>
         </div>
         <div>
           <p class="label c-sun">Tentang</p>
           <div class="mt-5 grid gap-3 text-sm text-white/65">
-            <a href="#top" class="hover:text-white">Misi kami</a>
-            <a href="#kemitraan" class="hover:text-white">Jadi mitra</a>
-            <a href="#dashboard" class="hover:text-white">Laporan dampak</a>
-            <a href="#top" class="hover:text-white">Kebijakan privasi</a>
+            <a href="/#top" class="hover:text-white">Misi kami</a>
+            <a href="/kemitraan" class="hover:text-white">Jadi mitra</a>
+            <a href="/dampak" class="hover:text-white">Laporan dampak</a>
+            <a href="/#top" class="hover:text-white">Kebijakan privasi</a>
           </div>
         </div>
       </div>
@@ -685,11 +756,21 @@
     import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 
     const siteHeader = document.getElementById('site-header');
-    const syncHeader = () => { if (!siteHeader) return; siteHeader.classList.toggle('hero-nav', window.scrollY < 40); siteHeader.classList.toggle('nav-scrolled', window.scrollY >= 40); };
+    const isHomePage = document.documentElement.dataset.page === 'home';
+    const syncHeader = () => {
+      if (!siteHeader) return;
+      const transparent = isHomePage && window.scrollY < 40;
+      siteHeader.classList.toggle('hero-nav', transparent);
+      siteHeader.classList.toggle('nav-scrolled', !transparent);
+    };
     syncHeader(); window.addEventListener('scroll', syncHeader, {passive:true});
     const $ = (s) => document.querySelector(s);
     const $$ = (s) => [...document.querySelectorAll(s)];
     const toast = (message) => { const el=$('#toast'); el.textContent=message; el.classList.add('show'); clearTimeout(window.toastTimer); window.toastTimer=setTimeout(()=>el.classList.remove('show'),3200); };
+    const currentPath = location.pathname.replace(/\/+$/, '') || '/';
+    document.querySelectorAll('header .nav-links a, header .mobile-link').forEach(link => {
+      if (link.pathname === currentPath) link.setAttribute('aria-current', 'page');
+    });
 
     const toggle=document.getElementById('menu-toggle');
     const closeMenu=document.getElementById('close-menu');
@@ -717,11 +798,11 @@
 
     const languageCopy = {
       id: {
-        nav: ['Peta','Dashboard','Komunitas','Pulangkan Air','Belajar','Media'],
+        nav: ['Peta','Dampak','Komunitas','Aksi','Belajar','Media'],
         monitor:'Mulai monitoring', join:'Gabung komunitas', dashboard:'Dampak yang bisa dilihat.', map:'Lihat kondisi mata air.', community:'Kontribusi kecil. Jejak yang terlihat.', points:'Cara dapat poin', returnWater:'Pulangkan air hujan ke rumahnya.', learn:'Belajar sebelum bergerak.', media:'Cerita dari lapangan.'
       },
       en: {
-        nav: ['Map','Dashboard','Community','Return Water','Learn','Media'],
+        nav: ['Map','Impact','Community','Projects','Learn','Media'],
         monitor:'Start monitoring', join:'Join the community', dashboard:'Impact you can see.', map:'See the condition of our springs.', community:'Small contributions. Visible traces.', points:'How to earn points', returnWater:'Return rainwater to its source.', learn:'Learn before you act.', media:'Stories from the field.'
       }
     };
@@ -731,9 +812,9 @@
       document.documentElement.lang = lang === 'en' ? 'en' : 'id';
       document.title = 'Belik Hub';
       if (languageButton) languageButton.textContent = lang.toUpperCase();
-      const navLabels = {'#map': c.nav[0], '#dashboard': c.nav[1], '#community': c.nav[2], '#pulangkan-air': c.nav[3], '#learn': c.nav[4], '#media': c.nav[5]};
+      const navLabels = {'/peta': c.nav[0], '/dampak': c.nav[1], '/komunitas': c.nav[2], '/aksi': c.nav[3], '/belajar': c.nav[4], '/media': c.nav[5]};
       document.querySelectorAll('header .mobile-link, header .nav-links a').forEach(a => {
-        const label = navLabels[a.getAttribute('href')];
+        const label = navLabels[a.pathname];
         if (!label) return;
         const target = a.querySelector('.nav-label') || a;
         target.textContent = label;
@@ -888,7 +969,7 @@
     }));
 
     const points = [{name:'Tuk Bismo',lat:-7.02,lng:109.91,status:'healthy'},{name:'Belik Soka',lat:-8.01,lng:110.61,status:'restored'},{name:'Wonomerto',lat:-7.29,lng:110.09,status:'attention'},{name:'Rowo Santen',lat:-7.91,lng:110.34,status:'healthy'},{name:'Watulumbung',lat:-7.23,lng:109.91,status:'restored'}];
-    if(window.L){
+    if(window.L && document.documentElement.dataset.page === 'peta'){
       const map=L.map('map-canvas',{scrollWheelZoom:true}).setView([-7.35,110.2],7);
       window.belikhubMap=map;
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {

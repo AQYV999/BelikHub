@@ -21,11 +21,27 @@ Arsitektur: Frontend statis (`index.html`) -> Vercel Serverless Functions (`/api
     firebase.json
     vercel.json
 
+## Halaman situs
+
+Situs menggunakan satu kerangka HTML bersama di `index.html`; rute menentukan bagian utama yang ditampilkan. Vercel mengarahkan rute halaman ke kerangka tersebut, sedangkan aset dan endpoint API tetap dilayani terpisah.
+
+- `/` — Beranda
+- `/peta` — Peta mata air
+- `/dampak` — Statistik dan laporan dampak
+- `/komunitas` — Kontribusi komunitas dan agenda
+- `/aksi` — Program aksi rorak
+- `/belajar` — Kursus dan bacaan
+- `/media` — Video dan publikasi
+- `/kemitraan` — Informasi dan formulir kemitraan
+
 ## Pengembangan lokal
 
     npm install
+    vercel login
     vercel env pull .env.local
-    npm run dev
+    npx vercel dev --listen 127.0.0.1:3000
+
+Gunakan Vercel CLI untuk mencoba semua rute dan endpoint API lokal; server statis sederhana seperti `python -m http.server` tidak menerapkan rewrite URL halaman. CLI perlu login ke akun Vercel.
 
 ## Environment variable (set di Vercel, jangan di-commit)
 
@@ -64,6 +80,6 @@ Beri custom claim admin lewat Admin SDK:
 
 ## Skrip
 
-- npm run dev: vercel dev
+- npx vercel dev --listen 127.0.0.1:3000: server pengembangan lokal dengan rewrite dan API
 - npm run deploy: vercel --prod
 - npm run lint: ESLint untuk api/ dan lib/
