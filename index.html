@@ -759,10 +759,12 @@
 
     const apiRequest = async (path, payload, options = {}) => {
       const needsAuth = options.auth !== false;
-      let token = null;
-      if (needsAuth && currentUser) token = await currentUser.getIdToken();
       const headers = { 'Content-Type': 'application/json' };
-      if (token) headers['Authorization'] = `Bearer ${token}`;
+      if (needsAuth) {
+        const user = currentUser || auth?.currentUser;
+        if (!user) throw new Error('Silakan masuk dulu sebelum mengirim laporan.');
+        headers['Authorization'] = `Bearer ${await user.getIdToken()}`;
+      }
       const response = await fetch(path, { method: 'POST', headers, body: JSON.stringify(payload) });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || 'Request failed');
@@ -804,6 +806,11 @@
     }));
 
     $$('.report-card').forEach(el => el.addEventListener('click', () => {
+      if (!(currentUser || auth?.currentUser)) {
+        toast('Masuk dulu untuk mengirim laporan.');
+        openLogin({ preventDefault() {} });
+        return;
+      }
       openModal(el.dataset.report, reportForm(el.dataset.report, el.textContent.match(/\+[\d.]+/)?.[0] || '100'));
       $('#report-form')?.addEventListener('submit', async e => {
         e.preventDefault();
