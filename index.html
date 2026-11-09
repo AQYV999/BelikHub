@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="BelikHub — platform komunitas untuk memantau, memulihkan, dan menjaga mata air Indonesia." />
-  <title>BelikHub — Pemulihan Sumber Air Berbasis Komunitas</title>
+  <title>Belik Hub</title>
   <link rel="icon" type="image/webp" href="/icons/logo.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -729,7 +729,7 @@
     const setLanguage = (lang) => {
       const c = languageCopy[lang] || languageCopy.id;
       document.documentElement.lang = lang === 'en' ? 'en' : 'id';
-      document.title = lang === 'en' ? 'BelikHub — Community-Driven Water Restoration' : 'BelikHub — Pemulihan Sumber Air Berbasis Komunitas';
+      document.title = 'Belik Hub';
       if (languageButton) languageButton.textContent = lang.toUpperCase();
       const navLabels = {'#map': c.nav[0], '#dashboard': c.nav[1], '#community': c.nav[2], '#pulangkan-air': c.nav[3], '#learn': c.nav[4], '#media': c.nav[5]};
       document.querySelectorAll('header .mobile-link, header .nav-links a').forEach(a => {
