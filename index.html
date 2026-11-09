@@ -182,8 +182,18 @@
     .media-video-ready ~ .media-fallback{display:none}
     .page-card{display:block;height:100%;border:1px solid var(--teks);padding:1.5rem;background:var(--card);transition:background .2s,transform .2s}
     .page-card:hover{background:var(--tint);transform:translateY(-2px)}
+    .story-photo{position:relative;overflow:hidden;background:var(--tint)}
+    .story-photo img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .6s}
+    .story-photo:hover img{transform:scale(1.035)}
+    .story-caption{position:absolute;inset:auto 0 0;padding:3rem 1.25rem 1rem;color:#fff;background:linear-gradient(transparent,rgba(5,30,35,.78))}
+    .story-card{position:relative;min-height:290px;overflow:hidden;background:var(--ink,#0B2A33);color:#fff}
+    .story-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s}
+    .story-card:hover img{transform:scale(1.035)}
+    .story-card::after{position:absolute;inset:0;content:"";background:linear-gradient(180deg,rgba(5,30,35,.04) 20%,rgba(5,30,35,.8) 100%)}
+    .story-card figcaption{position:absolute;z-index:1;inset:auto 0 0;padding:1.25rem}
+    .impact-number{font-family:'Fraunces',serif;font-size:clamp(2.5rem,5vw,4.5rem);font-weight:600;line-height:1;color:var(--accent)}
     .nav-links a[aria-current="page"]{border-bottom-color:currentColor}
-    html[data-page="home"] #top > section:not(#hero):not(#home-links),
+    html[data-page="home"] #top > section:not(#hero):not(#visi):not(#home-impact):not(#home-stories):not(#home-links),
     html[data-page="peta"] #top > section:not(#map),
     html[data-page="dampak"] #top > section:not(#dashboard),
     html[data-page="komunitas"] #top > section:not(#community):not(#agenda),
@@ -231,11 +241,9 @@
       </a>
 
       <div class="nav-links hidden items-center gap-8 lg:flex">
-        <a href="/peta"><span class="nav-num">01</span><span class="nav-label">Peta</span></a>
-        <a href="/dampak"><span class="nav-num">02</span><span class="nav-label">Dampak</span></a>
-        <a href="/komunitas"><span class="nav-num">03</span><span class="nav-label">Komunitas</span></a>
-        <a href="/aksi"><span class="nav-num">04</span><span class="nav-label">Aksi</span></a>
-        <a href="/belajar"><span class="nav-num">05</span><span class="nav-label">Belajar</span></a>
+        <a href="/#visi"><span class="nav-label">Cerita kami</span></a>
+        <a href="/dampak"><span class="nav-label">Dampak</span></a>
+        <a href="/peta"><span class="nav-label">Jelajahi</span></a>
       </div>
 
       <div class="hidden items-center gap-3 md:flex">
@@ -246,7 +254,7 @@
         </button>
         <a href="#" id="login-btn" class="px-3 py-2 text-sm font-bold hover:opacity-70">Masuk</a>
         <button id="logout-btn" class="hidden px-3 py-2 text-sm font-bold hover:opacity-70">Keluar</button>
-        <a href="/kemitraan" class="btn btn-teal">Jadi mitra</a>
+        <a href="/komunitas" class="btn btn-teal">Bergabung</a>
       </div>
 
       <button id="menu-toggle" class="nav-btn w-10 lg:hidden" aria-label="Buka menu"><i class="ph ph-list text-xl"></i></button>
@@ -260,17 +268,14 @@
           <button id="close-menu" class="nav-btn w-10" aria-label="Tutup menu"><i class="ph ph-x text-xl"></i></button>
         </div>
         <div class="serif flex flex-col text-3xl font-semibold">
-          <a href="/peta" class="mobile-link border-t border-white/20 py-3 hover:text-sun">Peta</a>
+          <a href="/#visi" class="mobile-link border-t border-white/20 py-3 hover:text-sun">Cerita kami</a>
           <a href="/dampak" class="mobile-link border-t border-white/20 py-3 hover:text-sun">Dampak</a>
-          <a href="/komunitas" class="mobile-link border-t border-white/20 py-3 hover:text-sun">Komunitas</a>
-          <a href="/aksi" class="mobile-link border-t border-white/20 py-3 hover:text-sun">Aksi rorak</a>
-          <a href="/belajar" class="mobile-link border-t border-white/20 py-3 hover:text-sun">Belajar</a>
-          <a href="/media" class="mobile-link border-t border-white/20 py-3 hover:text-sun">Media</a>
-          <a href="/kemitraan" class="mobile-link border-y border-white/20 py-3 hover:text-sun">Kemitraan</a>
+          <a href="/peta" class="mobile-link border-t border-white/20 py-3 hover:text-sun">Jelajahi peta</a>
+          <a href="/media" class="mobile-link border-y border-white/20 py-3 hover:text-sun">Cerita lapangan</a>
         </div>
         <div class="mt-auto flex flex-col gap-3">
           <a href="#" id="login-btn-mobile" class="btn btn-line-light w-full">Masuk</a>
-          <a href="/kemitraan" class="mobile-link btn btn-sun w-full">Jadi mitra</a>
+          <a href="/komunitas" class="mobile-link btn btn-sun w-full">Bergabung</a>
         </div>
       </div>
     </div>
@@ -287,40 +292,98 @@
 
       <div class="wrap relative z-10 flex w-full flex-1 items-center py-16">
         <div class="rise max-w-4xl">
-          <p class="label mb-8 flex items-center gap-3 text-white/80"><span class="stamp">Edisi 2026</span> Pemulihan air berbasis komunitas</p>
-          <h1 class="h1">Air yang hidup.<br><em class="c-sun" style="font-weight:500">Komunitas yang bergerak.</em></h1>
-          <p class="mt-8 max-w-xl text-lg leading-relaxed text-white/80 md:text-xl">Pantau mata air, ikut memulihkan ekosistemnya, dan lihat kontribusi komunitas tumbuh dalam satu ruang terbuka.</p>
+          <p class="label mb-8 flex items-center gap-3 text-white/80"><span class="stamp">Gerakan bersama</span> Memulihkan mata air, satu langkah demi satu</p>
+          <h1 class="h1">Air kembali mengalir.<br><em class="c-sun" style="font-weight:500">Alam pulih, warga bergerak.</em></h1>
+          <p id="hero-intro" class="mt-8 max-w-xl text-lg leading-relaxed text-white/80 md:text-xl">Kami merawat mata air bersama warga—menjaga alam, menghidupkan kembali sumber air, dan merawat harapan untuk generasi berikutnya.</p>
           <div class="mt-10 flex flex-col gap-3 sm:flex-row">
-            <a href="/peta" class="btn btn-sun"><span id="hero-monitor-text">Mulai monitoring</span> <i class="ph ph-arrow-right text-lg"></i></a>
-            <a href="/komunitas" class="btn btn-line-light"><span id="hero-join-text">Gabung komunitas</span></a>
+            <a href="#home-stories" class="btn btn-sun"><span id="hero-monitor-text">Lihat cerita lapangan</span> <i class="ph ph-arrow-right text-lg"></i></a>
+            <a href="/dampak" class="btn btn-line-light"><span id="hero-join-text">Lihat dampak</span></a>
           </div>
         </div>
       </div>
 
       <div class="relative z-10 border-t border-white/25">
         <div class="wrap grid grid-cols-1 sm:grid-cols-3">
-          <p class="label border-white/25 py-4 text-white/70 sm:border-r sm:pr-4">Jawa Tengah · DIY · Jawa Timur</p>
-          <p class="label border-white/25 py-4 text-white/70 sm:border-r sm:px-4">Koordinat publik dibulatkan ±5 km</p>
-          <p class="label py-4 text-white/70 sm:pl-4">Data diperbarui oleh relawan</p>
+          <p class="label border-white/25 py-4 text-white/70 sm:border-r sm:pr-4">Berakar di Jawa Tengah, DIY, dan Jawa Timur</p>
+          <p class="label border-white/25 py-4 text-white/70 sm:border-r sm:px-4">Digerakkan bersama komunitas lokal</p>
+          <p class="label py-4 text-white/70 sm:pl-4">Menjaga sumber air untuk masa depan</p>
         </div>
+      </div>
+    </section>
+
+    <section id="visi" class="sec">
+      <div class="wrap grid items-center gap-10 lg:grid-cols-[1fr_1.05fr] lg:gap-20">
+        <div>
+          <p class="label mb-5"><span class="c-accent">Mengapa BelikHub</span> — Air adalah kehidupan</p>
+          <h2 class="h2">Mata air terjaga, kehidupan tumbuh bersama.</h2>
+          <p class="muted mt-6 max-w-xl text-lg leading-relaxed">Kami percaya pemulihan dimulai ketika warga kembali terhubung dengan sumber airnya. BelikHub mempertemukan pengetahuan lokal, aksi nyata, dan orang-orang yang ingin menjaga mata air tetap hidup.</p>
+          <a href="/komunitas" class="link-arrow mt-7">Kenali gerakan kami <i class="ph ph-arrow-right"></i></a>
+        </div>
+        <figure class="story-photo h-[320px] sm:h-[440px]">
+          <img src="/images/galeri-hulu.jpg" alt="Foto ilustrasi lanskap perbukitan hijau" loading="lazy" />
+          <figcaption class="story-caption">
+            <span class="label">Foto ilustrasi · Unsplash</span>
+            <p class="serif mt-2 text-2xl">Menjaga mata air berarti menjaga kehidupan di sekitarnya.</p>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="home-impact" class="sec" style="background:var(--tint)">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="label"><span class="c-accent">Jejak gerakan</span> — Tumbuh bersama</p>
+          <h2 class="h2">Setiap aksi kecil punya arti.</h2>
+          <p class="muted sec-lead max-w-2xl">Dari mata air yang dipantau hingga pohon yang tumbuh, dampak terbentuk dari kerja bersama warga dan relawan.</p>
+        </div>
+        <div class="grid gap-6 border-y border-[var(--line)] py-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div><p class="impact-number">500+</p><p class="mt-3 font-semibold">Mata air dipantau</p></div>
+          <div><p class="impact-number">30+</p><p class="mt-3 font-semibold">Mata air dipulihkan</p></div>
+          <div><p class="impact-number">20.000+</p><p class="mt-3 font-semibold">Pohon lokal ditanam</p></div>
+          <div><p class="impact-number">200+</p><p class="mt-3 font-semibold">Rorak resapan dibangun</p></div>
+        </div>
+        <p class="label muted mt-4">Angka pratinjau — perbarui dengan data lapangan terverifikasi sebelum publikasi.</p>
+      </div>
+    </section>
+
+    <section id="home-stories" class="sec">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="label"><span class="c-accent">Catatan lapangan</span> — Cerita yang terus tumbuh</p>
+          <h2 class="h2">Pemulihan terlihat dari dekat.</h2>
+          <p class="muted sec-lead max-w-2xl">Ruang untuk menampilkan perjalanan warga, kondisi sumber air, dan perubahan yang terjadi dari waktu ke waktu.</p>
+        </div>
+        <div class="grid gap-4 md:grid-cols-2">
+          <figure class="story-card md:row-span-2 md:min-h-[590px]">
+            <img src="/images/galeri-hutan.jpg" alt="Foto ilustrasi hutan tropis yang rimbun" loading="lazy" />
+            <figcaption><span class="label">Foto ilustrasi · Unsplash</span><h3 class="serif mt-2 text-3xl font-semibold">Merawat hulu, menjaga sumber kehidupan.</h3></figcaption>
+          </figure>
+          <figure class="story-card min-h-[285px]">
+            <img src="/images/galeri-lanskap.jpg" alt="Foto ilustrasi bentang alam hijau" loading="lazy" />
+            <figcaption><span class="label">Foto ilustrasi · Unsplash</span><h3 class="serif mt-2 text-2xl font-semibold">Memulihkan alam, satu kawasan demi satu.</h3></figcaption>
+          </figure>
+          <figure class="story-card min-h-[285px]">
+            <video autoplay loop muted playsinline preload="metadata" class="absolute inset-0 h-full w-full object-cover">
+              <source src="/videos/media.mp4" type="video/mp4" />
+            </video>
+            <figcaption><span class="label">Video pratinjau · ganti dengan dokumentasi lapangan</span><h3 class="serif mt-2 text-2xl font-semibold">Gerakan bersama untuk mata air.</h3></figcaption>
+          </figure>
+        </div>
+        <a href="/media" class="link-arrow mt-8">Lihat semua cerita <i class="ph ph-arrow-right"></i></a>
       </div>
     </section>
 
     <section id="home-links" class="sec">
       <div class="wrap">
         <div class="sec-head">
-          <p class="label"><span class="c-accent">Jelajahi</span> — Ruang BelikHub</p>
-          <h2 class="h2">Mulai dari yang ingin Anda lakukan.</h2>
-          <p class="muted sec-lead max-w-2xl">Pantau mata air, lihat dampak, atau ikut bergerak bersama komunitas.</p>
+          <p class="label"><span class="c-accent">Mulai bergerak</span> — Temukan peran Anda</p>
+          <h2 class="h2">Perubahan dimulai dari langkah bersama.</h2>
+          <p class="muted sec-lead max-w-2xl">Lihat perkembangan, jelajahi peta, atau bergabung dalam gerakan pemulihan mata air.</p>
         </div>
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <a href="/peta" class="page-card"><span class="label c-accent">01 — Pantau</span><h3 class="h3 mt-4">Peta mata air</h3><p class="muted mt-2 text-sm">Jelajahi titik mata air dan status pemulihannya.</p></a>
-          <a href="/dampak" class="page-card"><span class="label c-accent">02 — Tinjau</span><h3 class="h3 mt-4">Dampak</h3><p class="muted mt-2 text-sm">Lihat perkembangan pemulihan dan laporan komunitas.</p></a>
-          <a href="/komunitas" class="page-card"><span class="label c-accent">03 — Berkontribusi</span><h3 class="h3 mt-4">Komunitas</h3><p class="muted mt-2 text-sm">Ikut kegiatan dan bantu mencatat kondisi mata air.</p></a>
-          <a href="/aksi" class="page-card"><span class="label c-accent">04 — Bertindak</span><h3 class="h3 mt-4">Aksi rorak</h3><p class="muted mt-2 text-sm">Dukung kegiatan resapan air di wilayah sekitar.</p></a>
-          <a href="/belajar" class="page-card"><span class="label c-accent">05 — Pelajari</span><h3 class="h3 mt-4">Pusat belajar</h3><p class="muted mt-2 text-sm">Kenali ekosistem mata air dan praktik pemulihannya.</p></a>
-          <a href="/kemitraan" class="page-card"><span class="label c-accent">06 — Berkolaborasi</span><h3 class="h3 mt-4">Kemitraan</h3><p class="muted mt-2 text-sm">Rancang program pemulihan bersama BelikHub.</p></a>
-          <a href="/media" class="page-card sm:col-span-2 lg:col-span-1"><span class="label c-accent">07 — Ikuti cerita</span><h3 class="h3 mt-4">Media</h3><p class="muted mt-2 text-sm">Lihat video, publikasi, dan kisah dari lapangan.</p></a>
+        <div class="grid gap-4 md:grid-cols-3">
+          <a href="/dampak" class="page-card"><span class="label c-accent">Lihat perubahan</span><h3 class="h3 mt-4">Dampak kami</h3><p class="muted mt-2 text-sm">Kenali perkembangan pemulihan mata air dan kontribusi warga.</p></a>
+          <a href="/peta" class="page-card"><span class="label c-accent">Jelajahi wilayah</span><h3 class="h3 mt-4">Peta mata air</h3><p class="muted mt-2 text-sm">Lihat titik pantau dan status pemulihan sumber air.</p></a>
+          <a href="/komunitas" class="page-card"><span class="label c-accent">Ambil bagian</span><h3 class="h3 mt-4">Bergabung</h3><p class="muted mt-2 text-sm">Temukan cara sederhana untuk ikut menjaga mata air.</p></a>
         </div>
       </div>
     </section>
@@ -366,86 +429,79 @@
     <section id="dashboard" class="sec">
       <div class="wrap">
         <div class="sec-head">
-          <p class="label"><span class="c-accent">§ 02</span> — Dampak nyata</p>
-          <h2 class="h2">Dampak yang bisa dilihat.</h2>
-          <p class="muted sec-lead max-w-2xl">Setiap laporan lapangan menjadi bagian dari gambaran yang lebih besar tentang pemulihan air di Indonesia.</p>
+          <p class="label"><span class="c-accent">Dampak nyata</span> — Tumbuh dari kerja bersama</p>
+          <h2 class="h2">Perubahan yang dirawat bersama.</h2>
+          <p class="muted sec-lead max-w-2xl">Di balik setiap angka ada warga, relawan, dan alam yang pulih. Inilah gambaran awal perjalanan BelikHub.</p>
         </div>
 
-        <div>
-          <div class="stat-row">
-            <p class="label muted">01</p>
-            <div><p class="h3">Mata air terpantau</p><p class="muted mt-1 text-sm">dipantau oleh komunitas</p></div>
-            <p class="stat-num">500<small>+</small></p>
-          </div>
-          <div class="stat-row">
-            <p class="label muted">02</p>
-            <div><p class="h3">Mata air dipulihkan</p><p class="muted mt-1 text-sm">lokasi yang telah dipulihkan</p></div>
-            <p class="stat-num">30<small>+</small></p>
-          </div>
-          <div class="stat-row">
-            <p class="label muted">03</p>
-            <div><p class="h3">Pohon lokal</p><p class="muted mt-1 text-sm">pohon endemik yang ditanam</p></div>
-            <p class="stat-num">20k<small>+</small></p>
-          </div>
-          <div class="stat-row">
-            <p class="label muted">04</p>
-            <div><p class="h3">Rorak resapan</p><p class="muted mt-1 text-sm">rorak untuk mengisi kembali air tanah</p></div>
-            <p class="stat-num">200<small>+</small></p>
-          </div>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <article class="frame p-6"><p class="impact-number">500+</p><h3 class="h3 mt-4">Mata air dipantau</h3><p class="muted mt-2 text-sm">Warga ikut memperhatikan kondisi sumber air.</p></article>
+          <article class="frame p-6"><p class="impact-number">30+</p><h3 class="h3 mt-4">Mata air dipulihkan</h3><p class="muted mt-2 text-sm">Upaya pemulihan dilakukan bersama komunitas.</p></article>
+          <article class="frame p-6"><p class="impact-number">20k+</p><h3 class="h3 mt-4">Pohon lokal ditanam</h3><p class="muted mt-2 text-sm">Vegetasi membantu menjaga kawasan resapan.</p></article>
+          <article class="frame p-6"><p class="impact-number">200+</p><h3 class="h3 mt-4">Rorak dibangun</h3><p class="muted mt-2 text-sm">Aksi warga untuk membantu air meresap ke tanah.</p></article>
+        </div>
+        <p class="label muted mt-4">Angka pratinjau — perbarui dengan data lapangan terverifikasi sebelum publikasi.</p>
+
+        <div class="mt-12 grid gap-4 md:grid-cols-2">
+          <figure class="story-photo h-[280px] sm:h-[360px]">
+            <img src="/images/galeri-hutan.jpg" alt="Foto ilustrasi hutan tropis" loading="lazy" />
+            <figcaption class="story-caption"><span class="label">Foto ilustrasi · Unsplash</span><p class="serif mt-2 text-2xl">Ekosistem yang sehat membantu mata air tetap hidup.</p></figcaption>
+          </figure>
+          <figure class="story-photo h-[280px] sm:h-[360px]">
+            <img src="/images/galeri-lanskap.jpg" alt="Foto ilustrasi kawasan hijau" loading="lazy" />
+            <figcaption class="story-caption"><span class="label">Foto ilustrasi · Unsplash</span><p class="serif mt-2 text-2xl">Pemulihan bertumbuh lewat langkah-langkah bersama.</p></figcaption>
+          </figure>
         </div>
 
-        <div class="mt-10 grid gap-6 md:grid-cols-2">
-          <div class="border-t border-dashed pt-4" style="border-color:var(--line)">
-            <p class="label c-accent">Standar pemeliharaan</p>
-            <p class="mt-2 text-sm">Target layanan perbaikan lapangan ≤ <span data-metric="sla_hours">72</span> jam, dengan target ≥ <span data-metric="sla_target_pct">80</span>% laporan selesai tepat waktu.</p>
-          </div>
-          <div class="border-t border-dashed pt-4" style="border-color:var(--line)">
-            <p class="label c-accent">BUKTI LAPANGAN ANTIKECURANGAN</p>
-            <p class="mt-2 text-sm">Kamera langsung melalui aplikasi web, dengan akurasi lokasi ≤ <span data-metric="gps_accuracy_m">15</span> meter dan penanda waktu.</p>
-          </div>
-          <div class="border-t border-dashed pt-4" style="border-color:var(--line)">
-            <p class="label c-accent">Batas resesi debit</p>
-            <p class="mt-2 text-sm">Penurunan debit puncak kemarau ditahan agar tidak anjlok lebih dari <span data-metric="recession_limit_pct">20</span>% per tahun.</p>
-          </div>
-          <div class="border-t border-dashed pt-4" style="border-color:var(--line)">
-            <p class="label c-accent">Laporan audit</p>
-            <p class="mt-2 text-sm">PDF otomatis terbit setiap tanggal 1 dan dikirim ke mitra CSR serta desa.</p>
-          </div>
-        </div>
-
-        <div class="mt-8 flex flex-wrap items-center gap-3">
-          <span class="label muted">Selaras dengan</span>
-          <span class="stamp c-accent">SDG 6 · Air bersih &amp; sanitasi</span>
-          <span class="stamp c-accent">SDG 8 · Pekerjaan layak</span>
-          <span class="stamp c-accent">SDG 13 · Iklim</span>
-          <span class="stamp c-accent">SDG 15 · Ekosistem darat</span>
-        </div>
-
-        <div class="mt-16 grid gap-12 lg:grid-cols-2 lg:gap-16">
-          <div>
-            <div class="flex items-baseline justify-between border-b-2 pb-3" style="border-color:var(--teks)">
-              <h3 class="h3">Aktivitas bulanan</h3>
-              <button class="link-arrow">Lihat arsip <i class="ph ph-arrow-up-right"></i></button>
+        <details class="mt-12 border-t border-[var(--line)] pt-5">
+          <summary class="cursor-pointer font-semibold">Metode pemantauan dan catatan kegiatan</summary>
+          <div class="mt-8">
+            <div class="grid gap-6 md:grid-cols-2">
+              <div class="border-t border-dashed pt-4" style="border-color:var(--line)">
+                <p class="label c-accent">Standar pemeliharaan</p>
+                <p class="mt-2 text-sm">Target layanan perbaikan lapangan ≤ <span data-metric="sla_hours">72</span> jam, dengan target ≥ <span data-metric="sla_target_pct">80</span>% laporan selesai tepat waktu.</p>
+              </div>
+              <div class="border-t border-dashed pt-4" style="border-color:var(--line)">
+                <p class="label c-accent">Bukti lapangan</p>
+                <p class="mt-2 text-sm">Catatan lapangan dapat dilengkapi foto, lokasi, dan penanda waktu untuk membantu proses verifikasi.</p>
+              </div>
+              <div class="border-t border-dashed pt-4" style="border-color:var(--line)">
+                <p class="label c-accent">Batas resesi debit</p>
+                <p class="mt-2 text-sm">Penurunan debit puncak kemarau ditargetkan tidak melebihi <span data-metric="recession_limit_pct">20</span>% per tahun.</p>
+              </div>
+              <div class="border-t border-dashed pt-4" style="border-color:var(--line)">
+                <p class="label c-accent">Laporan audit</p>
+                <p class="mt-2 text-sm">Ringkasan kegiatan disiapkan untuk dibagikan kepada mitra dan komunitas setempat.</p>
+              </div>
             </div>
-            <div class="mt-6 space-y-6">
-              <div><div class="mb-2 flex items-baseline justify-between text-sm"><span>Survei Mata Air</span><b class="label c-accent">42</b></div><div class="bar"><i style="width:100%"></i></div></div>
-              <div><div class="mb-2 flex items-baseline justify-between text-sm"><span>Penanaman Pohon</span><b class="label c-accent">18</b></div><div class="bar"><i style="width:43%"></i></div></div>
-              <div><div class="mb-2 flex items-baseline justify-between text-sm"><span>Pembangunan Rorak</span><b class="label c-accent">07</b></div><div class="bar"><i style="width:17%"></i></div></div>
+            <div class="mt-8 flex flex-wrap items-center gap-3">
+              <span class="label muted">Selaras dengan</span>
+              <span class="stamp c-accent">SDG 6 · Air bersih &amp; sanitasi</span>
+              <span class="stamp c-accent">SDG 8 · Pekerjaan layak</span>
+              <span class="stamp c-accent">SDG 13 · Iklim</span>
+              <span class="stamp c-accent">SDG 15 · Ekosistem darat</span>
+            </div>
+            <div class="mt-12 grid gap-12 lg:grid-cols-2 lg:gap-16">
+              <div>
+                <h3 class="h3 border-b-2 pb-3" style="border-color:var(--teks)">Aktivitas bulanan</h3>
+                <div class="mt-6 space-y-6">
+                  <div><div class="mb-2 flex items-baseline justify-between text-sm"><span>Survei Mata Air</span><b class="label c-accent">42</b></div><div class="bar"><i style="width:100%"></i></div></div>
+                  <div><div class="mb-2 flex items-baseline justify-between text-sm"><span>Penanaman Pohon</span><b class="label c-accent">18</b></div><div class="bar"><i style="width:43%"></i></div></div>
+                  <div><div class="mb-2 flex items-baseline justify-between text-sm"><span>Pembangunan Rorak</span><b class="label c-accent">07</b></div><div class="bar"><i style="width:17%"></i></div></div>
+                </div>
+              </div>
+              <div>
+                <h3 class="h3 border-b-2 pb-3" style="border-color:var(--teks)">Logbook terbaru</h3>
+                <div class="mt-2">
+                  <div class="log-line"><span class="label muted">No. 014</span><span class="flex-1"><b>Tuk Bismo</b><span class="label muted ml-3">7.0°S 109.9°E</span></span><span class="label muted">04 Nov</span></div>
+                  <div class="log-line"><span class="label muted">No. 013</span><span class="flex-1"><b>Rowo Santen</b><span class="label muted ml-3">7.9°S 110.3°E</span></span><span class="label muted">18 Okt</span></div>
+                  <div class="log-line"><span class="label muted">No. 012</span><span class="flex-1"><b>Wonomerto</b><span class="label muted ml-3">7.3°S 110.1°E</span></span><span class="label muted">12 Okt</span></div>
+                </div>
+                <p class="label muted mt-4">Koordinat dibulatkan demi keamanan sumber air.</p>
+              </div>
             </div>
           </div>
-          <div>
-            <div class="flex items-baseline justify-between border-b-2 pb-3" style="border-color:var(--teks)">
-              <h3 class="h3">Logbook terbaru</h3>
-              <button class="link-arrow">Semua laporan <i class="ph ph-arrow-up-right"></i></button>
-            </div>
-            <div class="mt-2">
-              <div class="log-line"><span class="label muted">No. 014</span><span class="flex-1"><b>Tuk Bismo</b><span class="label muted ml-3">7.0°S 109.9°E</span></span><span class="label muted">04 Nov</span></div>
-              <div class="log-line"><span class="label muted">No. 013</span><span class="flex-1"><b>Rowo Santen</b><span class="label muted ml-3">7.9°S 110.3°E</span></span><span class="label muted">18 Okt</span></div>
-              <div class="log-line"><span class="label muted">No. 012</span><span class="flex-1"><b>Wonomerto</b><span class="label muted ml-3">7.3°S 110.1°E</span></span><span class="label muted">12 Okt</span></div>
-            </div>
-            <p class="label muted mt-4">Koordinat dibulatkan demi keamanan sumber air.</p>
-          </div>
-        </div>
+        </details>
       </div>
     </section>
 
@@ -798,12 +854,16 @@
 
     const languageCopy = {
       id: {
-        nav: ['Peta','Dampak','Komunitas','Aksi','Belajar','Media'],
-        monitor:'Mulai monitoring', join:'Gabung komunitas', dashboard:'Dampak yang bisa dilihat.', map:'Lihat kondisi mata air.', community:'Kontribusi kecil. Jejak yang terlihat.', points:'Cara dapat poin', returnWater:'Pulangkan air hujan ke rumahnya.', learn:'Belajar sebelum bergerak.', media:'Cerita dari lapangan.'
+        nav: ['Cerita kami','Dampak','Jelajahi','Cerita lapangan','Bergabung'],
+        monitor:'Lihat cerita lapangan', join:'Lihat dampak', intro:'Kami merawat mata air bersama warga—menjaga alam, menghidupkan kembali sumber air, dan merawat harapan untuk generasi berikutnya.',
+        vision:'Mata air terjaga, kehidupan tumbuh bersama.', homeImpact:'Setiap aksi kecil punya arti.', homeStories:'Pemulihan terlihat dari dekat.',
+        dashboard:'Perubahan yang dirawat bersama.', map:'Lihat kondisi mata air.', community:'Kontribusi kecil. Jejak yang terlihat.', points:'Cara dapat poin', returnWater:'Pulangkan air hujan ke rumahnya.', learn:'Belajar sebelum bergerak.', media:'Cerita dari lapangan.'
       },
       en: {
-        nav: ['Map','Impact','Community','Projects','Learn','Media'],
-        monitor:'Start monitoring', join:'Join the community', dashboard:'Impact you can see.', map:'See the condition of our springs.', community:'Small contributions. Visible traces.', points:'How to earn points', returnWater:'Return rainwater to its source.', learn:'Learn before you act.', media:'Stories from the field.'
+        nav: ['Our story','Impact','Explore','Field stories','Join us'],
+        monitor:'See field stories', join:'See our impact', intro:'Together with local communities, we care for nature, restore springs, and nurture hope for generations to come.',
+        vision:'Healthy springs help life thrive together.', homeImpact:'Every small action matters.', homeStories:'Restoration, seen up close.',
+        dashboard:'Change we nurture together.', map:'See the condition of our springs.', community:'Small contributions. Visible traces.', points:'How to earn points', returnWater:'Return rainwater to its source.', learn:'Learn before you act.', media:'Stories from the field.'
       }
     };
 
@@ -812,7 +872,7 @@
       document.documentElement.lang = lang === 'en' ? 'en' : 'id';
       document.title = 'Belik Hub';
       if (languageButton) languageButton.textContent = lang.toUpperCase();
-      const navLabels = {'/peta': c.nav[0], '/dampak': c.nav[1], '/komunitas': c.nav[2], '/aksi': c.nav[3], '/belajar': c.nav[4], '/media': c.nav[5]};
+      const navLabels = {'/': c.nav[0], '/dampak': c.nav[1], '/peta': c.nav[2], '/media': c.nav[3], '/komunitas': c.nav[4]};
       document.querySelectorAll('header .mobile-link, header .nav-links a').forEach(a => {
         const label = navLabels[a.pathname];
         if (!label) return;
@@ -822,6 +882,10 @@
       const set = (selector, value) => { const el=document.querySelector(selector); if (el) el.textContent=value; };
       set('#hero-monitor-text', c.monitor);
       set('#hero-join-text', c.join);
+      set('#hero-intro', c.intro);
+      set('#visi h2', c.vision);
+      set('#home-impact h2', c.homeImpact);
+      set('#home-stories h2', c.homeStories);
       set('#dashboard h2', c.dashboard);
       set('#map h2', c.map);
       set('#community h2', c.community);

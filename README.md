@@ -25,6 +25,7 @@ Arsitektur: Frontend statis (`index.html`) -> Vercel Serverless Functions (`/api
 
 Situs menggunakan satu kerangka HTML bersama di `index.html`; rute menentukan bagian utama yang ditampilkan. Vercel mengarahkan rute halaman ke kerangka tersebut, sedangkan aset dan endpoint API tetap dilayani terpisah.
 
+- Beranda menampilkan visi, ringkasan dampak, dan galeri cerita lapangan; menu utama disederhanakan agar pengunjung bisa mulai dari cerita, dampak, atau peta.
 - `/` — Beranda
 - `/peta` — Peta mata air
 - `/dampak` — Statistik dan laporan dampak
@@ -33,6 +34,8 @@ Situs menggunakan satu kerangka HTML bersama di `index.html`; rute menentukan ba
 - `/belajar` — Kursus dan bacaan
 - `/media` — Video dan publikasi
 - `/kemitraan` — Informasi dan formulir kemitraan
+
+Foto `images/galeri-*.jpg` dan sebagian angka dampak saat ini adalah materi pratinjau. Ganti foto dengan dokumentasi BelikHub dan verifikasi angka lapangan sebelum publikasi.
 
 ## Pengembangan lokal
 
