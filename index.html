@@ -212,10 +212,10 @@
     .toast{position:fixed;left:50%;bottom:1.25rem;z-index:70;transform:translate(-50%,20px);opacity:0;pointer-events:none;transition:.25s;background:#0B2A33;color:#fff;border-left:4px solid #FFD166;padding:.8rem 1.25rem;font-size:.875rem;font-weight:600;max-width:calc(100vw - 2rem)}
     .toast.show{transform:translate(-50%,0);opacity:1;pointer-events:auto}
 
-    #language-menu{display:none!important;z-index:100!important;color:#0B2A33!important;background:#fff!important;border:1px solid #0B2A33}
-    #language-menu.open{display:block!important}
-    #language-menu button{color:#0B2A33!important;background:#fff!important}
-    #language-menu button:hover{background:#E3F4F6!important}
+    .language-menu{display:none!important;z-index:100!important;color:#0B2A33!important;background:#fff!important;border:1px solid #0B2A33}
+    .language-menu.open{display:block!important}
+    .language-menu button{color:#0B2A33!important;background:#fff!important}
+    .language-menu button:hover{background:#E3F4F6!important}
 
     @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
     .rise{animation:rise .7s ease both}
@@ -248,12 +248,12 @@
 
       <div class="hidden items-center gap-3 md:flex">
         <button id="lang-toggle" class="nav-btn px-3" aria-label="Bahasa">ID</button>
-        <button id="theme-toggle" class="nav-btn w-10" aria-label="Ganti tema">
+        <button id="theme-toggle" class="theme-toggle nav-btn w-10" aria-label="Ganti tema">
           <img id="icon-moon" src="/icons/moon.webp" alt="Dark Mode" class="h-5 w-5 object-contain" />
           <img id="icon-sun" src="/icons/sun.webp" alt="Light Mode" class="hidden h-5 w-5 object-contain" />
         </button>
-        <a href="#" id="login-btn" class="px-3 py-2 text-sm font-bold hover:opacity-70">Masuk</a>
-        <button id="logout-btn" class="hidden px-3 py-2 text-sm font-bold hover:opacity-70">Keluar</button>
+        <button type="button" id="login-btn" class="px-3 py-2 text-sm font-bold hover:opacity-70">Masuk</button>
+        <button type="button" id="logout-btn" class="hidden px-3 py-2 text-sm font-bold hover:opacity-70">Keluar</button>
         <a href="/komunitas" class="btn btn-teal">Bergabung</a>
       </div>
 
@@ -274,7 +274,15 @@
           <a href="/media" class="mobile-link border-y border-white/20 py-3 hover:text-sun">Cerita lapangan</a>
         </div>
         <div class="mt-auto flex flex-col gap-3">
-          <a href="#" id="login-btn-mobile" class="btn btn-line-light w-full">Masuk</a>
+          <div class="flex items-center justify-between">
+            <button id="lang-toggle-mobile" class="nav-btn px-3" aria-label="Bahasa">ID</button>
+            <button type="button" id="theme-toggle-mobile" class="theme-toggle nav-btn w-10" aria-label="Ganti tema">
+              <img id="icon-moon-mobile" src="/icons/moon.webp" alt="" class="h-5 w-5 object-contain" />
+              <img id="icon-sun-mobile" src="/icons/sun.webp" alt="" class="hidden h-5 w-5 object-contain" />
+            </button>
+          </div>
+          <button type="button" id="login-btn-mobile" class="btn btn-line-light w-full">Masuk</button>
+          <button type="button" id="logout-btn-mobile" class="btn btn-line-light hidden w-full">Keluar</button>
           <a href="/komunitas" class="mobile-link btn btn-sun w-full">Bergabung</a>
         </div>
       </div>
@@ -337,12 +345,15 @@
           <p class="muted sec-lead max-w-2xl">Dari mata air yang dipantau hingga pohon yang tumbuh, dampak terbentuk dari kerja bersama warga dan relawan.</p>
         </div>
         <div class="grid gap-6 border-y border-[var(--line)] py-8 sm:grid-cols-2 lg:grid-cols-4">
-          <div><p class="impact-number">500+</p><p class="mt-3 font-semibold">Mata air dipantau</p></div>
-          <div><p class="impact-number">30+</p><p class="mt-3 font-semibold">Mata air dipulihkan</p></div>
-          <div><p class="impact-number">20.000+</p><p class="mt-3 font-semibold">Pohon lokal ditanam</p></div>
-          <div><p class="impact-number">200+</p><p class="mt-3 font-semibold">Rorak resapan dibangun</p></div>
+          <div><p class="impact-number" data-impact-stat="totalApproved">—</p><p class="mt-3 font-semibold">Laporan terverifikasi</p></div>
+          <div><p class="impact-number" data-impact-stat="restoration">—</p><p class="mt-3 font-semibold">Laporan restorasi</p></div>
+          <div><p class="impact-number" data-impact-stat="planting">—</p><p class="mt-3 font-semibold">Laporan penanaman</p></div>
+          <div><p class="impact-number" data-impact-stat="rorak">—</p><p class="mt-3 font-semibold">Laporan rorak</p></div>
         </div>
-        <p class="label muted mt-4">Angka pratinjau — perbarui dengan data lapangan terverifikasi sebelum publikasi.</p>
+        <div class="mt-4 flex flex-wrap items-center gap-3">
+          <p id="home-impact-status" class="label muted" role="status" aria-live="polite">Memuat laporan terverifikasi…</p>
+          <button type="button" class="retry-impact-stats link-arrow hidden" aria-label="Coba muat ulang data dampak">Coba lagi <i class="ph ph-arrow-clockwise"></i></button>
+        </div>
       </div>
     </section>
 
@@ -351,7 +362,7 @@
         <div class="sec-head">
           <p class="label"><span class="c-accent">Catatan lapangan</span> — Cerita yang terus tumbuh</p>
           <h2 class="h2">Pemulihan terlihat dari dekat.</h2>
-          <p class="muted sec-lead max-w-2xl">Ruang untuk menampilkan perjalanan warga, kondisi sumber air, dan perubahan yang terjadi dari waktu ke waktu.</p>
+          <p class="muted sec-lead max-w-2xl">Dari menjaga kawasan hulu hingga melibatkan warga, pemulihan adalah perjalanan yang dibangun bersama.</p>
         </div>
         <div class="grid gap-4 md:grid-cols-2">
           <figure class="story-card md:row-span-2 md:min-h-[590px]">
@@ -366,7 +377,7 @@
             <video autoplay loop muted playsinline preload="metadata" class="absolute inset-0 h-full w-full object-cover">
               <source src="/videos/media.mp4" type="video/mp4" />
             </video>
-            <figcaption><span class="label">Video pratinjau · ganti dengan dokumentasi lapangan</span><h3 class="serif mt-2 text-2xl font-semibold">Gerakan bersama untuk mata air.</h3></figcaption>
+            <figcaption><span class="label">Video ilustrasi · bukan dokumentasi proyek</span><h3 class="serif mt-2 text-2xl font-semibold">Gerakan bersama untuk mata air.</h3></figcaption>
           </figure>
         </div>
         <a href="/media" class="link-arrow mt-8">Lihat semua cerita <i class="ph ph-arrow-right"></i></a>
@@ -400,28 +411,31 @@
         <div class="frame">
           <i class="tick tl"></i><i class="tick tr"></i><i class="tick bl"></i><i class="tick br"></i>
           <div class="flex flex-col gap-4 border-b p-4 md:flex-row md:items-end" style="border-color:var(--teks)">
-            <label class="block flex-1"><span class="label muted">Cari titik</span>
-              <input id="map-search" type="search" placeholder="Mata air, desa, provinsi…" class="field" /></label>
-            <label class="block md:w-56"><span class="label muted">Filter status</span>
+            <label class="block flex-1"><span class="label muted">Cari lokasi / jenis laporan</span>
+                <input id="map-search" type="search" placeholder="Nama lokasi atau kegiatan…" class="field" /></label>
+            <label class="block md:w-56"><span class="label muted">Jenis laporan</span>
               <select id="map-filter" class="field">
-                <option value="all">Semua titik</option>
-                <option value="healthy">Sehat</option>
-                <option value="restored">Dipulihkan</option>
-                <option value="attention">Perlu perhatian</option>
-              </select></label>
-            <button id="locate-btn" class="btn btn-line md:self-end"><i class="ph ph-crosshair text-lg"></i>Gunakan lokasi saya</button>
-          </div>
-          <div id="map-canvas" class="map-height"></div>
-          <div class="flex flex-wrap items-center justify-between gap-3 border-t p-4 text-sm" style="border-color:var(--teks)">
-            <span class="label flex flex-wrap items-center gap-5">
-              <span class="flex items-center gap-2"><i class="sq" style="background:#2BB3C0"></i>Sehat</span>
-              <span class="flex items-center gap-2"><i class="sq" style="background:#0E7C86"></i>Dipulihkan</span>
-              <span class="flex items-center gap-2"><i class="sq" style="background:#f59e0b"></i>Perhatian</span>
-            </span>
-            <button id="load-reports" class="flex items-center gap-2 font-bold">Muat laporan (24/431) <i class="ph ph-arrow-down"></i></button>
-          </div>
+                  <option value="all">Semua laporan</option>
+                  <option value="Survei Mata Air">Survei mata air</option>
+                  <option value="Restorasi Mata Air">Restorasi</option>
+                  <option value="Penanaman Pohon">Penanaman</option>
+                  <option value="Pembangunan Rorak">Rorak</option>
+                </select></label>
+              <button id="locate-btn" class="btn btn-line md:self-end"><i class="ph ph-crosshair text-lg"></i>Gunakan lokasi saya</button>
+            </div>
+            <div id="map-canvas" class="map-height"></div>
+            <div class="flex flex-wrap items-center justify-between gap-3 border-t p-4 text-sm" style="border-color:var(--teks)">
+              <span class="label flex flex-wrap items-center gap-5">
+                <span class="flex items-center gap-2"><i class="sq" style="background:#2BB3C0"></i>Survei</span>
+                <span class="flex items-center gap-2"><i class="sq" style="background:#0E7C86"></i>Restorasi</span>
+                <span class="flex items-center gap-2"><i class="sq" style="background:#f59e0b"></i>Penanaman</span>
+                <span class="flex items-center gap-2"><i class="sq" style="background:#7c3aed"></i>Rorak</span>
+              </span>
+              <button id="load-reports" class="flex items-center gap-2 font-bold"><span id="load-reports-label">Perbarui laporan</span><i class="ph ph-arrow-clockwise"></i></button>
+            </div>
         </div>
-        <p class="label muted mt-3">Gbr. 1 — Titik pantau komunitas. Sumber peta: OpenStreetMap.</p>
+        <p id="map-status" class="muted mt-3 text-sm" role="status" aria-live="polite">Memuat laporan terverifikasi…</p>
+        <p class="label muted mt-3">Peta menampilkan lokasi publik dari laporan terverifikasi. Koordinat disamarkan untuk melindungi sumber air.</p>
       </div>
     </section>
 
@@ -431,16 +445,19 @@
         <div class="sec-head">
           <p class="label"><span class="c-accent">Dampak nyata</span> — Tumbuh dari kerja bersama</p>
           <h2 class="h2">Perubahan yang dirawat bersama.</h2>
-          <p class="muted sec-lead max-w-2xl">Di balik setiap angka ada warga, relawan, dan alam yang pulih. Inilah gambaran awal perjalanan BelikHub.</p>
+          <p class="muted sec-lead max-w-2xl">Ringkasan ini dihitung dari laporan lapangan yang sudah diverifikasi komunitas.</p>
         </div>
 
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <article class="frame p-6"><p class="impact-number">500+</p><h3 class="h3 mt-4">Mata air dipantau</h3><p class="muted mt-2 text-sm">Warga ikut memperhatikan kondisi sumber air.</p></article>
-          <article class="frame p-6"><p class="impact-number">30+</p><h3 class="h3 mt-4">Mata air dipulihkan</h3><p class="muted mt-2 text-sm">Upaya pemulihan dilakukan bersama komunitas.</p></article>
-          <article class="frame p-6"><p class="impact-number">20k+</p><h3 class="h3 mt-4">Pohon lokal ditanam</h3><p class="muted mt-2 text-sm">Vegetasi membantu menjaga kawasan resapan.</p></article>
-          <article class="frame p-6"><p class="impact-number">200+</p><h3 class="h3 mt-4">Rorak dibangun</h3><p class="muted mt-2 text-sm">Aksi warga untuk membantu air meresap ke tanah.</p></article>
+          <article class="frame p-6"><p class="impact-number" data-impact-stat="totalApproved">—</p><h3 class="h3 mt-4">Laporan terverifikasi</h3><p class="muted mt-2 text-sm">Semua jenis kegiatan yang disetujui.</p></article>
+          <article class="frame p-6"><p class="impact-number" data-impact-stat="restoration">—</p><h3 class="h3 mt-4">Laporan restorasi</h3><p class="muted mt-2 text-sm">Catatan pemulihan mata air.</p></article>
+          <article class="frame p-6"><p class="impact-number" data-impact-stat="planting">—</p><h3 class="h3 mt-4">Laporan penanaman</h3><p class="muted mt-2 text-sm">Catatan kegiatan penanaman pohon.</p></article>
+          <article class="frame p-6"><p class="impact-number" data-impact-stat="rorak">—</p><h3 class="h3 mt-4">Laporan rorak</h3><p class="muted mt-2 text-sm">Catatan pembangunan rorak.</p></article>
         </div>
-        <p class="label muted mt-4">Angka pratinjau — perbarui dengan data lapangan terverifikasi sebelum publikasi.</p>
+        <div class="mt-4 flex flex-wrap items-center gap-3">
+          <p id="dashboard-impact-status" class="label muted" role="status" aria-live="polite">Memuat laporan terverifikasi…</p>
+          <button type="button" class="retry-impact-stats link-arrow hidden" aria-label="Coba muat ulang data dampak">Coba lagi <i class="ph ph-arrow-clockwise"></i></button>
+        </div>
 
         <div class="mt-12 grid gap-4 md:grid-cols-2">
           <figure class="story-photo h-[280px] sm:h-[360px]">
@@ -480,25 +497,6 @@
               <span class="stamp c-accent">SDG 8 · Pekerjaan layak</span>
               <span class="stamp c-accent">SDG 13 · Iklim</span>
               <span class="stamp c-accent">SDG 15 · Ekosistem darat</span>
-            </div>
-            <div class="mt-12 grid gap-12 lg:grid-cols-2 lg:gap-16">
-              <div>
-                <h3 class="h3 border-b-2 pb-3" style="border-color:var(--teks)">Aktivitas bulanan</h3>
-                <div class="mt-6 space-y-6">
-                  <div><div class="mb-2 flex items-baseline justify-between text-sm"><span>Survei Mata Air</span><b class="label c-accent">42</b></div><div class="bar"><i style="width:100%"></i></div></div>
-                  <div><div class="mb-2 flex items-baseline justify-between text-sm"><span>Penanaman Pohon</span><b class="label c-accent">18</b></div><div class="bar"><i style="width:43%"></i></div></div>
-                  <div><div class="mb-2 flex items-baseline justify-between text-sm"><span>Pembangunan Rorak</span><b class="label c-accent">07</b></div><div class="bar"><i style="width:17%"></i></div></div>
-                </div>
-              </div>
-              <div>
-                <h3 class="h3 border-b-2 pb-3" style="border-color:var(--teks)">Logbook terbaru</h3>
-                <div class="mt-2">
-                  <div class="log-line"><span class="label muted">No. 014</span><span class="flex-1"><b>Tuk Bismo</b><span class="label muted ml-3">7.0°S 109.9°E</span></span><span class="label muted">04 Nov</span></div>
-                  <div class="log-line"><span class="label muted">No. 013</span><span class="flex-1"><b>Rowo Santen</b><span class="label muted ml-3">7.9°S 110.3°E</span></span><span class="label muted">18 Okt</span></div>
-                  <div class="log-line"><span class="label muted">No. 012</span><span class="flex-1"><b>Wonomerto</b><span class="label muted ml-3">7.3°S 110.1°E</span></span><span class="label muted">12 Okt</span></div>
-                </div>
-                <p class="label muted mt-4">Koordinat dibulatkan demi keamanan sumber air.</p>
-              </div>
             </div>
           </div>
         </details>
@@ -562,8 +560,8 @@
         <div class="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
           <div>
             <div class="flex flex-wrap gap-3">
-              <button data-toast="Permintaan rorak dibuka. Tim kami akan menghubungi Anda." class="btn btn-teal">Pesan rorak · Rp20.000 <i class="ph ph-arrow-right text-lg"></i></button>
-              <button data-toast="Formulir pembuat rorak siap diisi." class="btn btn-line">Jadi pembuat · Rp16.000</button>
+              <a href="mailto:hello@belikhub.id?subject=Tanya%20rorak" class="btn btn-teal">Tanyakan rorak <i class="ph ph-arrow-right text-lg"></i></a>
+              <a href="mailto:hello@belikhub.id?subject=Menjadi%20pembuat%20rorak" class="btn btn-line">Tertarik jadi pembuat</a>
             </div>
             <div class="mt-10 border-t pt-5 text-sm" style="border-color:var(--line)"><p class="label c-accent mb-2">Spesifikasi minimum</p><p class="muted">Searah kontur, di daerah resapan, dengan izin pemilik lahan.</p></div>
           </div>
@@ -589,24 +587,24 @@
         <div class="sec-head">
           <p class="label"><span class="c-accent">§ 05</span> — Jadwal lapangan</p>
           <h2 class="h2">Turun ke lapangan.</h2>
-          <div class="sec-lead"><button data-toast="Kalender kegiatan dibuka." class="link-arrow">Lihat kalender <i class="ph ph-arrow-right"></i></button></div>
+          <div class="sec-lead"><a href="mailto:hello@belikhub.id?subject=Jadwal%20kegiatan%20BelikHub" class="link-arrow">Tanyakan jadwal kegiatan <i class="ph ph-arrow-right"></i></a></div>
         </div>
 
         <div>
           <div class="row agenda-row">
             <div><p class="serif text-5xl font-semibold leading-none c-accent">14</p><p class="label muted mt-1">Nov 2026</p></div>
             <div><h3 class="h3">Restorasi Mata Air Kulon Progo</h3><p class="muted mt-1 text-sm">Lokasi dibagikan melalui kanal komunitas setelah pendaftaran.</p></div>
-            <button data-toast="Anda masuk daftar tunggu kegiatan." class="btn btn-line">Daftar <i class="ph ph-arrow-right text-lg"></i></button>
+            <a href="mailto:hello@belikhub.id?subject=Minat%20kegiatan%20Kulon%20Progo" class="btn btn-line">Tanyakan pendaftaran <i class="ph ph-arrow-right text-lg"></i></a>
           </div>
           <div class="row agenda-row">
             <div><p class="serif text-5xl font-semibold leading-none c-accent">22</p><p class="label muted mt-1">Nov 2026</p></div>
             <div><h3 class="h3">Restorasi Mata Air Kediri</h3><p class="muted mt-1 text-sm">Bergabung dengan tim lokal untuk pemulihan titik sumber.</p></div>
-            <button data-toast="Anda masuk daftar tunggu kegiatan." class="btn btn-line">Daftar <i class="ph ph-arrow-right text-lg"></i></button>
+            <a href="mailto:hello@belikhub.id?subject=Minat%20kegiatan%20Kediri" class="btn btn-line">Tanyakan pendaftaran <i class="ph ph-arrow-right text-lg"></i></a>
           </div>
           <div class="row agenda-row">
             <div><p class="serif text-5xl font-semibold leading-none c-accent">05</p><p class="label muted mt-1">Des 2026</p></div>
             <div><h3 class="h3">Restorasi Mata Air Lak</h3><p class="muted mt-1 text-sm">J2 Bowongso, Wonosobo, Jawa Tengah.</p></div>
-            <button data-toast="Anda masuk daftar tunggu kegiatan." class="btn btn-line">Daftar <i class="ph ph-arrow-right text-lg"></i></button>
+            <a href="mailto:hello@belikhub.id?subject=Minat%20kegiatan%20Wonosobo" class="btn btn-line">Tanyakan pendaftaran <i class="ph ph-arrow-right text-lg"></i></a>
           </div>
         </div>
       </div>
@@ -670,21 +668,21 @@
             <img src="/icons/water-drop.webp" alt="Mata Air" class="h-10 w-10 object-contain" />
             <div><h3 class="h3">Pengenalan Mata Air</h3><p class="muted mt-1 text-sm">Dasar ekosistem mata air, jenisnya, dan mengapa penting bagi kehidupan.</p></div>
             <div class="label muted"><span class="stamp c-accent">Pemula</span><p class="mt-2">30 menit · 4 modul</p></div>
-            <button data-toast="Kursus Pengenalan Mata Air dipilih." class="link-arrow">Mulai kursus <i class="ph ph-arrow-right"></i></button>
+            <button type="button" data-course="spring" class="link-arrow">Lihat materi <i class="ph ph-arrow-right"></i></button>
           </div>
           <div class="row course-row">
             <span class="label muted">02</span>
             <img src="/icons/tree.webp" alt="Tanam Pohon" class="h-10 w-10 object-contain" />
             <div><h3 class="h3">Menanam Pohon Endemik</h3><p class="muted mt-1 text-sm">Memilih lokasi, menanam, dan merawat pohon di area resapan.</p></div>
             <div class="label muted"><span class="stamp c-accent">Menengah</span><p class="mt-2">45 menit · 4 modul</p></div>
-            <button data-toast="Kursus Menanam Pohon Endemik dipilih." class="link-arrow">Mulai kursus <i class="ph ph-arrow-right"></i></button>
+            <button type="button" data-course="trees" class="link-arrow">Lihat materi <i class="ph ph-arrow-right"></i></button>
           </div>
           <div class="row course-row">
             <span class="label muted">03</span>
             <img src="/icons/rorak.webp" alt="Rorak" class="h-10 w-10 object-contain" />
             <div><h3 class="h3">Membuat Rorak Resapan</h3><p class="muted mt-1 text-sm">Panduan praktis membuat parit resapan air tanah di lingkungan rumah.</p></div>
             <div class="label muted"><span class="stamp c-accent">Pemula</span><p class="mt-2">25 menit · 3 modul</p></div>
-            <button data-toast="Kursus Membuat Rorak Resapan dipilih." class="link-arrow">Mulai kursus <i class="ph ph-arrow-right"></i></button>
+            <button type="button" data-course="rorak" class="link-arrow">Lihat materi <i class="ph ph-arrow-right"></i></button>
           </div>
         </div>
 
@@ -692,12 +690,12 @@
           <div class="row agenda-row">
             <div><p class="label c-accent">Artikel</p></div>
             <div><h3 class="h3">Mengapa Mata Air Kering?</h3><p class="muted mt-1 text-sm">Faktor utama penurunan debit mata air dan dampaknya bagi petani.</p></div>
-            <a href="#" data-toast="Artikel akan dibuka saat publikasi tersedia." class="link-arrow">Baca selengkapnya <i class="ph ph-arrow-up-right"></i></a>
+            <p class="label muted">Publikasi sedang disiapkan</p>
           </div>
           <div class="row agenda-row">
             <div><p class="label c-accent">Kisah lapangan</p></div>
             <div><h3 class="h3">30+ mata air, satu gerakan</h3><p class="muted mt-1 text-sm">Dokumentasi perjalanan relawan dan warga memulihkan sumber air.</p></div>
-            <a href="#" data-toast="Cerita lapangan akan dibuka saat publikasi tersedia." class="link-arrow">Lihat cerita <i class="ph ph-arrow-up-right"></i></a>
+            <p class="label muted">Cerita segera hadir</p>
           </div>
         </div>
       </div>
@@ -735,13 +733,13 @@
               <p class="label c-accent">Publikasi</p>
               <h3 class="h3">Gerakan pemulihan air berbasis komunitas</h3>
               <p class="muted text-sm">Catatan dampak, pembelajaran, dan kolaborasi.</p>
-              <a href="#" data-toast="Artikel akan dibuka saat publikasi tersedia." class="link-arrow justify-self-start">Baca selengkapnya <i class="ph ph-arrow-up-right"></i></a>
+              <p class="label muted">Publikasi sedang disiapkan</p>
             </article>
             <article class="row" style="grid-template-columns:1fr">
               <p class="label c-accent">Kisah lapangan</p>
-              <h3 class="h3">30+ mata air, satu gerakan</h3>
+              <h3 class="h3">Satu gerakan untuk sumber air</h3>
               <p class="muted text-sm">Dokumentasi perjalanan relawan dan warga.</p>
-              <a href="#" data-toast="Cerita lapangan akan dibuka saat publikasi tersedia." class="link-arrow justify-self-start">Lihat cerita <i class="ph ph-arrow-up-right"></i></a>
+              <p class="label muted">Cerita segera hadir</p>
             </article>
           </div>
         </div>
@@ -762,10 +760,7 @@
         <div>
           <a href="/" class="serif text-3xl font-semibold">BelikHub</a>
           <p class="mt-5 max-w-sm leading-relaxed text-white/60">Memberdayakan komunitas Indonesia untuk melindungi dan memulihkan sumber air melalui aksi konservasi kolaboratif.</p>
-          <form id="newsletter" class="mt-7 flex max-w-sm items-end gap-3 border-b border-white/50">
-            <input required type="email" placeholder="Email Anda" class="min-w-0 flex-1 bg-transparent py-3 text-sm text-white outline-none placeholder:text-white/40" />
-            <button class="py-3 text-sm font-bold text-sun hover:opacity-80">Berlangganan →</button>
-          </form>
+          <a href="mailto:hello@belikhub.id?subject=Kabar%20terbaru%20BelikHub" class="mt-7 inline-flex items-center gap-2 text-sm font-bold text-sun hover:opacity-80">Minta kabar terbaru <i class="ph ph-arrow-up-right"></i></a>
         </div>
         <div>
           <p class="label c-sun">Jelajahi</p>
@@ -783,7 +778,7 @@
             <a href="/kemitraan" class="hover:text-white">Pusat bantuan</a>
             <a href="/kemitraan" class="hover:text-white">Hubungi kami</a>
             <a href="/komunitas" class="hover:text-white">Laporkan masalah</a>
-            <a href="/#top" class="hover:text-white">Tanya jawab</a>
+            <a href="/belajar" class="hover:text-white">Pusat belajar</a>
           </div>
         </div>
         <div>
@@ -792,7 +787,7 @@
             <a href="/#top" class="hover:text-white">Misi kami</a>
             <a href="/kemitraan" class="hover:text-white">Jadi mitra</a>
             <a href="/dampak" class="hover:text-white">Laporan dampak</a>
-            <a href="/#top" class="hover:text-white">Kebijakan privasi</a>
+            <a href="mailto:hello@belikhub.id?subject=Kebijakan%20privasi" class="hover:text-white">Tanya kebijakan privasi</a>
           </div>
         </div>
       </div>
@@ -837,20 +832,29 @@
       link.addEventListener('click', () => { menu.classList.add('hidden'); document.body.style.overflow='auto'; });
     });
 
-    $('#theme-toggle')?.addEventListener('click',()=>{
-      const isDark = document.documentElement.classList.toggle('dark');
+    const themeToggleButtons = $$('.theme-toggle');
+    const syncThemeIcons = (isDark) => {
       $('#icon-moon')?.classList.toggle('hidden', isDark);
       $('#icon-sun')?.classList.toggle('hidden', !isDark);
+      $('#icon-moon-mobile')?.classList.toggle('hidden', isDark);
+      $('#icon-sun-mobile')?.classList.toggle('hidden', !isDark);
+    };
+    themeToggleButtons.forEach(button => button.addEventListener('click',()=>{
+      const isDark = document.documentElement.classList.toggle('dark');
+      syncThemeIcons(isDark);
       localStorage.setItem('belikhub-theme', isDark ? 'dark' : 'light');
-    });
+    }));
 
-    const languageButton = $('#lang-toggle');
-    const languageMenu = document.createElement('div');
-    languageMenu.id = 'language-menu';
-    languageMenu.className = 'absolute right-12 top-12 z-[80] w-36 p-1 shadow-xl';
-    languageMenu.innerHTML = '<button data-language="id" class="block w-full px-3 py-2 text-left text-xs font-bold">Bahasa Indonesia</button><button data-language="en" class="block w-full px-3 py-2 text-left text-xs font-bold">English</button>';
-    languageButton?.parentElement?.appendChild(languageMenu);
-    if (languageButton?.parentElement) languageButton.parentElement.style.position = 'relative';
+    const languageButtons = $$('#lang-toggle, #lang-toggle-mobile');
+    const languageMenus = languageButtons.map((button, index) => {
+      const languageMenu = document.createElement('div');
+      languageMenu.id = `language-menu-${index}`;
+      languageMenu.className = 'language-menu absolute right-0 top-12 z-[80] w-40 p-1 shadow-xl';
+      languageMenu.innerHTML = '<button data-language="id" class="block w-full px-3 py-2 text-left text-xs font-bold">Bahasa Indonesia</button><button data-language="en" class="block w-full px-3 py-2 text-left text-xs font-bold">English</button>';
+      button.parentElement?.appendChild(languageMenu);
+      if (button.parentElement) button.parentElement.style.position = 'relative';
+      return languageMenu;
+    });
 
     const languageCopy = {
       id: {
@@ -871,7 +875,7 @@
       const c = languageCopy[lang] || languageCopy.id;
       document.documentElement.lang = lang === 'en' ? 'en' : 'id';
       document.title = 'Belik Hub';
-      if (languageButton) languageButton.textContent = lang.toUpperCase();
+      languageButtons.forEach(button => { button.textContent = lang.toUpperCase(); });
       const navLabels = {'/': c.nav[0], '/dampak': c.nav[1], '/peta': c.nav[2], '/media': c.nav[3], '/komunitas': c.nav[4]};
       document.querySelectorAll('header .mobile-link, header .nav-links a').forEach(a => {
         const label = navLabels[a.pathname];
@@ -894,12 +898,22 @@
       set('#learn h2', c.learn);
       set('#media h2', c.media);
       localStorage.setItem('belikhub-language', lang);
-      languageMenu.classList.remove('open');
+      languageMenus.forEach(menu => menu.classList.remove('open'));
     };
 
-    languageButton?.addEventListener('click', (event) => { event.stopPropagation(); languageMenu.classList.toggle('open'); });
-    languageMenu.querySelectorAll('[data-language]').forEach(button => button.addEventListener('click', () => { setLanguage(button.dataset.language); toast(button.dataset.language === 'en' ? 'Language changed to English.' : 'Bahasa diubah ke Indonesia.'); }));
-    document.addEventListener('click', (event) => { if (!languageMenu.contains(event.target) && event.target !== languageButton) languageMenu.classList.remove('open'); });
+    languageButtons.forEach((button, index) => {
+      const languageMenu = languageMenus[index];
+      button.addEventListener('click', event => { event.stopPropagation(); languageMenu.classList.toggle('open'); });
+      languageMenu.querySelectorAll('[data-language]').forEach(option => option.addEventListener('click', () => {
+        setLanguage(option.dataset.language);
+        toast(option.dataset.language === 'en' ? 'Language changed to English.' : 'Bahasa diubah ke Indonesia.');
+      }));
+    });
+    document.addEventListener('click', event => {
+      if (!languageButtons.includes(event.target) && !languageMenus.some(menu => menu.contains(event.target))) {
+        languageMenus.forEach(menu => menu.classList.remove('open'));
+      }
+    });
     setLanguage(localStorage.getItem('belikhub-language') || 'id');
 
     const mediaVideo = $('#media video');
@@ -910,13 +924,13 @@
     }
 
     let auth, currentUser = null;
-    const loginBtn = $('#login-btn');
-    const logoutBtn = $('#logout-btn');
+    const loginButtons = $$('#login-btn, #login-btn-mobile');
+    const logoutButtons = $$('#logout-btn, #logout-btn-mobile');
 
     const updateAuthUI = (user) => {
       currentUser = user;
-      loginBtn?.classList.toggle('hidden', !!user);
-      logoutBtn?.classList.toggle('hidden', !user);
+      loginButtons.forEach(button => button.classList.toggle('hidden', !!user));
+      logoutButtons.forEach(button => button.classList.toggle('hidden', !user));
     };
 
     const apiRequest = async (path, payload, options = {}) => {
@@ -945,6 +959,42 @@
     };
     initFirebase();
 
+    const impactStats = $$('[data-impact-stat]');
+    const impactStatus = $$('#home-impact-status, #dashboard-impact-status');
+    const retryImpactButtons = $$('.retry-impact-stats');
+    const loadImpactStats = async () => {
+      impactStatus.forEach(status => { status.textContent = 'Memuat laporan terverifikasi…'; });
+      retryImpactButtons.forEach(button => button.classList.add('hidden'));
+      try {
+        const response = await fetch('/api/stats');
+        if (!response.ok) throw new Error(`Layanan statistik merespons ${response.status}.`);
+        const stats = await response.json();
+        const byType = stats.byType || {};
+        const values = {
+          totalApproved: stats.totalApproved,
+          restoration: byType['Restorasi Mata Air'],
+          planting: byType['Penanaman Pohon'],
+          rorak: byType['Pembangunan Rorak']
+        };
+        if (Object.values(values).some(value => !Number.isFinite(value))) {
+          throw new Error('Respons statistik tidak lengkap.');
+        }
+        impactStats.forEach(element => {
+          element.textContent = values[element.dataset.impactStat].toLocaleString('id-ID');
+        });
+        impactStatus.forEach(status => { status.textContent = 'Dihitung dari laporan yang telah diverifikasi.'; });
+      } catch (error) {
+        console.error('Gagal memuat data dampak:', error);
+        impactStats.forEach(element => { element.textContent = '—'; });
+        impactStatus.forEach(status => { status.textContent = 'Data capaian belum tersedia saat ini.'; });
+        retryImpactButtons.forEach(button => button.classList.remove('hidden'));
+      }
+    };
+    if (['home', 'dampak'].includes(document.documentElement.dataset.page) && impactStats.length) {
+      loadImpactStats();
+      retryImpactButtons.forEach(button => button.addEventListener('click', loadImpactStats));
+    }
+
     const modal = $('#modal'), modalContent = $('#modal-content');
     const closeModal = () => { modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); modalContent.innerHTML=''; };
     const openModal = (title, body) => {
@@ -952,19 +1002,31 @@
       modal.classList.add('open');
       modal.setAttribute('aria-hidden','false');
       modal.querySelector('[data-close-modal]')?.addEventListener('click', closeModal);
-      const modalForm = modal.querySelector('form');
-      if (modalForm && !modalForm.dataset.api && !modalForm.dataset.custom) {
-        modalForm.addEventListener('submit', e => { e.preventDefault(); closeModal(); toast('Permintaan berhasil dicatat di prototipe BelikHub.'); });
-      }
     };
     modal?.addEventListener('click', e => { if (e.target === modal) closeModal(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
     const reportForm = (name, points) => `<form id="report-form" data-api="reports"><p class="text-sm leading-6 muted">Lengkapi laporan ${name.toLowerCase()} untuk mendapatkan <b>${points} poin</b>. Data ini akan diteruskan ke tim verifikasi.</p><label class="mt-5 block text-sm font-semibold">Nama lokasi<input required placeholder="Nama mata air / desa" class="mt-1" /></label><label class="mt-4 block text-sm font-semibold">Catatan lapangan<textarea required rows="3" placeholder="Apa yang Anda temukan?" class="mt-1"></textarea></label><button class="btn btn-teal mt-6 w-full">Kirim laporan</button></form>`;
 
-    $$('[data-toast]').forEach(el => el.addEventListener('click', e => {
-      e.preventDefault();
-      openModal('Mulai kontribusi', `<form><p class="text-sm leading-6 muted">${el.dataset.toast}</p><label class="mt-5 block text-sm font-semibold">Email<input required type="email" placeholder="nama@email.com" class="mt-1" /></label><button class="btn btn-teal mt-6 w-full">Lanjutkan</button></form>`);
+    const courseContent = {
+      spring: {
+        title: 'Pengenalan Mata Air',
+        description: 'Kenali bagian-bagian mata air, faktor yang memengaruhi debit, dan cara mencatat kondisi awal secara aman.'
+      },
+      trees: {
+        title: 'Menanam Pohon Endemik',
+        description: 'Pelajari cara memilih jenis pohon lokal, menentukan area tanam, dan merawat bibit di kawasan resapan.'
+      },
+      rorak: {
+        title: 'Membuat Rorak Resapan',
+        description: 'Pahami fungsi rorak, prinsip penempatan mengikuti kontur, dan hal yang perlu diperiksa sebelum pembangunan.'
+      }
+    };
+    $$('[data-course]').forEach(button => button.addEventListener('click', () => {
+      const course = courseContent[button.dataset.course];
+      if (!course) return;
+      const subject = encodeURIComponent(`Materi kursus: ${course.title}`);
+      openModal(course.title, `<p class="text-sm leading-relaxed muted">${course.description}</p><p class="mt-5 text-sm">Materi lengkap sedang disiapkan.</p><a href="mailto:hello@belikhub.id?subject=${subject}" class="link-arrow mt-5">Tanyakan materi <i class="ph ph-arrow-up-right"></i></a>`);
     }));
 
     $$('.report-card').forEach(el => el.addEventListener('click', () => {
@@ -1023,8 +1085,6 @@
       }
     });
 
-    $('#newsletter')?.addEventListener('submit', e => { e.preventDefault(); toast('Anda sudah masuk daftar pembaruan BelikHub.'); e.target.reset(); });
-
     $$('.learn-tab').forEach(tab => tab.addEventListener('click', () => {
       $$('.learn-tab').forEach(t => { t.classList.remove('tab-active'); t.classList.add('tab-idle'); });
       tab.classList.add('tab-active'); tab.classList.remove('tab-idle');
@@ -1032,7 +1092,6 @@
       $('#readings').classList.toggle('hidden', tab.dataset.tab !== 'readings');
     }));
 
-    const points = [{name:'Tuk Bismo',lat:-7.02,lng:109.91,status:'healthy'},{name:'Belik Soka',lat:-8.01,lng:110.61,status:'restored'},{name:'Wonomerto',lat:-7.29,lng:110.09,status:'attention'},{name:'Rowo Santen',lat:-7.91,lng:110.34,status:'healthy'},{name:'Watulumbung',lat:-7.23,lng:109.91,status:'restored'}];
     if(window.L && document.documentElement.dataset.page === 'peta'){
       const map=L.map('map-canvas',{scrollWheelZoom:true}).setView([-7.35,110.2],7);
       window.belikhubMap=map;
@@ -1043,18 +1102,92 @@
       setTimeout(()=>{ window.belikhubMap?.invalidateSize(); },500);
       window.addEventListener('resize',()=>{ window.belikhubMap?.invalidateSize(); });
       let markers=[];
-      const renderMarkers=(filter='all',query='')=>{markers.forEach(m=>m.remove());markers=points.filter(p=>(filter==='all'||p.status===filter)&&p.name.toLowerCase().includes(query.toLowerCase())).map(p=>{const color=p.status==='healthy'?'#2BB3C0':p.status==='restored'?'#0E7C86':'#f59e0b';const icon=L.divIcon({className:'custom-pin',html:`<span style="display:block;width:14px;height:14px;background:${color};border:2px solid #fff;outline:1px solid #0B2A33;transform:rotate(45deg)"></span>`,iconSize:[14,14],iconAnchor:[7,7]});return L.marker([p.lat,p.lng],{icon}).addTo(map).bindPopup(`<b>${p.name}</b><br><span style="font-size:14px">Status: ${p.status}</span>`);});};
-      renderMarkers();
+      let publicReports=[];
+      let hasInitialView=false;
+      const reportColors={
+        'Survei Mata Air':'#2BB3C0',
+        'Restorasi Mata Air':'#0E7C86',
+        'Penanaman Pohon':'#f59e0b',
+        'Pembangunan Rorak':'#7c3aed'
+      };
+      let reportsLoadError=false;
+      const updateMapStatus=(count)=>{
+        const status=$('#map-status');
+        if(!status) return;
+        if(reportsLoadError){
+          status.textContent='Laporan peta belum dapat dimuat. Coba lagi beberapa saat.';
+          return;
+        }
+        const withoutCoordinates=publicReports.filter(report=>!Number.isFinite(report.lat)||!Number.isFinite(report.lng)).length;
+        if(publicReports.length===0){
+          status.textContent='Belum ada laporan terverifikasi untuk ditampilkan.';
+        }else if(count===0&&withoutCoordinates===publicReports.length){
+          status.textContent=`${publicReports.length} laporan terverifikasi belum menyertakan koordinat publik.`;
+        }else if(count===0){
+          status.textContent='Tidak ada laporan yang cocok dengan pencarian atau filter ini.';
+        }else{
+          status.textContent=`Menampilkan ${count} lokasi yang cocok dari ${publicReports.length} laporan terverifikasi.${withoutCoordinates?` ${withoutCoordinates} laporan tidak menyertakan koordinat.`:''}`;
+        }
+      };
+      const renderMarkers=(filter='all',query='')=>{
+        markers.forEach(marker=>marker.remove());
+        const normalizedQuery=query.trim().toLocaleLowerCase('id');
+        markers=publicReports.filter(report=>{
+          const matchesType=filter==='all'||report.reportType===filter;
+          const matchesQuery=`${report.location} ${report.reportType}`.toLocaleLowerCase('id').includes(normalizedQuery);
+          return matchesType&&matchesQuery&&Number.isFinite(report.lat)&&Number.isFinite(report.lng);
+        }).map(report=>{
+          const color=reportColors[report.reportType]||'#0E7C86';
+          const icon=L.divIcon({className:'custom-pin',html:`<span style="display:block;width:14px;height:14px;background:${color};border:2px solid #fff;outline:1px solid #0B2A33;transform:rotate(45deg)"></span>`,iconSize:[14,14],iconAnchor:[7,7]});
+          const popup=document.createElement('div');
+          const title=document.createElement('strong');
+          title.textContent=report.location;
+          const type=document.createElement('p');
+          type.textContent=report.reportType;
+          popup.append(title,type);
+          return L.marker([report.lat,report.lng],{icon}).addTo(map).bindPopup(popup);
+        });
+        updateMapStatus(markers.length);
+        return markers.length;
+      };
+      const loadPublicReports=async()=>{
+        const status=$('#map-status');
+        const button=$('#load-reports');
+        const buttonLabel=$('#load-reports-label');
+        if(button) button.disabled=true;
+        if(buttonLabel) buttonLabel.textContent='Memuat…';
+        if(status) status.textContent='Memuat laporan terverifikasi…';
+        try{
+          const response=await fetch('/api/reports?limit=100');
+          if(!response.ok) throw new Error(`Layanan laporan merespons ${response.status}.`);
+          const data=await response.json();
+          if(!Array.isArray(data.reports)) throw new Error('Respons laporan tidak valid.');
+          reportsLoadError=false;
+          publicReports=data.reports;
+          renderMarkers($('#map-filter')?.value,$('#map-search')?.value);
+          if(!hasInitialView&&markers.length){
+            map.fitBounds(L.featureGroup(markers).getBounds().pad(0.15),{maxZoom:8});
+            hasInitialView=true;
+          }
+        }catch(error){
+          reportsLoadError=true;
+          console.error('Gagal memuat laporan peta:',error);
+          if(status) status.textContent='Laporan peta belum dapat dimuat. Coba lagi beberapa saat.';
+          toast(error.message);
+        }finally{
+          if(button) button.disabled=false;
+          if(buttonLabel) buttonLabel.textContent='Perbarui laporan';
+        }
+      };
+      loadPublicReports();
+      $('#load-reports')?.addEventListener('click',loadPublicReports);
       $('#map-filter')?.addEventListener('change',e=>renderMarkers(e.target.value,$('#map-search').value));
       $('#map-search')?.addEventListener('input',e=>renderMarkers($('#map-filter').value,e.target.value));
       $('#locate-btn')?.addEventListener('click',()=>{if(!navigator.geolocation){toast('Browser tidak mendukung lokasi.');return;}toast('Meminta izin lokasi…');navigator.geolocation.getCurrentPosition(pos=>{const {latitude,longitude}=pos.coords;window.belikhubMap?.setView([latitude,longitude],12);toast('Peta dipusatkan ke lokasi Anda.');},()=>toast('Lokasi tidak tersedia atau izin ditolak.'));});
     }
 
-    $('#load-reports')?.addEventListener('click', e => { e.currentTarget.textContent='Semua laporan sudah dimuat'; toast('24 laporan tambahan dimuat.'); openModal('Laporan komunitas','<div class="text-sm"><div class="log-line"><b>Survei Mata Air</b><span class="label muted">Tuk Bismo · 04 Nov 2026</span></div><div class="log-line"><b>Restorasi</b><span class="label muted">Rowo Santen · 18 Okt 2026</span></div><div class="log-line"><b>Survei Mata Air</b><span class="label muted">Wonomerto · 12 Okt 2026</span></div></div>'); });
-
     // Login / Daftar
-    const openLogin = (e) => {
-      e.preventDefault();
+    const openLogin = () => {
       menu?.classList.add('hidden'); document.body.style.overflow='auto';
       openModal('Masuk', `
         <form id="login-form" data-custom="1">
@@ -1082,17 +1215,22 @@
       form.addEventListener('submit', ev => { ev.preventDefault(); run(signInWithEmailAndPassword, 'Masuk', form.querySelector('[type=submit]')); });
       form.querySelector('#register-btn').addEventListener('click', ev => run(createUserWithEmailAndPassword, 'Daftar akun baru', ev.currentTarget));
     };
-    $('#login-btn')?.addEventListener('click', openLogin);
-    $('#login-btn-mobile')?.addEventListener('click', openLogin);
+    loginButtons.forEach(button => button.addEventListener('click',openLogin));
 
-    logoutBtn?.addEventListener('click', async () => {
-      try { await signOut(auth); toast('Anda telah keluar.'); } catch (error) { toast(error.message); }
-    });
+    logoutButtons.forEach(button => button.addEventListener('click',async () => {
+      try {
+        await signOut(auth);
+        menu?.classList.add('hidden');
+        document.body.style.overflow='auto';
+        toast('Anda telah keluar.');
+      } catch (error) { toast(error.message); }
+    }));
 
     if (localStorage.getItem('belikhub-theme') === 'dark') {
       document.documentElement.classList.add('dark');
-      $('#icon-moon')?.classList.add('hidden');
-      $('#icon-sun')?.classList.remove('hidden');
+      syncThemeIcons(true);
+    } else {
+      syncThemeIcons(false);
     }
   </script>
 </body>

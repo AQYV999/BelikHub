@@ -35,7 +35,7 @@ Situs menggunakan satu kerangka HTML bersama di `index.html`; rute menentukan ba
 - `/media` — Video dan publikasi
 - `/kemitraan` — Informasi dan formulir kemitraan
 
-Foto `images/galeri-*.jpg` dan sebagian angka dampak saat ini adalah materi pratinjau. Ganti foto dengan dokumentasi BelikHub dan verifikasi angka lapangan sebelum publikasi.
+Foto `images/galeri-*.jpg` dan video pratinjau adalah ilustrasi; ganti dengan dokumentasi BelikHub sebelum publikasi. Angka dampak diambil dari laporan terverifikasi melalui `/api/stats`.
 
 ## Pengembangan lokal
 
