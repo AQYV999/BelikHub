@@ -62,9 +62,12 @@ Semua akses data lewat API (Admin SDK). Rules menolak semua akses langsung dari 
 - GET /api/health
 - GET /api/firebase-config
 - GET /api/me (login)
+- GET /api/springs (publik: data baseline mata air resmi + metrik agregat)
 - GET /api/stats (publik: hitungan laporan terverifikasi)
 - GET /api/reports (publik: hanya approved, field terbatas; ?mine=1 untuk milik sendiri; admin melihat semua)
-- POST /api/reports (login; tipe laporan di-whitelist, poin dihitung server)
+- POST /api/reports (login; tipe laporan di-whitelist, poin dihitung server, dukung koordinat GPS)
+- POST /api/orders (publik: pemesanan rorak, pendaftaran tukang rorak, dan RSVP agenda lapangan)
+- POST /api/newsletter (publik: pendaftaran newsletter kabar terbaru)
 - POST /api/partnerships
 - GET /api/partnerships (admin)
 - PATCH /api/admin/reports/:id/status (admin; poin dikreditkan saat approved)

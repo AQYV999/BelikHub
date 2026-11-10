@@ -10,7 +10,7 @@
     }
   },
   "rewrites": [
-    { "source": "/((?!api/|icons/).*)", "destination": "/index.html" }
+    { "source": "/((?!api/|icons/|images/|videos/|assets/).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
@@ -28,7 +28,7 @@
       ]
     },
     {
-      "source": "/icons/(.*)",
+      "source": "/(icons|images|videos)/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
