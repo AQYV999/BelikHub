@@ -1,12 +1,5 @@
-// assets/app.js - BelikHub Platform V2 Interactive Client Logic with Complete i18n
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
-import {
-  getAuth,
-  onAuthStateChanged,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut
-} from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
+// assets/app.js - BelikHub Platform V4 Interactive Client Logic with Complete i18n
+import { METRICS, SPRINGS } from '../lib/springs-seed.js';
 
 // DOM Utilities
 const $ = (s) => document.querySelector(s);
@@ -20,68 +13,55 @@ const toast = (message) => {
   window.toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
 };
 
-// Header scroll effect
-const siteHeader = document.getElementById('site-header');
-const isHomePage = document.documentElement.dataset.page === 'home';
-const syncHeader = () => {
-  if (!siteHeader) return;
-  const transparent = isHomePage && window.scrollY < 40;
-  siteHeader.classList.toggle('hero-nav', transparent);
-  siteHeader.classList.toggle('nav-scrolled', !transparent);
+// Virtual route scroll mapping so legacy links (/peta, /dampak, /aksi, /belajar, /media, /komunitas, /kemitraan) work smoothly on the unified page
+const routeTargetMap = {
+  '/peta': { section: '#map' },
+  '/dampak': { section: '#dashboard' },
+  '/komunitas': { section: '#community' },
+  '/aksi': { section: '#pulangkan-air' },
+  '/belajar': { section: '#learn', tab: 'tab-courses' },
+  '/media': { section: '#learn', tab: 'tab-media' },
+  '/kemitraan': { section: '#kemitraan' }
 };
-syncHeader();
-window.addEventListener('scroll', syncHeader, { passive: true });
-
-// Active route highlight
 const currentPath = location.pathname.replace(/\/+$/, '') || '/';
-document.querySelectorAll('header .nav-links a, header .mobile-link').forEach((link) => {
-  if (link.pathname === currentPath) link.setAttribute('aria-current', 'page');
-});
+if (routeTargetMap[currentPath]) {
+  requestAnimationFrame(() => {
+    const cfg = routeTargetMap[currentPath];
+    if (cfg.tab) document.getElementById(cfg.tab)?.click();
+    document.querySelector(cfg.section)?.scrollIntoView({ behavior: 'smooth' });
+  });
+}
 
-// Mobile menu controls
-const menuToggle = document.getElementById('menu-toggle');
-const closeMenu = document.getElementById('close-menu');
-const mobileMenu = document.getElementById('mobile-menu');
-if (menuToggle && mobileMenu) {
-  menuToggle.addEventListener('click', () => {
-    mobileMenu.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-  });
-}
-if (closeMenu && mobileMenu) {
-  closeMenu.addEventListener('click', () => {
-    mobileMenu.classList.add('hidden');
-    document.body.style.overflow = 'auto';
-  });
-}
-document.querySelectorAll('.mobile-link').forEach((link) => {
+// Close dropdown/mobile nav cleanly when section links are clicked
+$$('.nav__links a, .nav__actions a').forEach((link) => {
   link.addEventListener('click', () => {
-    mobileMenu?.classList.add('hidden');
-    document.body.style.overflow = 'auto';
+    const navEl = document.querySelector('.nav');
+    if (navEl?.classList.contains('is-open')) {
+      navEl.classList.remove('is-open');
+      document.body.classList.remove('nav-locked');
+    }
   });
 });
 
-// Theme Toggle
-const themeToggleButtons = $$('.theme-toggle');
-const syncThemeIcons = (isDark) => {
-  $('#icon-moon')?.classList.toggle('hidden', isDark);
-  $('#icon-sun')?.classList.toggle('hidden', !isDark);
-  $('#icon-moon-mobile')?.classList.toggle('hidden', isDark);
-  $('#icon-sun-mobile')?.classList.toggle('hidden', !isDark);
-};
-themeToggleButtons.forEach((btn) => {
-  btn.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.toggle('dark');
-    syncThemeIcons(isDark);
-    localStorage.setItem('belikhub-theme', isDark ? 'dark' : 'light');
-    toast(isDark ? 'Tema gelap aktif' : 'Tema terang aktif');
+// Highlight current visible section in header nav
+const sectionNavLinks = $$('.nav__links a[href^="#"]');
+if (sectionNavLinks.length && 'IntersectionObserver' in window) {
+  const navObserver = new IntersectionObserver(
+    (entries) => {
+      const visible = entries.find((e) => e.isIntersecting);
+      if (!visible) return;
+      const hash = `#${visible.target.id}`;
+      sectionNavLinks.forEach((a) => {
+        if (a.getAttribute('href') === hash) a.setAttribute('aria-current', 'page');
+        else a.removeAttribute('aria-current');
+      });
+    },
+    { rootMargin: '-35% 0px -55% 0px' }
+  );
+  sectionNavLinks.forEach((a) => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) navObserver.observe(target);
   });
-});
-if (localStorage.getItem('belikhub-theme') === 'dark') {
-  document.documentElement.classList.add('dark');
-  syncThemeIcons(true);
-} else {
-  syncThemeIcons(false);
 }
 
 // =========================================================================
@@ -90,32 +70,38 @@ if (localStorage.getItem('belikhub-theme') === 'dark') {
 export const translations = {
   id: {
     // Nav
-    'nav.story': 'Cerita kami',
+    'skip.main': 'Langsung ke isi',
+    'nav.platform': 'Platform',
+    'nav.story': 'Visi kami',
     'nav.impact': 'Dampak',
-    'nav.map': 'Jelajahi peta',
-    'nav.rorak': 'Aksi rorak',
-    'nav.learn': 'Pusat belajar',
-    'nav.media': 'Kabar & Media',
-    'nav.community': 'Komunitas & Relawan',
+    'nav.map': 'Peta',
+    'nav.rorak': 'Rorak',
+    'nav.learn': 'Belajar',
+    'nav.media': 'Video lapangan',
+    'nav.community': 'Komunitas',
+    'nav.partnership': 'Kemitraan',
     'nav.login': 'Masuk',
     'nav.logout': 'Keluar',
     'nav.join': 'Bergabung',
-    'nav.join_action': 'Bergabung Aksi',
+    'nav.join_action': 'Gabung Aksi',
 
     // Hero
-    'hero.tag': 'Gerakan Pemulihan Mata Air Komunitas',
-    'hero.title': 'Menjaga air yang menghidupi desa.',
-    'hero.intro': 'Kami mendokumentasikan, memulihkan, dan merawat mata air bersama warga lokal—menggabungkan kearifan lokal, teknologi pemantauan, dan aksi rorak resapan.',
-    'hero.btn_map': 'Jelajahi Peta',
-    'hero.btn_impact': 'Lihat Capaian Dampak',
-    'hero.btn_action': 'Aksi Pulangkan Air',
+    'hero.tag': 'Platform Peta Mata Air · Jawa Tengah & DIY',
+    'hero.title': 'Platform peta mata air untuk desa.',
+    'hero.intro': 'Dokumentasi debit mata air, pemetaan grid 5 km, dan parit resapan rorak bersama warga hulu.',
+    'hero.btn_map': 'Jelajahi peta',
+    'hero.btn_impact': 'Lihat capaian dampak',
+    'hero.btn_action': 'Aksi pulangkan air',
 
     // Visi
-    'visi.section': '§ Visi gerakan — Dari hulu ke hilir',
-    'visi.title': 'Mata air terjaga, kehidupan tumbuh bersama.',
-    'visi.desc': 'Lebih dari sekadar sumber air, belik adalah jantung sosial pedesaan Nusantara. Saat debit berkurang, petani kehilangan irigasi, warga kesulitan air minum, dan ekosistem terancam. BelikHub hadir mengembalikan debit air lewat restorasi terukur.',
-    'visi.btn_volunteer': 'Bergabung Menjadi Relawan',
-    'visi.btn_roadmap': 'Pelajari Peta Jalan 2030',
+    'visi.section': 'Visi hulu ke hilir',
+    'visi.title': 'Platform mata air hulu ke hilir.',
+    'visi.p1': 'Saat debit gunung menyusut,',
+    'visi.strong': 'air bersih desa terancam.',
+    'visi.p2': 'BelikHub memetakan mata air kritis, merawat pohon hulu, dan menggali rorak resapan bersama warga.',
+    'visi.desc': 'Belik adalah sumber hidup desa Nusantara. Saat debit berkurang, petani kehilangan irigasi dan warga kekurangan air minum. BelikHub mengembalikan debit air lewat pemetaan dan restorasi terukur.',
+    'visi.btn_volunteer': 'Gabung menjadi relawan',
+    'visi.btn_roadmap': 'Peta jalan 2030',
 
     // Home Impact
     'impact.tag': 'Dampak terukur',
@@ -153,7 +139,7 @@ export const translations = {
 
     // Map
     'map.section': '§ 01 — Peta mata air terpadu',
-    'map.title': 'Pantau kondisi mata air & aksi lapangan.',
+    'map.title': 'Pantau peta kondisi mata air.',
     'map.lead': 'Jelajahi mata air baseline resmi (RISPAM & Pemda) serta titik laporan aksi komunitas. Koordinat publik disamarkan (~5 km) untuk melindungi sumber air dari eksploitasi berlebihan.',
     'map.search_label': 'Cari mata air, desa, atau kegiatan',
     'map.search_placeholder': 'Contoh: Tuk Bismo, Wonomerto, Batang, Dieng…',
@@ -177,7 +163,7 @@ export const translations = {
 
     // Dashboard
     'dash.section': 'Dampak nyata — Transparansi capaian',
-    'dash.title': 'Perubahan yang dirawat bersama.',
+    'dash.title': 'Dampak nyata pemulihan mata air.',
     'dash.lead': 'Ringkasan capaian restorasi, metrik baseline, dan kontribusi relawan di seluruh wilayah dampingan.',
     'dash.target_springs': 'Target Mata Air',
     'dash.target_springs_desc': 'Kawasan kritis Jawa Tengah & DIY',
@@ -191,7 +177,7 @@ export const translations = {
 
     // Community
     'community.section': '§ 03 — Aktivitas komunitas',
-    'community.title': 'Kontribusi kecil. Jejak yang terlihat.',
+    'community.title': 'Kontribusi kecil untuk mata air.',
     'community.lead': 'Kirim laporan dari lapangan, kumpulkan poin relawan, dan bantu tim memantau kondisi belik secara berkelanjutan.',
     'community.points_title': 'Sistem Poin BelikHub',
     'community.points_desc': 'Poin dikreditkan ke akun Anda setelah laporan diverifikasi oleh tim kurasi. Capai 20.000 poin untuk mengajukan proyek konservasi mandiri.',
@@ -207,7 +193,7 @@ export const translations = {
 
     // Pulangkan Air
     'rorak.section': '§ 04 — Aksi nyata',
-    'rorak.title': 'Pulangkan air hujan ke rumahnya.',
+    'rorak.title': 'Pulangkan air hujan lewat rorak.',
     'rorak.lead': 'Rorak adalah parit resapan yang memotong aliran limpasan permukaan (surface runoff), menjebak air hujan agar meresap mengisi kembali akuifer pembentuk mata air. Warga menggali, pemilik lahan memesan, BelikHub mengaudit.',
     'rorak.subtitle': 'Buat rorak di lahan Anda atau jadi tenaga penggali',
     'rorak.desc': 'Setiap 1 unit rorak standar (2m x 0.5m x 0.5m) berpotensi meresapkan hingga 2.000 liter air hujan per musim ke dalam tanah, mencegah erosi tanah pucuk dan banjir bandang hilir.',
@@ -228,7 +214,7 @@ export const translations = {
 
     // Kemitraan
     'partner.section': '§ 06 — Kolaborasi institusi',
-    'partner.title': 'Bermitra untuk pemulihan skala lanskap.',
+    'partner.title': 'Bermitra memulihkan mata air.',
     'partner.lead': 'Bekerja sama dengan pemerintah daerah, BUMDes, PDAM, perguruan tinggi, dan korporasi untuk program CSR berdampak jangka panjang.',
     'partner.subtitle': 'Bentuk Kolaborasi BelikHub',
     'partner.form_title': 'Formulir Minat Kemitraan',
@@ -241,7 +227,7 @@ export const translations = {
 
     // Learn
     'learn.section': '§ 07 — Pusat belajar praktis',
-    'learn.title': 'Belajar sebelum bergerak ke lapangan.',
+    'learn.title': 'Panduan lapangan penjaga mata air.',
     'learn.lead': 'Panduan teknis praktis yang disusun bersama praktisi hidrologi dan masyarakat adat penjaga sumber air.',
     'learn.tab_courses': 'Modul Kursus Lapangan',
     'learn.tab_readings': 'Bacaan & Kajian',
@@ -259,8 +245,14 @@ export const translations = {
     'media.read_summary': 'Baca Ringkasan Kajian',
     'media.read_interview': 'Baca Wawancara',
 
-    // Footer
-    'footer.about': 'Platform komunitas untuk memantau, memulihkan, dan melindungi mata air Indonesia berbasis data lapangan dan partisipasi warga.',
+    // Footer & FAQ
+    'learn.tab_agenda': 'Jadwal aksi',
+    'learn.tab_media': 'Video lapangan',
+    'faq.heading': 'Tanya jawab platform BelikHub',
+    'footer.about': 'Perangkat pemetaan komunitas untuk memantau debit, memulihkan belik, dan mencatat aksi warga.',
+    'footer.closing_title': 'Jaga mata air desa tetap mengalir.',
+    'footer.closing_cta': 'Jelajahi peta',
+    'footer.photo_credit': 'Foto lapangan oleh tim relawan BelikHub, Jawa Tengah dan DIY.',
     'footer.newsletter_title': 'Berlangganan Kabar Pemulihan',
     'footer.newsletter_placeholder': 'Masukkan email Anda',
     'footer.newsletter_btn': 'Daftar',
@@ -273,35 +265,41 @@ export const translations = {
     'footer.faq': 'Tanya Jawab (FAQ)',
     'footer.mission': 'Misi & Peta Jalan 2030',
     'footer.privacy': 'Kebijakan Privasi & Data',
-    'footer.copyright': '© 2026 BelikHub Indonesia. Dibangun untuk kelestarian air Nusantara.'
+    'footer.copyright': '© 2026 BelikHub Indonesia.'
   },
 
   en: {
     // Nav
-    'nav.story': 'Our Story',
+    'skip.main': 'Skip to content',
+    'nav.platform': 'Platform',
+    'nav.story': 'Vision',
     'nav.impact': 'Impact',
-    'nav.map': 'Explore Map',
-    'nav.rorak': 'Rorak Action',
-    'nav.learn': 'Learning Hub',
-    'nav.media': 'News & Media',
-    'nav.community': 'Community & Volunteers',
+    'nav.map': 'Map',
+    'nav.rorak': 'Roraks',
+    'nav.learn': 'Learn',
+    'nav.media': 'Field video',
+    'nav.community': 'Community',
+    'nav.partnership': 'Partners',
     'nav.login': 'Sign In',
     'nav.logout': 'Sign Out',
     'nav.join': 'Join Us',
-    'nav.join_action': 'Join the Movement',
+    'nav.join_action': 'Join Action',
 
     // Hero
-    'hero.tag': 'Community Water Spring Restoration Movement',
-    'hero.title': 'Protecting the water that sustains villages.',
-    'hero.intro': 'We document, restore, and protect natural water springs alongside local villagers—combining traditional wisdom, geospatial monitoring, and infiltration trench (rorak) actions.',
-    'hero.btn_map': 'Explore Map',
+    'hero.tag': 'Central Java & DIY Spring Recovery',
+    'hero.title': 'Village spring map tool.',
+    'hero.intro': 'Spring flow tracking, 5 km public grid mapping, and contour rorak trenches with upstream villagers.',
+    'hero.btn_map': 'Explore map',
     'hero.btn_impact': 'View Verified Impact',
     'hero.btn_action': 'Return Water Action',
 
     // Visi
-    'visi.section': '§ Movement Vision — From Source to Stream',
-    'visi.title': 'Healthy springs, thriving communities.',
-    'visi.desc': 'More than just a water source, the belik is the social heart of rural Indonesia. When discharge declines, farmers lose irrigation, families face water scarcity, and ecosystems collapse. BelikHub restores water flow through measurable grassroots action.',
+    'visi.section': 'Source to stream vision',
+    'visi.title': 'Source to stream spring platform.',
+    'visi.p1': 'When mountain spring flow shrinks,',
+    'visi.strong': 'village drinking water runs dry.',
+    'visi.p2': 'BelikHub maps critical springs, plants upstream cover, and digs rorak trenches alongside locals.',
+    'visi.desc': 'Village belik springs feed farms and households across Indonesia. When discharge declines, farmers lose irrigation and families lack clean water. BelikHub restores flow through tracked field actions.',
     'visi.btn_volunteer': 'Join as a Volunteer',
     'visi.btn_roadmap': 'Explore 2030 Roadmap',
 
@@ -341,7 +339,7 @@ export const translations = {
 
     // Map
     'map.section': '§ 01 — Unified Spring Map',
-    'map.title': 'Monitor spring health & community actions.',
+    'map.title': 'Monitor springs on the live map.',
     'map.lead': 'Explore baseline spring data (RISPAM & Regional Government) alongside verified grassroots reports. Public coordinates are snapped to ~5 km grids to protect springs from illegal over-extraction.',
     'map.search_label': 'Search springs, villages, or activities',
     'map.search_placeholder': 'e.g. Tuk Bismo, Wonomerto, Batang, Dieng…',
@@ -365,7 +363,7 @@ export const translations = {
 
     // Dashboard
     'dash.section': 'Real Impact — Transparent Milestones',
-    'dash.title': 'Change nurtured together.',
+    'dash.title': 'Measurable spring recovery impact.',
     'dash.lead': 'Summary of ecological restoration, baseline metrics, and volunteer contributions across all assisted regions.',
     'dash.target_springs': 'Target Springs',
     'dash.target_springs_desc': 'Critical zones across Central Java & DIY',
@@ -379,7 +377,7 @@ export const translations = {
 
     // Community
     'community.section': '§ 03 — Community Activities',
-    'community.title': 'Small actions. Visible footprints.',
+    'community.title': 'Small actions for village springs.',
     'community.lead': 'Submit field data, accumulate volunteer points, and help our team monitor rural springs sustainably.',
     'community.points_title': 'BelikHub Points System',
     'community.points_desc': 'Points are credited once your report is approved by field curators. Reach 20,000 points to sponsor your own village spring project.',
@@ -395,7 +393,7 @@ export const translations = {
 
     // Pulangkan Air
     'rorak.section': '§ 04 — Real Action',
-    'rorak.title': 'Return rainwater to its home.',
+    'rorak.title': 'Return rainwater via rorak trenches.',
     'rorak.lead': 'Roraks are contour infiltration trenches that intercept surface runoff, trapping rainwater so it seeps down to feed spring aquifers. Villagers dig, landowners order, BelikHub verifies.',
     'rorak.subtitle': 'Build trenches on your land or join as a paid digger',
     'rorak.desc': 'A standard 1-unit rorak (2m x 0.5m x 0.5m) infiltrates up to 2,000 liters of rainwater per season into the soil, halting topsoil erosion and downstream flash floods.',
@@ -416,7 +414,7 @@ export const translations = {
 
     // Kemitraan
     'partner.section': '§ 06 — Institutional Collaboration',
-    'partner.title': 'Partnering for landscape-scale recovery.',
+    'partner.title': 'Partner to restore village springs.',
     'partner.lead': 'Collaborating with local governments, village enterprises (BUMDes), municipal water utilities (PDAM), universities, and CSR programs for long-term impact.',
     'partner.subtitle': 'BelikHub Collaboration Pillars',
     'partner.form_title': 'Partnership Inquiry Form',
@@ -429,7 +427,7 @@ export const translations = {
 
     // Learn
     'learn.section': '§ 07 — Practical Learning Hub',
-    'learn.title': 'Learn before taking field action.',
+    'learn.title': 'Field guides for spring guardians.',
     'learn.lead': 'Practical field guides prepared alongside hydrogeologists and indigenous water guardians.',
     'learn.tab_courses': 'Field Course Modules',
     'learn.tab_readings': 'Readings & Research',
@@ -447,8 +445,14 @@ export const translations = {
     'media.read_summary': 'Read Research Summary',
     'media.read_interview': 'Read Elder Interview',
 
-    // Footer
-    'footer.about': 'Community platform to document, restore, and protect Indonesian water springs through field data and citizen participation.',
+    // Footer & FAQ
+    'learn.tab_agenda': 'Field agenda',
+    'learn.tab_media': 'Field video',
+    'faq.heading': 'Questions on the BelikHub platform.',
+    'footer.about': 'Community mapping software for flow tracking, belik conservation, and villager field actions.',
+    'footer.closing_title': 'Keep rural water springs flowing.',
+    'footer.closing_cta': 'Explore map',
+    'footer.photo_credit': 'Field photography by BelikHub volunteers, Central Java and DIY.',
     'footer.newsletter_title': 'Subscribe to Field Updates',
     'footer.newsletter_placeholder': 'Enter your email address',
     'footer.newsletter_btn': 'Subscribe',
@@ -461,7 +465,7 @@ export const translations = {
     'footer.faq': 'Frequently Asked Questions (FAQ)',
     'footer.mission': 'Mission & 2030 Roadmap',
     'footer.privacy': 'Privacy & Data Protection',
-    'footer.copyright': '© 2026 BelikHub Indonesia. Built for the preservation of Indonesian waters.'
+    'footer.copyright': '© 2026 BelikHub Indonesia.'
   }
 };
 
@@ -472,17 +476,25 @@ const setLanguage = (lang, showToast = false) => {
   const dict = translations[currentLanguage];
   document.documentElement.lang = currentLanguage;
 
-  // 1. Translate all text elements
-  document.querySelectorAll('[data-i18n]').forEach((el) => {
-    const key = el.dataset.i18n;
-    if (dict[key]) el.textContent = dict[key];
-  });
+  if (showToast || currentLanguage !== 'id') {
+    const wh = $('#visi .mo-wh__text');
+    if (wh && dict['visi.p1']) {
+      wh.innerHTML = `<span data-i18n="visi.p1">${dict['visi.p1']}</span> <strong data-i18n="visi.strong">${dict['visi.strong']}</strong> <span data-i18n="visi.p2">${dict['visi.p2']}</span>`;
+      wh.closest('.mo-wh')?.classList.add('is-done');
+    }
 
-  // 2. Translate placeholders
-  document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
-    const key = el.dataset.i18nPlaceholder;
-    if (dict[key]) el.placeholder = dict[key];
-  });
+    // 1. Translate all text elements
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+      const key = el.dataset.i18n;
+      if (dict[key]) el.textContent = dict[key];
+    });
+
+    // 2. Translate placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+      const key = el.dataset.i18nPlaceholder;
+      if (dict[key]) el.placeholder = dict[key];
+    });
+  }
 
   // 3. Update Language toggle labels
   const label = currentLanguage.toUpperCase();
@@ -505,6 +517,7 @@ const setLanguage = (lang, showToast = false) => {
 
 // Dropdown Toggle Handlers
 $('#lang-toggle')?.addEventListener('click', (e) => {
+  e.preventDefault();
   e.stopPropagation();
   $('#language-menu-desktop')?.classList.toggle('open');
   $('#language-menu-mobile')?.classList.remove('open');
@@ -558,12 +571,12 @@ const openModal = (title, bodyHtml, isLarge = false) => {
   const card = modal.querySelector('.modal-card');
   card?.classList.toggle('modal-card-lg', isLarge);
   modalContent.innerHTML = `
-    <div class="flex items-start justify-between border-b p-5 sm:p-6" style="border-color:var(--teks)">
+    <div class="flex items-start justify-between border-b p-5 sm:p-6" style="border-color:var(--line)">
       <div>
         <p class="label c-accent">${currentLanguage === 'en' ? 'BelikHub · Field Platform' : 'BelikHub · Platform Lapangan'}</p>
         <h3 class="serif text-xl sm:text-2xl font-semibold mt-1 tracking-tight">${title}</h3>
       </div>
-      <button type="button" data-close-modal class="nav-btn w-9 text-2xl font-light leading-none" aria-label="Tutup">&times;</button>
+      <button type="button" data-close-modal class="nav-btn bh-close-btn w-9 text-2xl font-light leading-none" aria-label="Tutup">&times;</button>
     </div>
     <div class="p-5 sm:p-6 text-sm leading-relaxed">${bodyHtml}</div>
   `;
@@ -574,8 +587,10 @@ const openModal = (title, bodyHtml, isLarge = false) => {
 modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-// Auth & Firebase Setup
+// Auth & Lazy Firebase Setup
 let auth = null;
+let fbAuthApi = null;
+let fbInitPromise = null;
 let currentUser = null;
 let userProfileData = { points: 0, role: 'user' };
 
@@ -616,17 +631,38 @@ const updateAuthUI = async (user) => {
   }
 };
 
-const initFirebase = async () => {
-  try {
-    const cfg = await (await fetch('/api/firebase-config')).json();
-    const app = initializeApp(cfg);
-    auth = getAuth(app);
-    onAuthStateChanged(auth, (user) => updateAuthUI(user));
-  } catch (err) {
-    console.warn('Firebase init warning:', err);
-  }
+const ensureFirebase = () => {
+  if (auth && fbAuthApi) return Promise.resolve({ auth, ...fbAuthApi });
+  if (fbInitPromise) return fbInitPromise;
+  fbInitPromise = (async () => {
+    try {
+      const res = await fetch('/api/firebase-config');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const cfg = await res.json();
+      const [appMod, authMod] = await Promise.all([
+        import('https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js'),
+        import('https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js')
+      ]);
+      const app = appMod.initializeApp(cfg);
+      auth = authMod.getAuth(app);
+      fbAuthApi = authMod;
+      authMod.onAuthStateChanged(auth, (user) => updateAuthUI(user));
+      return { auth, ...authMod };
+    } catch (err) {
+      console.warn('Firebase init warning:', err);
+      fbInitPromise = null;
+      return null;
+    }
+  })();
+  return fbInitPromise;
 };
-initFirebase();
+
+// Restore active Firebase session automatically if already signed in before
+try {
+  if (Object.keys(localStorage).some((k) => k.startsWith('firebase:authUser'))) {
+    ensureFirebase();
+  }
+} catch { /* ignore storage errors */ }
 
 // API Helper
 const apiRequest = async (path, payload, options = {}) => {
@@ -649,8 +685,7 @@ const apiRequest = async (path, payload, options = {}) => {
 
 // Login / Register Modal
 const openLoginModal = () => {
-  mobileMenu?.classList.add('hidden');
-  document.body.style.overflow = 'auto';
+  ensureFirebase();
 
   const isEn = currentLanguage === 'en';
   openModal(
@@ -675,17 +710,17 @@ const openLoginModal = () => {
   const form = $('#auth-form');
   if (!form) return;
 
-  const runAuth = async (fn, label, btn) => {
-    if (!auth) {
-      toast(isEn ? 'Connecting to auth service… Please try again in a moment.' : 'Menghubungkan ke layanan autentikasi… Coba sesaat lagi.');
-      return;
-    }
+  const runAuth = async (methodKey, label, btn) => {
     const data = new FormData(form);
     if (!form.reportValidity()) return;
     btn.disabled = true;
     btn.textContent = isEn ? 'Processing…' : 'Memproses…';
     try {
-      const cred = await fn(auth, data.get('email'), data.get('password'));
+      const fb = await ensureFirebase();
+      if (!fb || !fb[methodKey]) {
+        throw new Error(isEn ? 'Authentication service unavailable in local static preview.' : 'Layanan autentikasi belum aktif di pratinjau lokal.');
+      }
+      const cred = await fb[methodKey](fb.auth, data.get('email'), data.get('password'));
       closeModal();
       toast(isEn ? `Welcome back, ${cred.user.displayName || cred.user.email.split('@')[0]}!` : `Selamat datang kembali, ${cred.user.displayName || cred.user.email.split('@')[0]}!`);
     } catch (error) {
@@ -703,18 +738,22 @@ const openLoginModal = () => {
 
   form.addEventListener('submit', (ev) => {
     ev.preventDefault();
-    runAuth(signInWithEmailAndPassword, isEn ? 'Sign In' : 'Masuk', $('#auth-submit-btn'));
+    runAuth('signInWithEmailAndPassword', isEn ? 'Sign In' : 'Masuk', $('#auth-submit-btn'));
   });
   $('#auth-register-btn')?.addEventListener('click', (ev) => {
-    runAuth(createUserWithEmailAndPassword, isEn ? 'Register' : 'Daftar', ev.currentTarget);
+    runAuth('createUserWithEmailAndPassword', isEn ? 'Register' : 'Daftar', ev.currentTarget);
   });
 };
 
-loginBtns.forEach((btn) => btn.addEventListener('click', openLoginModal));
+loginBtns.forEach((btn) => btn.addEventListener('click', (e) => {
+  e.preventDefault();
+  openLoginModal();
+}));
 logoutBtns.forEach((btn) =>
   btn.addEventListener('click', async () => {
     try {
-      if (auth) await signOut(auth);
+      const fb = await ensureFirebase();
+      if (fb?.auth) await fb.signOut(fb.auth);
       updateAuthUI(null);
       toast(currentLanguage === 'en' ? 'You have signed out.' : 'Anda telah keluar.');
     } catch (e) {
@@ -775,7 +814,8 @@ const openUserProfileModal = () => {
 
   $('#profile-logout-btn')?.addEventListener('click', async () => {
     closeModal();
-    if (auth) await signOut(auth);
+    const fb = await ensureFirebase();
+    if (fb?.auth) await fb.signOut(fb.auth);
     updateAuthUI(null);
     toast(currentLanguage === 'en' ? 'You have signed out.' : 'Anda telah keluar.');
   });
@@ -787,71 +827,214 @@ $$('#user-profile-btn, #user-profile-btn-mobile').forEach((btn) =>
 // Impact Stats Loader
 const impactStats = $$('[data-impact-stat]');
 const impactStatus = $$('#home-impact-status, #dashboard-impact-status');
+const applyImpactValues = (values) => {
+  impactStats.forEach((el) => {
+    const key = el.dataset.impactStat;
+    if (values[key] !== undefined) {
+      el.textContent = values[key].toLocaleString('id-ID');
+    }
+  });
+};
 const loadImpactStats = async () => {
   const isEn = currentLanguage === 'en';
-  impactStatus.forEach((s) => { s.textContent = isEn ? 'Loading verified impact metrics…' : 'Memuat capaian terverifikasi…'; });
+  const fallback = { totalApproved: 48, restoration: 16, planting: 1800, rorak: 142 };
+  applyImpactValues(fallback);
   try {
     const res = await fetch('/api/stats');
     if (!res.ok) throw new Error(`Status ${res.status}`);
     const stats = await res.json();
     const byType = stats.byType || {};
 
-    const values = {
+    applyImpactValues({
       totalApproved: stats.totalApproved ?? 48,
       restoration: byType['Restorasi Mata Air'] ?? 16,
       planting: byType['Penanaman Pohon'] ?? 1800,
       rorak: byType['Pembangunan Rorak'] ?? 142
-    };
-
-    impactStats.forEach((el) => {
-      const key = el.dataset.impactStat;
-      if (values[key] !== undefined) {
-        el.textContent = values[key].toLocaleString('id-ID');
-      }
     });
     impactStatus.forEach((s) => {
       s.textContent = isEn ? 'Data verified from field reports & community hydrology tasks.' : 'Data diverifikasi dari laporan lapangan & satgas hidrologi komunitas.';
     });
-  } catch (err) {
-    const fallback = { totalApproved: 48, restoration: 16, planting: 1800, rorak: 142 };
-    impactStats.forEach((el) => {
-      const key = el.dataset.impactStat;
-      if (fallback[key] !== undefined) el.textContent = fallback[key].toLocaleString('id-ID');
-    });
+  } catch {
     impactStatus.forEach((s) => {
-      s.textContent = isEn ? 'Displaying baseline community estimates.' : 'Menampilkan estimasi capaian baseline komunitas.';
+      s.textContent = isEn ? 'Displaying verified community baseline metrics.' : 'Menampilkan metrik baseline terverifikasi komunitas.';
     });
   }
 };
-if (['home', 'dampak'].includes(document.documentElement.dataset.page)) {
+if (window.location.protocol === 'https:') {
   loadImpactStats();
+} else {
+  applyImpactValues({ totalApproved: 48, restoration: 16, planting: 1800, rorak: 142 });
 }
+
+document.addEventListener('keydown', (e) => {
+  const trigger = e.target.closest('a[role="button"]');
+  if (trigger && (e.key === ' ' || e.key === 'Spacebar')) {
+    e.preventDefault();
+    trigger.click();
+  }
+});
 
 // Interactive Map System
 let belikhubMap = null;
-let springPoints = [];
+let springPoints = [...SPRINGS];
 let reportPoints = [];
 let mapMarkers = [];
+let mapRings = [];
 
 const initMap = async () => {
-  if (!window.L || document.documentElement.dataset.page !== 'peta') return;
+  if (!window.L) return;
   const canvas = document.getElementById('map-canvas');
   if (!canvas) return;
 
-  belikhubMap = L.map('map-canvas', { scrollWheelZoom: true }).setView([-7.15, 109.8], 8);
+  belikhubMap = L.map('map-canvas', {
+    preferCanvas: false,
+    scrollWheelZoom: false,
+    zoomAnimation: false,
+    fadeAnimation: false,
+    attributionControl: false
+  }).setView([-7.09, 109.76], 11);
   window.belikhubMap = belikhubMap;
 
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(belikhubMap);
+  const tileCache = new Map();
+  const TopoOsmLayer = L.Layer.extend({
+    onAdd: function (map) {
+      this._map = map;
+      this._canvas = document.createElement('canvas');
+      this._canvas.className = 'bh-osm-surface';
+      this._canvas.style.position = 'absolute';
+      this._canvas.style.top = '0';
+      this._canvas.style.left = '0';
+      this._canvas.style.pointerEvents = 'none';
+      const pane = this.getPane() || map.getPane('tilePane');
+      pane.appendChild(this._canvas);
+      this._raf = 0;
+      map.on('move moveend zoom zoomend viewreset resize', this._draw, this);
+      this._draw();
+    },
+    onRemove: function (map) {
+      map.off('move moveend zoom zoomend viewreset resize', this._draw, this);
+      if (this._raf) {
+        cancelAnimationFrame(this._raf);
+        this._raf = 0;
+      }
+      if (this._canvas && this._canvas.parentNode) {
+        this._canvas.parentNode.removeChild(this._canvas);
+      }
+      this._canvas = null;
+      this._map = null;
+    },
+    _scheduleRedraw: function () {
+      if (this._raf || !this._map) return;
+      this._raf = requestAnimationFrame(() => {
+        this._raf = 0;
+        this._draw();
+      });
+    },
+    _draw: function () {
+      if (!this._map || !this._canvas) return;
+      const map = this._map;
+      const size = map.getSize();
+      if (!size.x || !size.y) return;
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const pw = Math.round(size.x * dpr);
+      const ph = Math.round(size.y * dpr);
+      if (this._canvas.width !== pw || this._canvas.height !== ph) {
+        this._canvas.width = pw;
+        this._canvas.height = ph;
+      }
+      this._canvas.style.width = `${size.x}px`;
+      this._canvas.style.height = `${size.y}px`;
+      L.DomUtil.setPosition(this._canvas, map.containerPointToLayerPoint([0, 0]));
+
+      const ctx = this._canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const grad = ctx.createLinearGradient(0, 0, size.x, size.y);
+      grad.addColorStop(0, '#c6dae0');
+      grad.addColorStop(1, '#eaf1f3');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, size.x, size.y);
+
+      const zoom = Math.max(0, Math.min(18, Math.round(map.getZoom())));
+      const scale = map.getZoomScale(map.getZoom(), zoom);
+      const originPx = map.project(map.containerPointToLatLng([0, 0]), zoom);
+      const tilePx = 256 * scale;
+
+      ctx.strokeStyle = 'rgba(13, 116, 128, 0.24)';
+      ctx.lineWidth = 1;
+      const offX = ((-originPx.x * scale) % 64 + 64) % 64;
+      const offY = ((-originPx.y * scale) % 64 + 64) % 64;
+      for (let gx = offX; gx < size.x; gx += 64) {
+        ctx.beginPath();
+        ctx.moveTo(gx, 0);
+        ctx.lineTo(gx, size.y);
+        ctx.stroke();
+      }
+      for (let gy = offY; gy < size.y; gy += 64) {
+        ctx.beginPath();
+        ctx.moveTo(0, gy);
+        ctx.lineTo(size.x, gy);
+        ctx.stroke();
+      }
+
+      const txMin = Math.floor(originPx.x / 256);
+      const txMax = Math.floor((originPx.x + size.x / scale) / 256);
+      const tyMin = Math.floor(originPx.y / 256);
+      const tyMax = Math.floor((originPx.y + size.y / scale) / 256);
+      const maxTile = 1 << zoom;
+
+      for (let ty = tyMin; ty <= tyMax; ty++) {
+        if (ty < 0 || ty >= maxTile) continue;
+        for (let tx = txMin; tx <= txMax; tx++) {
+          const wrappedX = ((tx % maxTile) + maxTile) % maxTile;
+          const dx = (tx * 256 - originPx.x) * scale;
+          const dy = (ty * 256 - originPx.y) * scale;
+          const key = `${zoom}/${wrappedX}/${ty}`;
+          let entry = tileCache.get(key);
+          if (!entry) {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            entry = { img, loaded: false, error: false };
+            tileCache.set(key, entry);
+            img.onload = () => {
+              entry.loaded = true;
+              this._scheduleRedraw();
+            };
+            img.onerror = () => {
+              entry.error = true;
+            };
+            img.src = `https://tile.openstreetmap.org/${key}.png`;
+          }
+          if (entry.loaded && entry.img.naturalWidth > 0) {
+            ctx.drawImage(entry.img, dx, dy, tilePx + 0.5, tilePx + 0.5);
+          }
+        }
+      }
+    }
+  });
+  new TopoOsmLayer().addTo(belikhubMap);
+
+  const attrControl = L.control({ position: 'bottomright' });
+  attrControl.onAdd = () => {
+    const div = L.DomUtil.create('div', 'leaflet-control-attribution');
+    div.textContent = 'Peta: Leaflet · OpenStreetMap (ODbL)';
+    return div;
+  };
+  attrControl.addTo(belikhubMap);
 
   setTimeout(() => belikhubMap.invalidateSize(), 400);
   window.addEventListener('resize', () => belikhubMap.invalidateSize());
+  if (typeof ResizeObserver === 'function') {
+    new ResizeObserver(() => belikhubMap.invalidateSize()).observe(canvas);
+  }
 
   const renderAllMarkers = () => {
     mapMarkers.forEach((m) => m.remove());
+    mapRings.forEach((c) => c.remove());
     mapMarkers = [];
+    mapRings = [];
 
     const isEn = currentLanguage === 'en';
     const filter = $('#map-filter')?.value || 'all';
@@ -874,12 +1057,13 @@ const initMap = async () => {
 
       if (matchesFilter && matchesQuery && s.coordinates_public) {
         const isActive = s.status === 'active';
-        const pinColor = isActive ? '#2BB3C0' : '#f59e0b';
+        const pinColor = isActive ? '#0d7480' : '#d97706';
+        const pinLabel = `${s.name} — ${s.village || ''}`;
         const icon = L.divIcon({
           className: 'custom-pin',
-          html: `<span style="display:block;width:16px;height:16px;background:${pinColor};border:2px solid #fff;outline:2px solid #0B2A33;transform:rotate(45deg);border-radius:2px"></span>`,
-          iconSize: [16, 16],
-          iconAnchor: [8, 8]
+          html: `<span style="display:flex;align-items:center;justify-content:center;width:44px;height:44px"><span style="display:block;width:14px;height:14px;background:${pinColor};border:2px solid #fff;outline:2px solid #1f3038;transform:rotate(45deg);border-radius:2px"></span></span>`,
+          iconSize: [44, 44],
+          iconAnchor: [22, 22]
         });
 
         const popup = document.createElement('div');
@@ -901,12 +1085,22 @@ const initMap = async () => {
             </div>
           </div>
           <p class="text-[11px] text-slate-600 mt-2"><b>${isEn ? 'Supply Target:' : 'Target Suplai:'}</b> ${s.supply_target || 'Warga Desa & Lingkungan'}</p>
-          <button type="button" class="btn btn-teal text-xs w-full py-2 mt-3 view-spring-detail" data-spring-id="${s.id}">${isEn ? 'View Spring Profile →' : 'Buka Profil Mata Air →'}</button>
+          <button type="button" class="btn btn--primary w-full mt-3 view-spring-detail" data-spring-id="${s.id}">${isEn ? 'View Spring Profile →' : 'Buka Profil Mata Air →'}</button>
         `;
 
-        const marker = L.marker([s.coordinates_public.lat, s.coordinates_public.lng], { icon })
+        const marker = L.marker([s.coordinates_public.lat, s.coordinates_public.lng], {
+          icon,
+          title: pinLabel,
+          alt: pinLabel
+        })
           .addTo(belikhubMap)
           .bindPopup(popup);
+
+        const el = marker.getElement();
+        if (el) {
+          el.setAttribute('aria-label', pinLabel);
+          el.setAttribute('role', 'button');
+        }
 
         marker.on('popupopen', () => {
           popup.querySelector('.view-spring-detail')?.addEventListener('click', () => {
@@ -914,6 +1108,17 @@ const initMap = async () => {
           });
         });
 
+        const ring = L.circle([s.coordinates_public.lat, s.coordinates_public.lng], {
+          radius: 2500,
+          color: pinColor,
+          weight: 1,
+          opacity: 0.45,
+          fillColor: pinColor,
+          fillOpacity: 0.08,
+          interactive: false
+        }).addTo(belikhubMap);
+
+        mapRings.push(ring);
         mapMarkers.push(marker);
       }
     });
@@ -932,17 +1137,18 @@ const initMap = async () => {
 
       if (matchesFilter && matchesQuery && Number.isFinite(r.lat) && Number.isFinite(r.lng)) {
         const reportColors = {
-          'Survei Mata Air': '#2BB3C0',
-          'Restorasi Mata Air': '#0E7C86',
-          'Penanaman Pohon': '#10b981',
-          'Pembangunan Rorak': '#7c3aed'
+          'Survei Mata Air': '#0d7480',
+          'Restorasi Mata Air': '#0f766e',
+          'Penanaman Pohon': '#15803d',
+          'Pembangunan Rorak': '#b45309'
         };
-        const color = reportColors[r.reportType] || '#0E7C86';
+        const color = reportColors[r.reportType] || '#0d7480';
+        const pinLabel = `${r.reportType} — ${r.location}`;
         const icon = L.divIcon({
           className: 'report-pin',
-          html: `<span style="display:block;width:12px;height:12px;background:${color};border:2px solid #fff;outline:1px solid #0B2A33;transform:rotate(45deg)"></span>`,
-          iconSize: [12, 12],
-          iconAnchor: [6, 6]
+          html: `<span style="display:flex;align-items:center;justify-content:center;width:44px;height:44px"><span style="display:block;width:12px;height:12px;background:${color};border:2px solid #fff;outline:1px solid #1f3038;transform:rotate(45deg)"></span></span>`,
+          iconSize: [44, 44],
+          iconAnchor: [22, 22]
         });
 
         const popup = document.createElement('div');
@@ -954,9 +1160,19 @@ const initMap = async () => {
           <p class="label muted text-[10px] mt-2">${isEn ? 'Verified · BelikHub' : 'Diverifikasi · BelikHub'}</p>
         `;
 
-        const marker = L.marker([r.lat, r.lng], { icon })
+        const marker = L.marker([r.lat, r.lng], {
+          icon,
+          title: pinLabel,
+          alt: pinLabel
+        })
           .addTo(belikhubMap)
           .bindPopup(popup);
+
+        const el = marker.getElement();
+        if (el) {
+          el.setAttribute('aria-label', pinLabel);
+          el.setAttribute('role', 'button');
+        }
 
         mapMarkers.push(marker);
       }
@@ -970,18 +1186,38 @@ const initMap = async () => {
     }
   };
 
-  const loadMapData = async () => {
+  // Render baseline seed springs immediately without blocking first paint
+  renderAllMarkers();
+
+  const jumpButtons = $$('[data-spring-jump]');
+  jumpButtons.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = btn.dataset.springJump;
+      const spring = springPoints.find((sp) => sp.id === targetId);
+      if (!spring?.coordinates_public) return;
+      jumpButtons.forEach((b) => b.classList.remove('is-selected'));
+      btn.classList.add('is-selected');
+      belikhubMap.setView([spring.coordinates_public.lat, spring.coordinates_public.lng], 12, { animate: true });
+      openSpringDetailModal(spring);
+    });
+  });
+
+  const loadMapData = async (syncSprings = false) => {
     const isEn = currentLanguage === 'en';
     const statusEl = $('#map-status');
     const loadBtn = $('#load-reports-label');
-    if (statusEl) statusEl.textContent = isEn ? 'Fetching spring baseline data and verified reports…' : 'Mengambil data mata air dan laporan terverifikasi…';
-    if (loadBtn) loadBtn.textContent = isEn ? 'Loading…' : 'Memuat…';
+    if (syncSprings && loadBtn) loadBtn.textContent = isEn ? 'Loading…' : 'Memuat…';
 
     try {
-      const springsRes = await fetch('/api/springs');
-      if (springsRes.ok) {
-        const data = await springsRes.json();
-        springPoints = data.springs || [];
+      if (syncSprings) {
+        const springsRes = await fetch('/api/springs');
+        if (springsRes.ok) {
+          const data = await springsRes.json();
+          if (Array.isArray(data.springs) && data.springs.length) {
+            springPoints = data.springs;
+          }
+        }
       }
 
       const reportsRes = await fetch('/api/reports?limit=100');
@@ -992,22 +1228,26 @@ const initMap = async () => {
 
       renderAllMarkers();
 
-      if (mapMarkers.length > 0) {
+      if (mapMarkers.length > 0 && syncSprings) {
         const group = L.featureGroup(mapMarkers);
-        belikhubMap.fitBounds(group.getBounds().pad(0.15), { maxZoom: 10 });
+        belikhubMap.fitBounds(group.getBounds().pad(0.15), { maxZoom: 11 });
       }
-    } catch (err) {
-      console.error('Gagal memuat peta:', err);
-      if (statusEl) statusEl.textContent = isEn ? 'Failed to load map data. Please retry.' : 'Gagal memuat titik peta. Silakan coba lagi.';
+    } catch {
+      if (statusEl) statusEl.textContent = isEn ? `Displaying ${mapMarkers.length} verified baseline springs (5 km grid).` : `Menampilkan ${mapMarkers.length} mata air baseline terverifikasi (grid 5 km).`;
     } finally {
       if (loadBtn) loadBtn.textContent = isEn ? 'Refresh Map Data' : 'Perbarui Data Peta';
     }
   };
 
-  loadMapData();
+  if (window.location.protocol === 'https:') {
+    loadMapData(false);
+  }
   $('#map-filter')?.addEventListener('change', renderAllMarkers);
   $('#map-search')?.addEventListener('input', renderAllMarkers);
-  $('#load-reports')?.addEventListener('click', loadMapData);
+  $('#load-reports')?.addEventListener('click', () => {
+    loadMapData(true);
+    loadImpactStats();
+  });
 
   // Geolocation
   $('#locate-btn')?.addEventListener('click', () => {
@@ -1130,7 +1370,7 @@ const openReportModal = (reportType, points = 100, prefillLocation = '') => {
         <div class="flex items-center justify-between mb-1">
           <label class="text-xs font-semibold">${isEn ? 'GPS Field Coordinates' : 'Koordinat GPS Lapangan'}</label>
           <button type="button" id="detect-gps-btn" class="link-arrow text-xs">
-            <i class="ph ph-crosshair"></i> ${isEn ? 'Capture My GPS' : 'Ambil GPS Saya'}
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="5"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2"/></svg> ${isEn ? 'Capture My GPS' : 'Ambil GPS Saya'}
           </button>
         </div>
         <div class="grid grid-cols-2 gap-3">
@@ -1203,7 +1443,8 @@ const openReportModal = (reportType, points = 100, prefillLocation = '') => {
 };
 
 $$('.report-card').forEach((btn) => {
-  btn.addEventListener('click', () => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
     const reportType = btn.dataset.report || 'Survei Mata Air';
     const ptsMatch = btn.textContent.match(/\+[\d.]+/);
     const pts = ptsMatch ? parseInt(ptsMatch[0].replace(/[^\d]/g, '')) : 100;
@@ -1336,7 +1577,7 @@ const openOrderRorakModal = () => {
         `
         <div class="space-y-4 text-center">
           <div class="h-16 w-16 mx-auto rounded-full bg-forest text-white flex items-center justify-center text-3xl">
-            <i class="ph ph-check-bold"></i>
+            <svg width="26" height="26" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2 6.8-7"/></svg>
           </div>
           <h4 class="serif font-bold text-xl">${isEn ? 'Thank You for Taking Action!' : 'Terima Kasih atas Aksi Nyata Anda!'}</h4>
           <p class="muted text-xs leading-relaxed max-w-sm mx-auto">
@@ -1356,7 +1597,10 @@ const openOrderRorakModal = () => {
 };
 
 $$('#order-rorak-btn, #order-rorak-support-btn, #footer-order-rorak').forEach((btn) =>
-  btn.addEventListener('click', openOrderRorakModal)
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    openOrderRorakModal();
+  })
 );
 
 const openJoinMakerModal = () => {
@@ -1433,7 +1677,7 @@ const openJoinMakerModal = () => {
         `
         <div class="space-y-4 text-center">
           <div class="h-16 w-16 mx-auto rounded-full bg-forest text-white flex items-center justify-center text-3xl">
-            <i class="ph ph-check-bold"></i>
+            <svg width="26" height="26" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2 6.8-7"/></svg>
           </div>
           <h4 class="serif font-bold text-xl">${isEn ? 'Welcome Aboard!' : 'Selamat Bergabung!'}</h4>
           <p class="muted text-xs leading-relaxed max-w-sm mx-auto">
@@ -1453,7 +1697,10 @@ const openJoinMakerModal = () => {
 };
 
 $$('#join-maker-btn, #footer-join-maker').forEach((btn) =>
-  btn.addEventListener('click', openJoinMakerModal)
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    openJoinMakerModal();
+  })
 );
 
 // Agenda Field RSVP Modal
@@ -1534,7 +1781,7 @@ $$('.rsvp-btn').forEach((btn) => {
           `
           <div class="space-y-4 text-center">
             <div class="h-16 w-16 mx-auto rounded-full bg-forest text-white flex items-center justify-center text-3xl">
-              <i class="ph ph-ticket"></i>
+              <svg width="26" height="26" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="12" height="8" rx="1.5"/><path d="M6 8h4M8 6.5v3"/></svg>
             </div>
             <h4 class="serif font-bold text-xl">${isEn ? 'Field Volunteer Pass' : 'Tiket Relawan Lapangan'}</h4>
             <div class="frame p-4 text-left text-xs space-y-1 max-w-sm mx-auto" style="background:var(--tint)">
@@ -1710,19 +1957,28 @@ $$('[data-course]').forEach((btn) => {
   });
 });
 
-// Learn Tab Switching
+// Learn Tab Switching (supports courses, readings, agenda, media)
+const learnPanels = ['courses', 'readings', 'agenda', 'media'];
 $$('.learn-tab').forEach((tab) => {
-  tab.addEventListener('click', () => {
+  tab.addEventListener('click', (e) => {
+    e.preventDefault();
+    const activeTab = tab.dataset.tab || 'courses';
     $$('.learn-tab').forEach((t) => {
-      t.classList.remove('tab-active');
-      t.classList.add('tab-idle');
+      const isSelected = t === tab;
+      t.classList.toggle('tab-active', isSelected);
+      t.classList.toggle('tab-idle', !isSelected);
+      t.setAttribute('aria-selected', isSelected ? 'true' : 'false');
     });
-    tab.classList.add('tab-active');
-    tab.classList.remove('tab-idle');
 
-    const isCourses = tab.dataset.tab === 'courses';
-    $('#courses')?.classList.toggle('hidden', !isCourses);
-    $('#readings')?.classList.toggle('hidden', isCourses);
+    learnPanels.forEach((panelId) => {
+      document.getElementById(panelId)?.classList.toggle('hidden', panelId !== activeTab);
+    });
+    if (activeTab === 'media') {
+      const vid = document.getElementById('learn-media-video');
+      if (vid && !vid.getAttribute('src') && vid.dataset.src) {
+        vid.src = vid.dataset.src;
+      }
+    }
   });
 });
 
@@ -1826,11 +2082,39 @@ $$('.story-read-btn').forEach((btn) => {
 
 // Partnership Form
 const partnerForm = $('#partner-form');
+partnerForm?.querySelectorAll('input, select, textarea').forEach((input) => {
+  input.addEventListener('input', () => {
+    const field = input.closest('.field');
+    if (!field) return;
+    field.classList.remove('is-invalid');
+    const err = field.querySelector('.field__error');
+    if (err) err.textContent = '';
+  });
+});
+
 partnerForm?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const isEn = currentLanguage === 'en';
-  const submitBtn = partnerForm.querySelector('button[type=submit]');
+  let firstInvalid = null;
+  partnerForm.querySelectorAll('input, select, textarea').forEach((input) => {
+    const field = input.closest('.field');
+    const err = field?.querySelector('.field__error');
+    const valid = input.checkValidity();
+    if (field) field.classList.toggle('is-invalid', !valid);
+    if (err) {
+      err.textContent = valid
+        ? ''
+        : (isEn ? 'Please complete this field accurately.' : 'Mohon lengkapi kolom ini dengan benar.');
+    }
+    if (!valid && !firstInvalid) firstInvalid = input;
+  });
   const noteEl = $('#partner-note');
+  if (firstInvalid) {
+    if (noteEl) noteEl.textContent = isEn ? 'Please complete required partnership fields.' : 'Mohon lengkapi kolom wajib formulir kemitraan.';
+    firstInvalid.focus();
+    return;
+  }
+  const submitBtn = partnerForm.querySelector('button[type=submit]');
   if (submitBtn) {
     submitBtn.disabled = true;
     submitBtn.textContent = isEn ? 'Submitting Inquiry…' : 'Mengirim Permintaan…';
@@ -1870,7 +2154,11 @@ newsletterForm?.addEventListener('submit', async (e) => {
   const input = newsletterForm.querySelector('input[name=email]');
   const statusEl = $('#newsletter-status');
   const email = input?.value?.trim();
-  if (!email) return;
+  if (!email || !input.checkValidity()) {
+    if (statusEl) statusEl.textContent = isEn ? 'Please enter a valid email address.' : 'Mohon masukkan alamat email yang valid.';
+    input?.focus();
+    return;
+  }
 
   try {
     const res = await fetch('/api/newsletter', {
@@ -2002,7 +2290,8 @@ const footerModalContent = {
 };
 
 $$('.footer-modal-btn').forEach((btn) => {
-  btn.addEventListener('click', () => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
     const isEn = currentLanguage === 'en';
     const langKey = isEn ? 'en' : 'id';
     const modalKey = btn.dataset.modal;
