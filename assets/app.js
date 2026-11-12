@@ -1,9 +1,18 @@
 // assets/app.js - BelikHub Platform V4 Interactive Client Logic with Complete i18n
-import { METRICS, SPRINGS } from '../lib/springs-seed.js';
+import { SPRINGS } from './springs-seed.js';
 
 // DOM Utilities
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
+const prefersReducedMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;'
+}[ch]));
+
 const toast = (message) => {
   const el = $('#toast');
   if (!el) return;
@@ -28,20 +37,9 @@ if (routeTargetMap[currentPath]) {
   requestAnimationFrame(() => {
     const cfg = routeTargetMap[currentPath];
     if (cfg.tab) document.getElementById(cfg.tab)?.click();
-    document.querySelector(cfg.section)?.scrollIntoView({ behavior: 'smooth' });
+    document.querySelector(cfg.section)?.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
   });
 }
-
-// Close dropdown/mobile nav cleanly when section links are clicked
-$$('.nav__links a, .nav__actions a').forEach((link) => {
-  link.addEventListener('click', () => {
-    const navEl = document.querySelector('.nav');
-    if (navEl?.classList.contains('is-open')) {
-      navEl.classList.remove('is-open');
-      document.body.classList.remove('nav-locked');
-    }
-  });
-});
 
 // Highlight current visible section in header nav
 const sectionNavLinks = $$('.nav__links a[href^="#"]');
@@ -69,13 +67,22 @@ if (sectionNavLinks.length && 'IntersectionObserver' in window) {
 // =========================================================================
 export const translations = {
   id: {
+    'doc.title': 'BelikHub: Platform Peta Mata Air & Pemulihan Daerah Tangkapan Air',
+    'doc.desc': 'Platform peta mata air komunitas di Jawa Tengah dan DIY: pemantauan debit, grid privasi 5 km, parit resapan rorak, dan aksi relawan hulu ke hilir.',
+
     // Nav
     'skip.main': 'Langsung ke isi',
+    'nav.logo_aria': 'BelikHub Beranda',
+    'nav.main_aria': 'Navigasi utama',
+    'nav.lang_aria': 'Ganti bahasa',
+    'nav.toggle_aria': 'Buka menu navigasi',
+    'nav.theme_aria': 'Ganti mode terang atau gelap',
     'nav.platform': 'Platform',
     'nav.story': 'Visi kami',
     'nav.impact': 'Dampak',
     'nav.map': 'Peta',
     'nav.rorak': 'Rorak',
+    'nav.order_rorak': 'Pesan rorak mata air',
     'nav.learn': 'Belajar',
     'nav.media': 'Video lapangan',
     'nav.community': 'Komunitas',
@@ -90,8 +97,15 @@ export const translations = {
     'hero.title': 'Platform peta mata air untuk desa.',
     'hero.intro': 'Dokumentasi debit mata air, pemetaan grid 5 km, dan parit resapan rorak bersama warga hulu.',
     'hero.btn_map': 'Jelajahi peta',
-    'hero.btn_impact': 'Lihat capaian dampak',
+    'hero.btn_impact': 'Lihat capaian BelikHub',
     'hero.btn_action': 'Aksi pulangkan air',
+    'hero.float_springs_aria': 'Ringkasan jaringan mata air',
+    'hero.float_grid': 'Grid Publik 5 km',
+    'hero.float_springs': '88 mata air terdata',
+    'hero.float_discharge': '1.350 L/s total debit',
+    'hero.float_rorak_aria': 'Kapasitas serapan rorak',
+    'hero.float_rorak_label': 'Rorak Standar',
+    'hero.float_rorak_val': '2.000 L / musim',
 
     // Visi
     'visi.section': 'Visi hulu ke hilir',
@@ -102,6 +116,18 @@ export const translations = {
     'visi.desc': 'Belik adalah sumber hidup desa Nusantara. Saat debit berkurang, petani kehilangan irigasi dan warga kekurangan air minum. BelikHub mengembalikan debit air lewat pemetaan dan restorasi terukur.',
     'visi.btn_volunteer': 'Gabung menjadi relawan',
     'visi.btn_roadmap': 'Peta jalan 2030',
+    'visi.stat1_dt': 'Target Mata Air',
+    'visi.stat1_dd': '88 belik',
+    'visi.stat2_dt': 'Potensi Debit',
+    'visi.stat3_dt': 'Penerima Manfaat',
+    'visi.stat3_dd': '2.500+ KK',
+    'visi.stat4_dt': 'Mandiri Komunitas',
+    'visi.step1_label': '01 · Pemetaan grid publik',
+    'visi.step1_val': 'Radius 5 km',
+    'visi.step2_label': '02 · Parit resapan rorak',
+    'visi.step2_val': '2.000 L / unit',
+    'visi.step3_label': '03 · Audit debit tahunan',
+    'visi.step3_val': 'Jawa Tengah & DIY',
 
     // Home Impact
     'impact.tag': 'Dampak terukur',
@@ -115,6 +141,10 @@ export const translations = {
     'impact.trees_desc': 'Bibit endemik pengikat air di area springshed.',
     'impact.rorak': 'Rorak Digali',
     'impact.rorak_desc': 'Menahan limpasan hujan masuk ke akuifer tanah.',
+    'impact.unit_reports': 'laporan',
+    'impact.unit_springs': 'belik',
+    'impact.unit_trees': 'pohon',
+    'impact.unit_units': 'unit',
     'impact.status_loading': 'Memuat data capaian…',
     'impact.status_ready': 'Data diverifikasi dari laporan lapangan & satgas hidrologi komunitas.',
 
@@ -124,7 +154,7 @@ export const translations = {
     'stories.lead': 'Dari Tuk Bismo di lereng Dieng hingga Wonomerto di Batang, dengarkan kisah warga yang kembali merasakan gemericik air melimpah.',
     'stories.btn_all': 'Jelajahi semua cerita & publikasi',
     'stories.btn_read': 'Baca Kisah Lengkap',
-    'stories.btn_guide': 'Baca Panduan',
+    'stories.btn_guide': 'Baca panduan BelikHub',
 
     // Home Links
     'links.transparency': 'Transparansi',
@@ -141,6 +171,7 @@ export const translations = {
     'map.section': '§ 01 — Peta mata air terpadu',
     'map.title': 'Pantau peta kondisi mata air.',
     'map.lead': 'Jelajahi mata air baseline resmi (RISPAM & Pemda) serta titik laporan aksi komunitas. Koordinat publik disamarkan (~5 km) untuk melindungi sumber air dari eksploitasi berlebihan.',
+    'map.canvas_aria': 'Peta interaktif sebaran mata air BelikHub',
     'map.search_label': 'Cari mata air, desa, atau kegiatan',
     'map.search_placeholder': 'Contoh: Tuk Bismo, Wonomerto, Batang, Dieng…',
     'map.filter_label': 'Filter kategori',
@@ -174,6 +205,13 @@ export const translations = {
     'dash.uptime': 'Target Uptime',
     'dash.uptime_desc': 'Keandalan aliran di musim kemarau',
     'dash.audit_summary': 'Standar audit & keselarasan target SDG',
+    'dash.flow_tag': 'Alur Data Hidrologi',
+    'dash.flow_title': 'Alur validasi data peta mata air BelikHub',
+    'dash.sdg_title': 'Protokol pemantauan mata air SDG 6',
+    'dash.row1_label': 'Akurasi GPS & Grid Publik',
+    'dash.row1_val': '15 meter · 5 km',
+    'dash.row2_label': 'Target Uptime Kemarau',
+    'dash.row2_val': '95% stabil',
 
     // Community
     'community.section': '§ 03 — Aktivitas komunitas',
@@ -181,7 +219,7 @@ export const translations = {
     'community.lead': 'Kirim laporan dari lapangan, kumpulkan poin relawan, dan bantu tim memantau kondisi belik secara berkelanjutan.',
     'community.points_title': 'Sistem Poin BelikHub',
     'community.points_desc': 'Poin dikreditkan ke akun Anda setelah laporan diverifikasi oleh tim kurasi. Capai 20.000 poin untuk mengajukan proyek konservasi mandiri.',
-    'community.btn_points': 'Lihat Rincian Poin',
+    'community.btn_points': 'Rincian poin BelikHub',
     'community.card1_title': 'Survei Mata Air',
     'community.card1_desc': 'Cek kondisi fisik, debit, dan vegetasi sekitar',
     'community.card2_title': 'Restorasi Mata Air',
@@ -200,6 +238,13 @@ export const translations = {
     'rorak.btn_order': 'Pesan Rorak (Rp20.000/unit)',
     'rorak.btn_maker': 'Daftar Jadi Pembuat Rorak',
     'rorak.spec_title': 'Spesifikasi Standar Rorak BelikHub',
+    'rorak.spec1_label': 'Dimensi lubang',
+    'rorak.spec2_label': 'Kapasitas serapan',
+    'rorak.spec2_val': '2.000 L / musim',
+    'rorak.spec3_label': 'Biaya galian lokal',
+    'rorak.spec3_val': 'Rp20.000 / unit',
+    'rorak.spec4_label': 'Tanggul hilir',
+    'rorak.spec4_val': '15 cm padat',
     'rorak.project_label': 'Proyek Komunitas Berjalan',
     'rorak.project_status': 'Terbuka',
     'rorak.project_title': '100 Rorak untuk Konservasi Belik Soka',
@@ -217,23 +262,53 @@ export const translations = {
     'partner.title': 'Bermitra memulihkan mata air.',
     'partner.lead': 'Bekerja sama dengan pemerintah daerah, BUMDes, PDAM, perguruan tinggi, dan korporasi untuk program CSR berdampak jangka panjang.',
     'partner.subtitle': 'Bentuk Kolaborasi BelikHub',
-    'partner.form_title': 'Formulir Minat Kemitraan',
-    'partner.form_desc': 'Sampaikan rencana atau kebutuhan konservasi air institusi Anda.',
+    'partner.form_title': 'Formulir Minat Kemitraan BelikHub',
+    'partner.form_desc': 'Sampaikan rencana konservasi air institusi Anda.',
     'partner.label_name': 'Nama Penanggung Jawab',
-    'partner.label_inst': 'Nama Organisasi / Perusahaan / Instansi',
+    'partner.placeholder_name': 'Nama lengkap PIC',
+    'partner.label_inst': 'Instansi / Perusahaan',
+    'partner.placeholder_inst': 'BUMDes Bismo / PDAM',
     'partner.label_email': 'Email Resmi',
+    'partner.placeholder_email': 'nama@instansi.go.id',
     'partner.label_need': 'Kategori Kebutuhan',
-    'partner.btn_submit': 'Kirim Minat Kemitraan',
+    'partner.opt_csr': 'Restorasi Mata Air & Rorak',
+    'partner.opt_research': 'Kajian Riset & KKN',
+    'partner.opt_pdam': 'Integrasi Data PDAM / Pemda',
+    'partner.label_notes': 'Catatan wilayah sasaran',
+    'partner.placeholder_notes': 'Sebutkan kabupaten/kecamatan atau target unit rorak',
+    'partner.btn_submit': 'Kirim kemitraan BelikHub',
 
     // Learn
-    'learn.section': '§ 07 — Pusat belajar praktis',
+    'learn.section': '05 · Pusat belajar praktis',
     'learn.title': 'Panduan lapangan penjaga mata air.',
-    'learn.lead': 'Panduan teknis praktis yang disusun bersama praktisi hidrologi dan masyarakat adat penjaga sumber air.',
-    'learn.tab_courses': 'Modul Kursus Lapangan',
-    'learn.tab_readings': 'Bacaan & Kajian',
-    'learn.btn_open': 'Buka Modul Kursus',
-    'learn.btn_read_article': 'Baca Artikel Penuh',
-    'learn.btn_read_story': 'Baca Kisah Penuh',
+    'learn.lead': 'Panduan teknis praktis bersama praktisi hidrologi dan masyarakat adat penjaga sumber air.',
+    'learn.tab_courses': 'Kursus',
+    'learn.tab_readings': 'Bacaan',
+    'learn.tab_agenda': 'Agenda',
+    'learn.tab_media': 'Video',
+    'learn.c1_title': 'Ekosistem Mata Air & Springshed',
+    'learn.c1_desc': 'Uji debit volumetrik, kejernihan air, dan tata cara adat survei di hulu.',
+    'learn.c2_title': 'Tanam Pohon Endemik Hulu',
+    'learn.c2_desc': 'Pemilihan spesies akar dalam beringin, aren, dan bambu di zona imbuhan.',
+    'learn.c3_title': 'Teknik Rorak Resapan Kontur',
+    'learn.c3_desc': 'Garis kontur A-frame, penggalian lubang baku, dan perawatan pra-hujan.',
+    'learn.r1_title': 'Ekspedisi Tuk Bismo: 200 Sumur & Rorak',
+    'learn.r1_desc': 'Bagaimana 200 sumur resapan dan 2.000 pohon menaikkan debit mata air +9,57% di lereng Dieng.',
+    'learn.r2_title': 'Wonomerto: Dari Kekeringan ke 4,5 L/s',
+    'learn.r2_desc': 'Kilas balik kekeringan 12 bulan di Desa Wonomerto hingga aliran kembali melayani 65 keluarga.',
+    'learn.r3_title': 'Memulangkan Air Hujan ke Akuifer',
+    'learn.r3_desc': 'Rincian teknis mengapa rorak kontur Rp20.000/unit efektif menekan limpasan erosi di lereng.',
+    'learn.r4_title': 'Mengapa Debit Mata Air Menurun?',
+    'learn.r4_desc': 'Analisis koefisien infiltrasi tanah di lahan terbuka serta langkah perbaikannya.',
+    'learn.a1_title': 'Galian 30 Rorak Lereng Bismo',
+    'learn.a1_desc': 'Titik kumpul Balai Desa Bismo, Kec. Blado, Batang · pukul 07.30 WIB.',
+    'learn.a2_title': 'Pembersihan Springbox Wonomerto',
+    'learn.a2_desc': 'Titik kumpul Mata Air Wonomerto, Kec. Bandar · pukul 08.00 WIB.',
+    'learn.a3_title': 'Tanam 250 Bibit Hulu Watulumbung',
+    'learn.a3_desc': 'Titik kumpul Desa Tambakboyo, Kec. Reban · pukul 07.00 WIB.',
+    'learn.btn_open': 'Buka modul mata air',
+    'learn.btn_read_article': 'Baca artikel mata air',
+    'learn.btn_read_story': 'Baca kisah mata air',
 
     // Media
     'media.section': '§ 08 — Dokumentasi audio visual',
@@ -242,20 +317,32 @@ export const translations = {
     'media.video_tag': 'Dokumenter 2026',
     'media.video_title': 'Menghidupkan Kembali Belik Desa yang Sempat Padam',
     'media.video_desc': 'Saksikan bagaimana sinergi warga desa, pemuda, dan tetua adat bahu membahu merestorasi mata air dengan teknik konservasi sederhana berbiaya rendah.',
+    'media.video_note': 'Ringkasan naskah dokumenter tersedia melalui tombol bacaan di samping.',
     'media.read_summary': 'Baca Ringkasan Kajian',
     'media.read_interview': 'Baca Wawancara',
 
-    // Footer & FAQ
-    'learn.tab_agenda': 'Jadwal aksi',
-    'learn.tab_media': 'Video lapangan',
+    // FAQ
+    'faq.label': 'Pertanyaan umum',
     'faq.heading': 'Tanya jawab platform BelikHub',
+    'faq.lead': 'Pelindungan koordinat 5 km, poin relawan, dan pengajuan restorasi desa.',
+    'faq.q1': 'Mengapa koordinat publik mata air BelikHub disamarkan ke grid 5 km?',
+    'faq.a1': 'Koordinat GPS asli dienkripsi agar mata air desa terlindung dari eksploitasi berlebih.',
+    'faq.q2': 'Bagaimana sistem poin relawan di platform BelikHub bekerja?',
+    'faq.a2': 'Survei 100 poin, tanam 100 poin, rorak 500 poin, restorasi 1.000 poin. Raih 20.000 poin untuk pengajuan restorasi desa.',
+    'faq.q3': 'Apakah biaya pembuatan rorak BelikHub disalurkan langsung ke warga?',
+    'faq.a3': 'Ya. Kontribusi Rp20.000 per unit disalurkan kepada kelompok penggali lokal bersama pemilik lahan.',
+    'faq.q4': 'Bagaimana PDAM atau BUMDes mengakses data mata air BelikHub?',
+    'faq.a4': 'Instansi mengajukan kolaborasi data historis lewat formulir kemitraan BelikHub di bawah.',
+
+    // Footer & Actionbar
     'footer.about': 'Perangkat pemetaan komunitas untuk memantau debit, memulihkan belik, dan mencatat aksi warga.',
     'footer.closing_title': 'Jaga mata air desa tetap mengalir.',
+    'footer.closing_desc': 'Peta terpadu, parit resapan rorak, dan aksi warga untuk kedaulatan air bersih Nusantara.',
     'footer.closing_cta': 'Jelajahi peta',
     'footer.photo_credit': 'Foto lapangan oleh tim relawan BelikHub, Jawa Tengah dan DIY.',
     'footer.newsletter_title': 'Berlangganan Kabar Pemulihan',
     'footer.newsletter_placeholder': 'Masukkan email Anda',
-    'footer.newsletter_btn': 'Daftar',
+    'footer.newsletter_btn': 'Daftar kabar BelikHub',
     'footer.explore': 'Jelajahi',
     'footer.community_actions': 'Aksi Komunitas',
     'footer.order_rorak': 'Pemesanan Rorak Tanah',
@@ -265,17 +352,28 @@ export const translations = {
     'footer.faq': 'Tanya Jawab (FAQ)',
     'footer.mission': 'Misi & Peta Jalan 2030',
     'footer.privacy': 'Kebijakan Privasi & Data',
-    'footer.copyright': '© 2026 BelikHub Indonesia.'
+    'footer.copyright': '© 2026 BelikHub Indonesia.',
+    'actionbar.aria': 'Aksi cepat',
+    'actionbar.order': 'Pesan rorak'
   },
 
   en: {
+    'doc.title': 'BelikHub: Community Spring Mapping & Watershed Restoration Platform',
+    'doc.desc': 'Community spring mapping platform across Central Java and Yogyakarta: discharge monitoring, 5 km privacy grid, rorak infiltration trenches, and volunteer conservation.',
+
     // Nav
     'skip.main': 'Skip to content',
+    'nav.logo_aria': 'BelikHub Home',
+    'nav.main_aria': 'Main navigation',
+    'nav.lang_aria': 'Change language',
+    'nav.toggle_aria': 'Open navigation menu',
+    'nav.theme_aria': 'Toggle light or dark mode',
     'nav.platform': 'Platform',
     'nav.story': 'Vision',
     'nav.impact': 'Impact',
     'nav.map': 'Map',
     'nav.rorak': 'Roraks',
+    'nav.order_rorak': 'Order spring rorak',
     'nav.learn': 'Learn',
     'nav.media': 'Field video',
     'nav.community': 'Community',
@@ -292,6 +390,13 @@ export const translations = {
     'hero.btn_map': 'Explore map',
     'hero.btn_impact': 'View Verified Impact',
     'hero.btn_action': 'Return Water Action',
+    'hero.float_springs_aria': 'Spring network summary',
+    'hero.float_grid': '5 km Public Grid',
+    'hero.float_springs': '88 springs mapped',
+    'hero.float_discharge': '1,350 L/s total flow',
+    'hero.float_rorak_aria': 'Rorak infiltration capacity',
+    'hero.float_rorak_label': 'Standard Rorak',
+    'hero.float_rorak_val': '2,000 L / season',
 
     // Visi
     'visi.section': 'Source to stream vision',
@@ -302,6 +407,18 @@ export const translations = {
     'visi.desc': 'Village belik springs feed farms and households across Indonesia. When discharge declines, farmers lose irrigation and families lack clean water. BelikHub restores flow through tracked field actions.',
     'visi.btn_volunteer': 'Join as a Volunteer',
     'visi.btn_roadmap': 'Explore 2030 Roadmap',
+    'visi.stat1_dt': 'Target Springs',
+    'visi.stat1_dd': '88 springs',
+    'visi.stat2_dt': 'Potential Flow',
+    'visi.stat3_dt': 'Beneficiaries',
+    'visi.stat3_dd': '2,500+ families',
+    'visi.stat4_dt': 'Community Led',
+    'visi.step1_label': '01 · Public grid mapping',
+    'visi.step1_val': '5 km radius',
+    'visi.step2_label': '02 · Rorak infiltration trench',
+    'visi.step2_val': '2,000 L / unit',
+    'visi.step3_label': '03 · Annual discharge audit',
+    'visi.step3_val': 'Central Java & DIY',
 
     // Home Impact
     'impact.tag': 'Measurable Impact',
@@ -315,6 +432,10 @@ export const translations = {
     'impact.trees_desc': 'Deep-rooted native saplings across springsheds.',
     'impact.rorak': 'Roraks Dug',
     'impact.rorak_desc': 'Trapping surface runoff to recharge underground aquifers.',
+    'impact.unit_reports': 'reports',
+    'impact.unit_springs': 'springs',
+    'impact.unit_trees': 'trees',
+    'impact.unit_units': 'units',
     'impact.status_loading': 'Loading impact metrics…',
     'impact.status_ready': 'Data verified from field reports & community hydrology tasks.',
 
@@ -341,6 +462,7 @@ export const translations = {
     'map.section': '§ 01 — Unified Spring Map',
     'map.title': 'Monitor springs on the live map.',
     'map.lead': 'Explore baseline spring data (RISPAM & Regional Government) alongside verified grassroots reports. Public coordinates are snapped to ~5 km grids to protect springs from illegal over-extraction.',
+    'map.canvas_aria': 'BelikHub interactive spring distribution map',
     'map.search_label': 'Search springs, villages, or activities',
     'map.search_placeholder': 'e.g. Tuk Bismo, Wonomerto, Batang, Dieng…',
     'map.filter_label': 'Filter Category',
@@ -374,6 +496,13 @@ export const translations = {
     'dash.uptime': 'Target Uptime',
     'dash.uptime_desc': 'Flow reliability during peak dry seasons',
     'dash.audit_summary': 'Audit standards & SDG target alignment',
+    'dash.flow_tag': 'Hydrological Data Flow',
+    'dash.flow_title': 'BelikHub spring map validation workflow',
+    'dash.sdg_title': 'SDG 6 spring monitoring protocol',
+    'dash.row1_label': 'GPS Accuracy & Public Grid',
+    'dash.row1_val': '15 meters · 5 km',
+    'dash.row2_label': 'Dry-Season Uptime Target',
+    'dash.row2_val': '95% stable',
 
     // Community
     'community.section': '§ 03 — Community Activities',
@@ -400,6 +529,13 @@ export const translations = {
     'rorak.btn_order': 'Order Roraks (Rp20,000/unit)',
     'rorak.btn_maker': 'Register as a Rorak Digger',
     'rorak.spec_title': 'BelikHub Standard Rorak Specifications',
+    'rorak.spec1_label': 'Trench dimensions',
+    'rorak.spec2_label': 'Infiltration capacity',
+    'rorak.spec2_val': '2,000 L / season',
+    'rorak.spec3_label': 'Local digging fee',
+    'rorak.spec3_val': 'Rp20,000 / unit',
+    'rorak.spec4_label': 'Downslope berm',
+    'rorak.spec4_val': '15 cm compacted',
     'rorak.project_label': 'Ongoing Community Project',
     'rorak.project_status': 'Open',
     'rorak.project_title': '100 Roraks for Belik Soka Conservation',
@@ -420,18 +556,48 @@ export const translations = {
     'partner.form_title': 'Partnership Inquiry Form',
     'partner.form_desc': 'Share your institution’s water conservation goals or plans.',
     'partner.label_name': 'Contact Person Name',
-    'partner.label_inst': 'Organization / Company / Institution Name',
+    'partner.placeholder_name': 'PIC full name',
+    'partner.label_inst': 'Organization / Company',
+    'partner.placeholder_inst': 'BUMDes Bismo / PDAM',
     'partner.label_email': 'Official Work Email',
+    'partner.placeholder_email': 'name@institution.go.id',
     'partner.label_need': 'Partnership Category',
+    'partner.opt_csr': 'Spring & Rorak Restoration',
+    'partner.opt_research': 'Research & University Service',
+    'partner.opt_pdam': 'PDAM / Municipal Data Integration',
+    'partner.label_notes': 'Target area notes',
+    'partner.placeholder_notes': 'List regency/district or target rorak units',
     'partner.btn_submit': 'Submit Partnership Inquiry',
 
     // Learn
-    'learn.section': '§ 07 — Practical Learning Hub',
+    'learn.section': '05 · Practical Learning Hub',
     'learn.title': 'Field guides for spring guardians.',
     'learn.lead': 'Practical field guides prepared alongside hydrogeologists and indigenous water guardians.',
-    'learn.tab_courses': 'Field Course Modules',
-    'learn.tab_readings': 'Readings & Research',
-    'learn.btn_open': 'Open Course Module',
+    'learn.tab_courses': 'Courses',
+    'learn.tab_readings': 'Readings',
+    'learn.tab_agenda': 'Agenda',
+    'learn.tab_media': 'Video',
+    'learn.c1_title': 'Spring Ecosystems & Springsheds',
+    'learn.c1_desc': 'Volumetric flow testing, water clarity checks, and customary upstream survey etiquette.',
+    'learn.c2_title': 'Planting Native Upstream Trees',
+    'learn.c2_desc': 'Selecting deep-root banyan, sugar palm, and bamboo species across recharge zones.',
+    'learn.c3_title': 'Contour Infiltration Rorak Technique',
+    'learn.c3_desc': 'A-frame contour staking, standard pit excavation, and pre-monsoon silt maintenance.',
+    'learn.r1_title': 'Tuk Bismo Expedition: 200 Wells & Roraks',
+    'learn.r1_desc': 'How 200 infiltration wells and 2,000 trees raised spring flow +9.57% on Dieng slopes.',
+    'learn.r2_title': 'Wonomerto: From Drought to 4.5 L/s',
+    'learn.r2_desc': 'A 12-month drought turnaround in Wonomerto Village restoring water for 65 families.',
+    'learn.r3_title': 'Returning Rainwater to Aquifers',
+    'learn.r3_desc': 'Technical breakdown of why Rp20,000 contour roraks effectively cut slope erosion runoff.',
+    'learn.r4_title': 'Why Are Spring Flows Declining?',
+    'learn.r4_desc': 'Soil infiltration loss analysis on cleared slopes and practical community fixes.',
+    'learn.a1_title': 'Digging 30 Roraks on Bismo Slope',
+    'learn.a1_desc': 'Meeting point: Bismo Village Hall, Blado, Batang · 07:30 WIB.',
+    'learn.a2_title': 'Wonomerto Springbox Cleanup',
+    'learn.a2_desc': 'Meeting point: Wonomerto Spring, Bandar · 08:00 WIB.',
+    'learn.a3_title': 'Planting 250 Seedlings at Watulumbung',
+    'learn.a3_desc': 'Meeting point: Tambakboyo Village, Reban · 07:00 WIB.',
+    'learn.btn_open': 'Open spring module',
     'learn.btn_read_article': 'Read Full Article',
     'learn.btn_read_story': 'Read Full Story',
 
@@ -442,15 +608,27 @@ export const translations = {
     'media.video_tag': '2026 Documentary',
     'media.video_title': 'Reviving Extinguished Village Springs',
     'media.video_desc': 'Witness how villagers, youth volunteers, and village elders join forces to restore springs using low-cost, high-impact conservation methods.',
+    'media.video_note': 'Documentary transcript summaries are available via the reading buttons alongside.',
     'media.read_summary': 'Read Research Summary',
     'media.read_interview': 'Read Elder Interview',
 
-    // Footer & FAQ
-    'learn.tab_agenda': 'Field agenda',
-    'learn.tab_media': 'Field video',
+    // FAQ
+    'faq.label': 'Frequently asked',
     'faq.heading': 'Questions on the BelikHub platform.',
+    'faq.lead': '5 km coordinate protection, volunteer points, and village restoration proposals.',
+    'faq.q1': 'Why are public BelikHub spring coordinates fuzzed to a 5 km grid?',
+    'faq.a1': 'Exact GPS coordinates stay encrypted so village springs remain protected from over-extraction.',
+    'faq.q2': 'How does the volunteer points system work on BelikHub?',
+    'faq.a2': 'Survey 100 pts, tree planting 100 pts, rorak 500 pts, restoration 1,000 pts. Reach 20,000 pts to propose a village restoration.',
+    'faq.q3': 'Do rorak construction fees go directly to local villagers?',
+    'faq.a3': 'Yes. The Rp20,000/unit fee goes directly to local village digger groups and participating landowners.',
+    'faq.q4': 'How can PDAMs or BUMDes access BelikHub spring records?',
+    'faq.a4': 'Institutions can request historical discharge collaborations via the BelikHub partnership form below.',
+
+    // Footer & Actionbar
     'footer.about': 'Community mapping software for flow tracking, belik conservation, and villager field actions.',
     'footer.closing_title': 'Keep rural water springs flowing.',
+    'footer.closing_desc': 'Unified mapping, rorak infiltration trenches, and community action for rural clean-water sovereignty.',
     'footer.closing_cta': 'Explore map',
     'footer.photo_credit': 'Field photography by BelikHub volunteers, Central Java and DIY.',
     'footer.newsletter_title': 'Subscribe to Field Updates',
@@ -465,7 +643,9 @@ export const translations = {
     'footer.faq': 'Frequently Asked Questions (FAQ)',
     'footer.mission': 'Mission & 2030 Roadmap',
     'footer.privacy': 'Privacy & Data Protection',
-    'footer.copyright': '© 2026 BelikHub Indonesia.'
+    'footer.copyright': '© 2026 BelikHub Indonesia.',
+    'actionbar.aria': 'Quick actions',
+    'actionbar.order': 'Order roraks'
   }
 };
 
@@ -477,36 +657,57 @@ const setLanguage = (lang, showToast = false) => {
   document.documentElement.lang = currentLanguage;
 
   if (showToast || currentLanguage !== 'id') {
+    if (dict['doc.title']) document.title = dict['doc.title'];
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc && dict['doc.desc']) metaDesc.setAttribute('content', dict['doc.desc']);
+
     const wh = $('#visi .mo-wh__text');
     if (wh && dict['visi.p1']) {
-      wh.innerHTML = `<span data-i18n="visi.p1">${dict['visi.p1']}</span> <strong data-i18n="visi.strong">${dict['visi.strong']}</strong> <span data-i18n="visi.p2">${dict['visi.p2']}</span>`;
+      wh.innerHTML = `<span data-i18n="visi.p1">${escapeHtml(dict['visi.p1'])}</span> <strong data-i18n="visi.strong">${escapeHtml(dict['visi.strong'])}</strong> <span data-i18n="visi.p2">${escapeHtml(dict['visi.p2'])}</span>`;
       wh.closest('.mo-wh')?.classList.add('is-done');
     }
 
-    // 1. Translate all text elements
     document.querySelectorAll('[data-i18n]').forEach((el) => {
       const key = el.dataset.i18n;
       if (dict[key]) el.textContent = dict[key];
     });
 
-    // 2. Translate placeholders
     document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
       const key = el.dataset.i18nPlaceholder;
       if (dict[key]) el.placeholder = dict[key];
     });
+
+    document.querySelectorAll('[data-i18n-aria-label]').forEach((el) => {
+      const key = el.dataset.i18nAriaLabel;
+      if (dict[key]) el.setAttribute('aria-label', dict[key]);
+    });
+
+    document.querySelectorAll('.dg-pause').forEach((btn) => {
+      const paused = btn.getAttribute('aria-pressed') === 'true';
+      btn.setAttribute('aria-label', currentLanguage === 'en'
+        ? (paused ? 'Play animation' : 'Pause animation')
+        : (paused ? 'Putar animasi' : 'Jeda animasi'));
+    });
+
+    window.__belikhubRenderMap?.();
   }
 
-  // 3. Update Language toggle labels
+  // Update Language toggle labels & dropdown checkmarks
   const label = currentLanguage.toUpperCase();
-  $$('.lang-text, .lang-text-mobile').forEach((el) => { el.textContent = label; });
+  $$('.lang-text').forEach((el) => { el.textContent = label; });
 
-  // 4. Update Dropdown Checkmarks
-  $$('.lang-check-id').forEach((el) => el.classList.toggle('hidden', currentLanguage !== 'id'));
-  $$('.lang-check-en').forEach((el) => el.classList.toggle('hidden', currentLanguage !== 'en'));
+  $$('.lang-check-id').forEach((el) => {
+    el.hidden = currentLanguage !== 'id';
+    el.classList.toggle('hidden', currentLanguage !== 'id');
+  });
+  $$('.lang-check-en').forEach((el) => {
+    el.hidden = currentLanguage !== 'en';
+    el.classList.toggle('hidden', currentLanguage !== 'en');
+  });
 
-  // 5. Close Dropdowns
+  // Close Dropdown & reset expanded state
   $('#language-menu-desktop')?.classList.remove('open');
-  $('#language-menu-mobile')?.classList.remove('open');
+  $('#lang-toggle')?.setAttribute('aria-expanded', 'false');
 
   localStorage.setItem('belikhub-language', currentLanguage);
 
@@ -515,27 +716,21 @@ const setLanguage = (lang, showToast = false) => {
   }
 };
 
-// Dropdown Toggle Handlers
-$('#lang-toggle')?.addEventListener('click', (e) => {
+// Dropdown Toggle Handler
+const langToggle = $('#lang-toggle');
+const langMenu = $('#language-menu-desktop');
+langToggle?.addEventListener('click', (e) => {
   e.preventDefault();
   e.stopPropagation();
-  $('#language-menu-desktop')?.classList.toggle('open');
-  $('#language-menu-mobile')?.classList.remove('open');
-});
-
-$('#lang-toggle-mobile')?.addEventListener('click', (e) => {
-  e.stopPropagation();
-  $('#language-menu-mobile')?.classList.toggle('open');
-  $('#language-menu-desktop')?.classList.remove('open');
+  const isOpen = langMenu?.classList.toggle('open');
+  langToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 });
 
 // Click outside closes dropdown
 document.addEventListener('click', (e) => {
   if (!e.target.closest('#lang-toggle') && !e.target.closest('#language-menu-desktop')) {
-    $('#language-menu-desktop')?.classList.remove('open');
-  }
-  if (!e.target.closest('#lang-toggle-mobile') && !e.target.closest('#language-menu-mobile')) {
-    $('#language-menu-mobile')?.classList.remove('open');
+    langMenu?.classList.remove('open');
+    langToggle?.setAttribute('aria-expanded', 'false');
   }
 });
 
@@ -549,6 +744,73 @@ $$('[data-language]').forEach((btn) => {
 // Initialize Language on Load
 setLanguage(localStorage.getItem('belikhub-language') || 'id', false);
 
+// Dark / Night Mode Theme Engine
+// =========================================================================
+const themeMeta = $('meta[name="theme-color"]');
+const getStoredTheme = () => {
+  const stored = localStorage.getItem('belikhub-theme');
+  if (stored === 'dark' || stored === 'light') return stored;
+  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+};
+
+const applyTheme = (theme, showToast = false) => {
+  const isDark = theme === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  document.documentElement.dataset.tone = isDark ? 'dark' : 'light';
+
+  if (themeMeta) {
+    themeMeta.setAttribute('content', isDark ? '#0c131a' : '#f7f9fa');
+  }
+
+  $$('.theme-toggle-btn').forEach((btn) => {
+    btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+    const isEn = currentLanguage === 'en';
+    btn.setAttribute('aria-label', isDark
+      ? (isEn ? 'Switch to light mode' : 'Beralih ke mode terang')
+      : (isEn ? 'Switch to dark mode' : 'Beralih ke mode gelap'));
+    btn.setAttribute('title', isDark
+      ? (isEn ? 'Switch to light mode' : 'Beralih ke mode terang')
+      : (isEn ? 'Switch to dark mode' : 'Beralih ke mode gelap'));
+  });
+
+  const heroBg = $('#hero .bh-hero-layer');
+  if (heroBg) {
+    heroBg.setAttribute('src', isDark ? 'images/bg-hero-night.jpg' : 'images/bg-hero-mist.jpg');
+  }
+
+  const topoImg = $('#kemitraan .bh-photo-frame--topo img');
+  if (topoImg) {
+    topoImg.setAttribute('src', isDark ? 'images/topo-dark.webp' : 'images/topo-light.webp');
+  }
+
+  localStorage.setItem('belikhub-theme', isDark ? 'dark' : 'light');
+
+  if (showToast) {
+    const isEn = currentLanguage === 'en';
+    toast(isDark
+      ? (isEn ? 'Dark mode enabled.' : 'Mode gelap diaktifkan.')
+      : (isEn ? 'Light mode enabled.' : 'Mode terang diaktifkan.'));
+  }
+};
+
+$$('.theme-toggle-btn').forEach((btn) => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    applyTheme(current === 'dark' ? 'light' : 'dark', true);
+  });
+});
+
+if (window.matchMedia) {
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!localStorage.getItem('belikhub-theme')) {
+      applyTheme(e.matches ? 'dark' : 'light', false);
+    }
+  });
+}
+
+applyTheme(getStoredTheme(), false);
+
 // Video fallback handling
 const mediaVideo = $('#media video');
 if (mediaVideo) {
@@ -557,35 +819,73 @@ if (mediaVideo) {
   if (mediaVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) hideMediaFallback();
 }
 
-// Modal System
+// Accessible Modal System with Focus Management & Trap
 const modal = $('#modal');
 const modalContent = $('#modal-content');
+let lastModalTrigger = null;
+
+const getModalFocusable = () => {
+  if (!modal) return [];
+  return [...modal.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')];
+};
+
 const closeModal = () => {
-  if (!modal) return;
+  if (!modal || !modal.classList.contains('open')) return;
   modal.classList.remove('open');
   modal.setAttribute('aria-hidden', 'true');
   if (modalContent) modalContent.innerHTML = '';
+  if (lastModalTrigger && typeof lastModalTrigger.focus === 'function' && document.contains(lastModalTrigger)) {
+    lastModalTrigger.focus();
+  }
+  lastModalTrigger = null;
 };
+
 const openModal = (title, bodyHtml, isLarge = false) => {
   if (!modal || !modalContent) return;
-  const card = modal.querySelector('.modal-card');
-  card?.classList.toggle('modal-card-lg', isLarge);
+  if (!modal.classList.contains('open')) {
+    lastModalTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  }
+  const card = modal.querySelector('.modal-card') || modalContent;
+  card.classList.toggle('modal-card-lg', isLarge);
   modalContent.innerHTML = `
-    <div class="flex items-start justify-between border-b p-5 sm:p-6" style="border-color:var(--line)">
+    <div class="bh-modal-head">
       <div>
         <p class="label c-accent">${currentLanguage === 'en' ? 'BelikHub · Field Platform' : 'BelikHub · Platform Lapangan'}</p>
-        <h3 class="serif text-xl sm:text-2xl font-semibold mt-1 tracking-tight">${title}</h3>
+        <h2 id="modal-title" class="bh-modal-title">${escapeHtml(title)}</h2>
       </div>
-      <button type="button" data-close-modal class="nav-btn bh-close-btn w-9 text-2xl font-light leading-none" aria-label="Tutup">&times;</button>
+      <button type="button" data-close-modal class="nav-btn bh-close-btn" aria-label="${currentLanguage === 'en' ? 'Close' : 'Tutup'}">&times;</button>
     </div>
-    <div class="p-5 sm:p-6 text-sm leading-relaxed">${bodyHtml}</div>
+    <div class="bh-modal-body">${bodyHtml}</div>
   `;
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
-  modal.querySelector('[data-close-modal]')?.addEventListener('click', closeModal);
+  modal.querySelectorAll('[data-close-modal]').forEach((btn) => btn.addEventListener('click', closeModal));
+  const focusTarget = modal.querySelector('input, select, textarea, [data-close-modal], button');
+  requestAnimationFrame(() => focusTarget?.focus());
 };
+
 modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+document.addEventListener('keydown', (e) => {
+  if (!modal?.classList.contains('open')) return;
+  if (e.key === 'Escape') {
+    e.preventDefault();
+    closeModal();
+    return;
+  }
+  if (e.key === 'Tab') {
+    const focusable = getModalFocusable();
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+});
 
 // Auth & Lazy Firebase Setup
 let auth = null;
@@ -605,7 +905,6 @@ const updateAuthUI = async (user) => {
   if (user) {
     loginBtns.forEach((b) => b.classList.add('hidden'));
     userBadges.forEach((b) => b.classList.remove('hidden'));
-    userBadges.forEach((b) => b.classList.add('flex'));
     const name = user.displayName || user.email?.split('@')[0] || (currentLanguage === 'en' ? 'Volunteer' : 'Relawan');
     userDisplayNames.forEach((el) => { el.textContent = name; });
 
@@ -614,7 +913,7 @@ const updateAuthUI = async (user) => {
       const res = await fetch('/api/me', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      if (res.ok) {
+      if (res.ok && res.headers.get('content-type')?.includes('application/json')) {
         const data = await res.json();
         userProfileData = data;
         userPointsBadges.forEach((el) => {
@@ -627,7 +926,6 @@ const updateAuthUI = async (user) => {
   } else {
     loginBtns.forEach((b) => b.classList.remove('hidden'));
     userBadges.forEach((b) => b.classList.add('hidden'));
-    userBadges.forEach((b) => b.classList.remove('flex'));
   }
 };
 
@@ -637,7 +935,9 @@ const ensureFirebase = () => {
   fbInitPromise = (async () => {
     try {
       const res = await fetch('/api/firebase-config');
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok || !res.headers.get('content-type')?.includes('application/json')) {
+        throw new Error(`HTTP ${res.status}`);
+      }
       const cfg = await res.json();
       const [appMod, authMod] = await Promise.all([
         import('https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js'),
@@ -678,8 +978,21 @@ const apiRequest = async (path, payload, options = {}) => {
     headers,
     body: JSON.stringify(payload)
   });
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.error || (currentLanguage === 'en' ? 'Request failed' : 'Permintaan gagal diproses'));
+  const isJson = response.headers.get('content-type')?.includes('application/json');
+  const data = isJson ? await response.json().catch(() => ({})) : {};
+  if (!isJson && !response.ok) {
+    throw new Error(currentLanguage === 'en'
+      ? 'Backend API unavailable in static preview.'
+      : 'Layanan backend belum tersedia pada pratinjau lokal ini.');
+  }
+  if (!response.ok) {
+    throw new Error(data.error || (currentLanguage === 'en' ? 'Request failed' : 'Permintaan gagal diproses'));
+  }
+  if (!isJson) {
+    throw new Error(currentLanguage === 'en'
+      ? 'Unexpected server response format.'
+      : 'Format respons server tidak sesuai.');
+  }
   return data;
 };
 
@@ -691,17 +1004,19 @@ const openLoginModal = () => {
   openModal(
     isEn ? 'Volunteer Account Sign In' : 'Masuk ke Akun Relawan',
     `
-    <form id="auth-form" class="space-y-4">
-      <p class="muted text-xs">${isEn ? 'Sign in to submit field reports, order roraks, and track your volunteer contribution points.' : 'Masuk untuk mencatat laporan lapangan, memesan rorak, dan memantau poin kontribusi Anda.'}</p>
-      <label class="block text-xs font-semibold">Email
-        <input required type="email" name="email" placeholder="nama@email.com" class="field mt-1" />
-      </label>
-      <label class="block text-xs font-semibold">Password
-        <input name="password" required minlength="6" type="password" placeholder="••••••••" class="field mt-1" />
-      </label>
-      <div class="pt-2">
-        <button id="auth-submit-btn" class="btn btn-teal w-full" type="submit">${isEn ? 'Sign In' : 'Masuk'}</button>
-        <button id="auth-register-btn" class="btn btn-line mt-3 w-full" type="button">${isEn ? 'Register New Volunteer Account' : 'Daftar Akun Relawan Baru'}</button>
+    <form id="auth-form" class="bh-modal-stack">
+      <p class="bh-modal-note">${isEn ? 'Sign in to submit field reports, order roraks, and track your volunteer contribution points.' : 'Masuk untuk mencatat laporan lapangan, memesan rorak, dan memantau poin kontribusi Anda.'}</p>
+      <div class="field">
+        <label for="auth-email">Email</label>
+        <input id="auth-email" required type="email" name="email" autocomplete="email" placeholder="nama@email.com" />
+      </div>
+      <div class="field">
+        <label for="auth-password">Password</label>
+        <input id="auth-password" name="password" required minlength="6" type="password" autocomplete="current-password" placeholder="••••••••" />
+      </div>
+      <div class="bh-modal-stack">
+        <button id="auth-submit-btn" class="btn btn-teal" type="submit">${isEn ? 'Sign In' : 'Masuk'}</button>
+        <button id="auth-register-btn" class="btn btn-line" type="button">${isEn ? 'Register New Volunteer Account' : 'Daftar Akun Relawan Baru'}</button>
       </div>
     </form>
     `
@@ -771,43 +1086,41 @@ const openUserProfileModal = () => {
   const isEn = currentLanguage === 'en';
   const email = currentUser.email || '—';
   const name = currentUser.displayName || email.split('@')[0];
-  const pts = userProfileData.points || 0;
+  const pts = Number(userProfileData.points || 0);
   const role = userProfileData.role || 'user';
 
   openModal(
     isEn ? 'Water Volunteer Profile' : 'Profil Relawan Mata Air',
     `
-    <div class="space-y-4">
-      <div class="flex items-center gap-4 p-4 frame" style="background:var(--tint)">
-        <div class="h-14 w-14 rounded-full bg-forest text-white flex items-center justify-center serif text-2xl font-bold">
-          ${name.charAt(0).toUpperCase()}
-        </div>
+    <div class="bh-modal-stack">
+      <div class="bh-modal-box bh-modal-box--tint bh-modal-profile">
+        <div class="bh-modal-avatar">${escapeHtml(name.charAt(0).toUpperCase())}</div>
         <div>
-          <h4 class="font-bold text-base">${name}</h4>
-          <p class="muted text-xs">${email}</p>
-          <span class="stamp c-accent mt-1 inline-block">${role === 'admin' ? (isEn ? 'Admin' : 'Pengurus Admin') : (isEn ? 'Registered Volunteer' : 'Relawan Terdaftar')}</span>
+          <h3 class="bh-modal-subtitle">${escapeHtml(name)}</h3>
+          <p class="bh-modal-note">${escapeHtml(email)}</p>
+          <span class="bh-status-pill">${role === 'admin' ? (isEn ? 'Admin' : 'Pengurus Admin') : (isEn ? 'Registered Volunteer' : 'Relawan Terdaftar')}</span>
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-3">
-        <div class="frame p-4 text-center">
+      <div class="bh-modal-grid">
+        <div class="bh-modal-box bh-modal-center">
           <p class="label c-accent">${isEn ? 'Accumulated Points' : 'Poin Terkumpul'}</p>
-          <p class="serif text-3xl font-bold mt-1 text-forest">${pts.toLocaleString('id-ID')}</p>
-          <p class="muted text-xs mt-1">${isEn ? 'Verified points' : 'Poin diverifikasi'}</p>
+          <p class="bh-modal-stat">${pts.toLocaleString('id-ID')}</p>
+          <p class="bh-modal-note">${isEn ? 'Verified points' : 'Poin diverifikasi'}</p>
         </div>
-        <div class="frame p-4 text-center">
+        <div class="bh-modal-box bh-modal-center">
           <p class="label c-accent">${isEn ? 'Community Target' : 'Target Mandiri'}</p>
-          <p class="serif text-3xl font-bold mt-1">20.000</p>
-          <p class="muted text-xs mt-1">${isEn ? 'To sponsor a spring' : 'Untuk buka proyek'}</p>
+          <p class="bh-modal-stat">20.000</p>
+          <p class="bh-modal-note">${isEn ? 'To sponsor a spring' : 'Untuk buka proyek'}</p>
         </div>
       </div>
 
-      <div class="border-t pt-4" style="border-color:var(--line)">
-        <p class="label c-accent mb-2">${isEn ? 'Activity Guide' : 'Panduan Aktivitas'}</p>
-        <p class="text-xs text-muted leading-relaxed">${isEn ? 'Every field survey earns +100 points, building roraks earns +500 points, and restoring springs earns +1,000 points. Please ensure GPS coordinates are attached during surveys.' : 'Setiap survei lapangan bernilai +100 poin, pembangunan rorak +500 poin, dan restorasi mata air +1.000 poin. Pastikan melampirkan koordinat GPS saat survei.'}</p>
+      <div class="bh-modal-box">
+        <p class="label c-accent">${isEn ? 'Activity Guide' : 'Panduan Aktivitas'}</p>
+        <p class="bh-modal-note">${isEn ? 'Every field survey earns +100 points, building roraks earns +500 points, and restoring springs earns +1,000 points. Please ensure GPS coordinates are attached during surveys.' : 'Setiap survei lapangan bernilai +100 poin, pembangunan rorak +500 poin, dan restorasi mata air +1.000 poin. Pastikan melampirkan koordinat GPS saat survei.'}</p>
       </div>
 
-      <button id="profile-logout-btn" class="btn btn-line w-full text-xs font-bold">${isEn ? 'Sign Out of Account' : 'Keluar dari Akun'}</button>
+      <button id="profile-logout-btn" class="btn btn-line" type="button">${isEn ? 'Sign Out of Account' : 'Keluar dari Akun'}</button>
     </div>
     `
   );
@@ -841,7 +1154,9 @@ const loadImpactStats = async () => {
   applyImpactValues(fallback);
   try {
     const res = await fetch('/api/stats');
-    if (!res.ok) throw new Error(`Status ${res.status}`);
+    if (!res.ok || !res.headers.get('content-type')?.includes('application/json')) {
+      throw new Error(`Status ${res.status}`);
+    }
     const stats = await res.json();
     const byType = stats.byType || {};
 
@@ -860,11 +1175,7 @@ const loadImpactStats = async () => {
     });
   }
 };
-if (window.location.protocol === 'https:') {
-  loadImpactStats();
-} else {
-  applyImpactValues({ totalApproved: 48, restoration: 16, planting: 1800, rorak: 142 });
-}
+loadImpactStats();
 
 document.addEventListener('keydown', (e) => {
   const trigger = e.target.closest('a[role="button"]');
@@ -888,143 +1199,44 @@ const initMap = async () => {
 
   belikhubMap = L.map('map-canvas', {
     preferCanvas: false,
-    scrollWheelZoom: false,
-    zoomAnimation: false,
-    fadeAnimation: false,
+    scrollWheelZoom: true,
+    zoomAnimation: !prefersReducedMotion(),
+    fadeAnimation: !prefersReducedMotion(),
     attributionControl: false
   }).setView([-7.09, 109.76], 11);
   window.belikhubMap = belikhubMap;
 
-  const tileCache = new Map();
-  const TopoOsmLayer = L.Layer.extend({
-    onAdd: function (map) {
-      this._map = map;
-      this._canvas = document.createElement('canvas');
-      this._canvas.className = 'bh-osm-surface';
-      this._canvas.style.position = 'absolute';
-      this._canvas.style.top = '0';
-      this._canvas.style.left = '0';
-      this._canvas.style.pointerEvents = 'none';
-      const pane = this.getPane() || map.getPane('tilePane');
-      pane.appendChild(this._canvas);
-      this._raf = 0;
-      map.on('move moveend zoom zoomend viewreset resize', this._draw, this);
-      this._draw();
-    },
-    onRemove: function (map) {
-      map.off('move moveend zoom zoomend viewreset resize', this._draw, this);
-      if (this._raf) {
-        cancelAnimationFrame(this._raf);
-        this._raf = 0;
-      }
-      if (this._canvas && this._canvas.parentNode) {
-        this._canvas.parentNode.removeChild(this._canvas);
-      }
-      this._canvas = null;
-      this._map = null;
-    },
-    _scheduleRedraw: function () {
-      if (this._raf || !this._map) return;
-      this._raf = requestAnimationFrame(() => {
-        this._raf = 0;
-        this._draw();
-      });
-    },
-    _draw: function () {
-      if (!this._map || !this._canvas) return;
-      const map = this._map;
-      const size = map.getSize();
-      if (!size.x || !size.y) return;
+  let tileErrorCount = 0;
+  const osmTiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    crossOrigin: false
+  }).addTo(belikhubMap);
 
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const pw = Math.round(size.x * dpr);
-      const ph = Math.round(size.y * dpr);
-      if (this._canvas.width !== pw || this._canvas.height !== ph) {
-        this._canvas.width = pw;
-        this._canvas.height = ph;
-      }
-      this._canvas.style.width = `${size.x}px`;
-      this._canvas.style.height = `${size.y}px`;
-      L.DomUtil.setPosition(this._canvas, map.containerPointToLayerPoint([0, 0]));
-
-      const ctx = this._canvas.getContext('2d');
-      if (!ctx) return;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      const grad = ctx.createLinearGradient(0, 0, size.x, size.y);
-      grad.addColorStop(0, '#c6dae0');
-      grad.addColorStop(1, '#eaf1f3');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, size.x, size.y);
-
-      const zoom = Math.max(0, Math.min(18, Math.round(map.getZoom())));
-      const scale = map.getZoomScale(map.getZoom(), zoom);
-      const originPx = map.project(map.containerPointToLatLng([0, 0]), zoom);
-      const tilePx = 256 * scale;
-
-      ctx.strokeStyle = 'rgba(13, 116, 128, 0.24)';
-      ctx.lineWidth = 1;
-      const offX = ((-originPx.x * scale) % 64 + 64) % 64;
-      const offY = ((-originPx.y * scale) % 64 + 64) % 64;
-      for (let gx = offX; gx < size.x; gx += 64) {
-        ctx.beginPath();
-        ctx.moveTo(gx, 0);
-        ctx.lineTo(gx, size.y);
-        ctx.stroke();
-      }
-      for (let gy = offY; gy < size.y; gy += 64) {
-        ctx.beginPath();
-        ctx.moveTo(0, gy);
-        ctx.lineTo(size.x, gy);
-        ctx.stroke();
-      }
-
-      const txMin = Math.floor(originPx.x / 256);
-      const txMax = Math.floor((originPx.x + size.x / scale) / 256);
-      const tyMin = Math.floor(originPx.y / 256);
-      const tyMax = Math.floor((originPx.y + size.y / scale) / 256);
-      const maxTile = 1 << zoom;
-
-      for (let ty = tyMin; ty <= tyMax; ty++) {
-        if (ty < 0 || ty >= maxTile) continue;
-        for (let tx = txMin; tx <= txMax; tx++) {
-          const wrappedX = ((tx % maxTile) + maxTile) % maxTile;
-          const dx = (tx * 256 - originPx.x) * scale;
-          const dy = (ty * 256 - originPx.y) * scale;
-          const key = `${zoom}/${wrappedX}/${ty}`;
-          let entry = tileCache.get(key);
-          if (!entry) {
-            const img = new Image();
-            img.crossOrigin = 'anonymous';
-            entry = { img, loaded: false, error: false };
-            tileCache.set(key, entry);
-            img.onload = () => {
-              entry.loaded = true;
-              this._scheduleRedraw();
-            };
-            img.onerror = () => {
-              entry.error = true;
-            };
-            img.src = `https://tile.openstreetmap.org/${key}.png`;
-          }
-          if (entry.loaded && entry.img.naturalWidth > 0) {
-            ctx.drawImage(entry.img, dx, dy, tilePx + 0.5, tilePx + 0.5);
-          }
-        }
+  osmTiles.on('tileload', () => {
+    tileErrorCount = 0;
+  });
+  osmTiles.on('tileerror', () => {
+    tileErrorCount += 1;
+    if (tileErrorCount >= 4) {
+      const statusEl = $('#map-status');
+      const isEn = currentLanguage === 'en';
+      if (statusEl) {
+        statusEl.textContent = isEn
+          ? `Displaying ${mapMarkers.length} mapped points (offline topographic grid active).`
+          : `Menampilkan ${mapMarkers.length} titik terpetakan (mode grid topografi offline).`;
       }
     }
   });
-  new TopoOsmLayer().addTo(belikhubMap);
 
   const attrControl = L.control({ position: 'bottomright' });
   attrControl.onAdd = () => {
     const div = L.DomUtil.create('div', 'leaflet-control-attribution');
-    div.textContent = 'Peta: Leaflet · OpenStreetMap (ODbL)';
+    div.textContent = 'Peta: Leaflet · © OpenStreetMap';
     return div;
   };
   attrControl.addTo(belikhubMap);
 
-  setTimeout(() => belikhubMap.invalidateSize(), 400);
+  setTimeout(() => belikhubMap.invalidateSize(), 250);
   window.addEventListener('resize', () => belikhubMap.invalidateSize());
   if (typeof ResizeObserver === 'function') {
     new ResizeObserver(() => belikhubMap.invalidateSize()).observe(canvas);
@@ -1057,7 +1269,7 @@ const initMap = async () => {
 
       if (matchesFilter && matchesQuery && s.coordinates_public) {
         const isActive = s.status === 'active';
-        const pinColor = isActive ? '#0d7480' : '#d97706';
+        const pinColor = isActive ? '#0d7480' : '#b45309';
         const pinLabel = `${s.name} — ${s.village || ''}`;
         const icon = L.divIcon({
           className: 'custom-pin',
@@ -1067,25 +1279,25 @@ const initMap = async () => {
         });
 
         const popup = document.createElement('div');
-        popup.className = 'p-1';
+        popup.className = 'bh-popup';
         popup.innerHTML = `
-          <div class="border-b pb-2 mb-2">
-            <span class="stamp ${isActive ? 'c-accent' : 'text-amber-600'} text-[10px]">${isActive ? (isEn ? 'Active Spring' : 'Mata Air Aktif') : (isEn ? 'Under Rehabilitation' : 'Dalam Rehabilitasi')}</span>
-            <h4 class="serif font-bold text-lg mt-1 text-ink">${s.name}</h4>
-            <p class="text-xs text-slate-500">${s.village || ''}, ${s.district || ''}, ${s.regency || ''}</p>
+          <div class="bh-popup__head">
+            <span class="bh-status-pill ${isActive ? '' : 'bh-status-pill--warn'}">${isActive ? (isEn ? 'Active Spring' : 'Mata Air Aktif') : (isEn ? 'Under Rehabilitation' : 'Dalam Rehabilitasi')}</span>
+            <h3 class="bh-popup__title">${escapeHtml(s.name)}</h3>
+            <p class="bh-popup__loc">${escapeHtml([s.village, s.district, s.regency].filter(Boolean).join(', '))}</p>
           </div>
-          <div class="grid grid-cols-2 gap-2 text-xs py-1">
+          <div class="bh-popup__stats">
             <div>
-              <span class="label text-[10px] block opacity-70">${isEn ? 'Baseline Discharge' : 'Debit Baseline'}</span>
-              <strong class="text-forest text-sm">${s.baseline_discharge_lps || '—'} L/s</strong>
+              <span class="label">${isEn ? 'Baseline Discharge' : 'Debit Baseline'}</span>
+              <strong>${escapeHtml(s.baseline_discharge_lps || '—')} L/s</strong>
             </div>
             <div>
-              <span class="label text-[10px] block opacity-70">${isEn ? 'Beneficiaries' : 'Penerima'}</span>
-              <strong class="text-forest text-sm">${s.beneficiaries_kk || '—'} KK</strong>
+              <span class="label">${isEn ? 'Beneficiaries' : 'Penerima'}</span>
+              <strong>${escapeHtml(s.beneficiaries_kk || '—')} KK</strong>
             </div>
           </div>
-          <p class="text-[11px] text-slate-600 mt-2"><b>${isEn ? 'Supply Target:' : 'Target Suplai:'}</b> ${s.supply_target || 'Warga Desa & Lingkungan'}</p>
-          <button type="button" class="btn btn--primary w-full mt-3 view-spring-detail" data-spring-id="${s.id}">${isEn ? 'View Spring Profile →' : 'Buka Profil Mata Air →'}</button>
+          <p class="bh-popup__target"><strong>${isEn ? 'Supply Target:' : 'Target Suplai:'}</strong> ${escapeHtml(s.supply_target || (isEn ? 'Villagers & Environment' : 'Warga Desa & Lingkungan'))}</p>
+          <button type="button" class="btn btn--primary view-spring-detail" style="width:100%" data-spring-id="${escapeHtml(s.id)}">${isEn ? 'View Spring Profile →' : 'Buka Profil Mata Air →'}</button>
         `;
 
         const marker = L.marker([s.coordinates_public.lat, s.coordinates_public.lng], {
@@ -1124,16 +1336,16 @@ const initMap = async () => {
     });
 
     // 2. Process Community Reports
+    const reportFilterValues = ['Survei Mata Air', 'Restorasi Mata Air', 'Penanaman Pohon', 'Pembangunan Rorak'];
     reportPoints.forEach((r) => {
       const matchesFilter =
         filter === 'all' ||
-        filter === r.reportType ||
-        (filter.startsWith('springs_') ? false : true);
+        (reportFilterValues.includes(filter) && filter === r.reportType);
 
       const matchesQuery =
         !query ||
-        r.location.toLowerCase().includes(query) ||
-        r.reportType.toLowerCase().includes(query);
+        String(r.location || '').toLowerCase().includes(query) ||
+        String(r.reportType || '').toLowerCase().includes(query);
 
       if (matchesFilter && matchesQuery && Number.isFinite(r.lat) && Number.isFinite(r.lng)) {
         const reportColors = {
@@ -1152,12 +1364,12 @@ const initMap = async () => {
         });
 
         const popup = document.createElement('div');
-        popup.className = 'p-1';
+        popup.className = 'bh-popup';
         popup.innerHTML = `
-          <span class="stamp c-accent text-[10px]">${r.reportType}</span>
-          <h4 class="font-bold text-base mt-1 text-ink">${r.location}</h4>
-          <p class="text-xs text-slate-600 mt-1">${r.notes || (isEn ? 'Verified community report.' : 'Laporan terverifikasi komunitas.')}</p>
-          <p class="label muted text-[10px] mt-2">${isEn ? 'Verified · BelikHub' : 'Diverifikasi · BelikHub'}</p>
+          <span class="bh-status-pill">${escapeHtml(r.reportType)}</span>
+          <h3 class="bh-popup__title">${escapeHtml(r.location)}</h3>
+          <p class="bh-popup__notes">${escapeHtml(r.notes || (isEn ? 'Verified community report.' : 'Laporan terverifikasi komunitas.'))}</p>
+          <p class="label bh-popup__meta">${isEn ? 'Verified · BelikHub' : 'Diverifikasi · BelikHub'}</p>
         `;
 
         const marker = L.marker([r.lat, r.lng], {
@@ -1186,8 +1398,14 @@ const initMap = async () => {
     }
   };
 
+  window.__belikhubRenderMap = renderAllMarkers;
+
   // Render baseline seed springs immediately without blocking first paint
   renderAllMarkers();
+  if (mapMarkers.length > 0) {
+    const initialGroup = L.featureGroup(mapMarkers);
+    belikhubMap.fitBounds(initialGroup.getBounds().pad(0.22), { maxZoom: 11, animate: false });
+  }
 
   const jumpButtons = $$('[data-spring-jump]');
   jumpButtons.forEach((btn) => {
@@ -1198,7 +1416,7 @@ const initMap = async () => {
       if (!spring?.coordinates_public) return;
       jumpButtons.forEach((b) => b.classList.remove('is-selected'));
       btn.classList.add('is-selected');
-      belikhubMap.setView([spring.coordinates_public.lat, spring.coordinates_public.lng], 12, { animate: true });
+      belikhubMap.setView([spring.coordinates_public.lat, spring.coordinates_public.lng], 12, { animate: !prefersReducedMotion() });
       openSpringDetailModal(spring);
     });
   });
@@ -1212,7 +1430,7 @@ const initMap = async () => {
     try {
       if (syncSprings) {
         const springsRes = await fetch('/api/springs');
-        if (springsRes.ok) {
+        if (springsRes.ok && springsRes.headers.get('content-type')?.includes('application/json')) {
           const data = await springsRes.json();
           if (Array.isArray(data.springs) && data.springs.length) {
             springPoints = data.springs;
@@ -1221,7 +1439,7 @@ const initMap = async () => {
       }
 
       const reportsRes = await fetch('/api/reports?limit=100');
-      if (reportsRes.ok) {
+      if (reportsRes.ok && reportsRes.headers.get('content-type')?.includes('application/json')) {
         const data = await reportsRes.json();
         reportPoints = data.reports || [];
       }
@@ -1230,18 +1448,20 @@ const initMap = async () => {
 
       if (mapMarkers.length > 0 && syncSprings) {
         const group = L.featureGroup(mapMarkers);
-        belikhubMap.fitBounds(group.getBounds().pad(0.15), { maxZoom: 11 });
+        belikhubMap.fitBounds(group.getBounds().pad(0.15), { maxZoom: 11, animate: !prefersReducedMotion() });
       }
     } catch {
-      if (statusEl) statusEl.textContent = isEn ? `Displaying ${mapMarkers.length} verified baseline springs (5 km grid).` : `Menampilkan ${mapMarkers.length} mata air baseline terverifikasi (grid 5 km).`;
+      if (statusEl) {
+        statusEl.textContent = isEn
+          ? `Displaying ${mapMarkers.length} verified baseline springs (5 km grid).`
+          : `Menampilkan ${mapMarkers.length} mata air baseline terverifikasi (grid 5 km).`;
+      }
     } finally {
       if (loadBtn) loadBtn.textContent = isEn ? 'Refresh Map Data' : 'Perbarui Data Peta';
     }
   };
 
-  if (window.location.protocol === 'https:') {
-    loadMapData(false);
-  }
+  loadMapData(false);
   $('#map-filter')?.addEventListener('change', renderAllMarkers);
   $('#map-search')?.addEventListener('input', renderAllMarkers);
   $('#load-reports')?.addEventListener('click', () => {
@@ -1279,58 +1499,56 @@ initMap();
 // Spring Details Modal
 const openSpringDetailModal = (s) => {
   const isEn = currentLanguage === 'en';
+  const treatments = (s.treatment_needed || ['Sumur Resapan', 'Rorak Kontur', 'Bibit Endemik'])
+    .map((t) => `<span class="bh-status-pill">${escapeHtml(t)}</span>`)
+    .join('');
+
   openModal(
-    `${isEn ? 'Spring Details' : 'Detail Mata Air'}: ${s.name}`,
+    `${isEn ? 'Spring Details' : 'Detail Mata Air'}: ${s.name || ''}`,
     `
-    <div class="space-y-4">
-      <div class="flex items-center justify-between border-b pb-3" style="border-color:var(--line)">
+    <div class="bh-modal-stack">
+      <div class="bh-modal-split">
         <div>
-          <span class="stamp ${s.status === 'active' ? 'c-accent' : 'text-amber-600'}">${s.status === 'active' ? (isEn ? 'Active Flow' : 'Aktif Mengalir') : (isEn ? 'Needs Rehabilitation' : 'Perlu Pemulihan')}</span>
-          <p class="text-xs text-muted mt-1">${s.village || ''}, ${s.district || ''}, ${s.regency || ''}</p>
+          <span class="bh-status-pill ${s.status === 'active' ? '' : 'bh-status-pill--warn'}">${s.status === 'active' ? (isEn ? 'Active Flow' : 'Aktif Mengalir') : (isEn ? 'Needs Rehabilitation' : 'Perlu Pemulihan')}</span>
+          <p class="bh-modal-note">${escapeHtml([s.village, s.district, s.regency].filter(Boolean).join(', '))}</p>
         </div>
-        <div class="text-right">
+        <div>
           <p class="label c-accent">${isEn ? 'Flow Reliability' : 'Keandalan Aliran'}</p>
-          <p class="serif text-2xl font-bold">${s.uptime_percentage || '95'}%</p>
+          <p class="bh-modal-stat">${escapeHtml(s.uptime_percentage || '95')}%</p>
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-3">
-        <div class="frame p-3">
-          <p class="label muted text-[10px]">${isEn ? 'Baseline Discharge' : 'Debit Baseline'} (L/s)</p>
-          <p class="serif text-2xl font-bold mt-1 text-forest">${s.baseline_discharge_lps || '—'}</p>
-          <p class="muted text-[11px]">${isEn ? 'Historical' : 'Historis'}: ${s.historical_discharge_lps || s.baseline_discharge_lps || '—'} L/s</p>
+      <div class="bh-modal-grid">
+        <div class="bh-modal-box">
+          <p class="label c-accent">${isEn ? 'Baseline Discharge' : 'Debit Baseline'} (L/s)</p>
+          <p class="bh-modal-stat">${escapeHtml(s.baseline_discharge_lps || '—')}</p>
+          <p class="bh-modal-note">${isEn ? 'Historical' : 'Historis'}: ${escapeHtml(s.historical_discharge_lps || s.baseline_discharge_lps || '—')} L/s</p>
         </div>
-        <div class="frame p-3">
-          <p class="label muted text-[10px]">${isEn ? 'Beneficiaries' : 'Penerima Manfaat'}</p>
-          <p class="serif text-2xl font-bold mt-1 text-forest">${s.beneficiaries_kk || '—'} KK</p>
-          <p class="muted text-[11px]">${s.supply_target || (isEn ? 'Villagers & Agriculture' : 'Warga Desa & Pertanian')}</p>
+        <div class="bh-modal-box">
+          <p class="label c-accent">${isEn ? 'Beneficiaries' : 'Penerima Manfaat'}</p>
+          <p class="bh-modal-stat">${escapeHtml(s.beneficiaries_kk || '—')} KK</p>
+          <p class="bh-modal-note">${escapeHtml(s.supply_target || (isEn ? 'Villagers & Agriculture' : 'Warga Desa & Pertanian'))}</p>
         </div>
       </div>
 
-      <div>
-        <p class="label c-accent mb-1.5">${isEn ? 'Required Conservation Treatments' : 'Tindakan Konservasi yang Dibutuhkan'}</p>
-        <div class="flex flex-wrap gap-1.5">
-          ${(s.treatment_needed || ['Sumur Resapan', 'Rorak Kontur', 'Bibit Endemik'])
-            .map((t) => `<span class="stamp c-accent text-[11px]">${t}</span>`)
-            .join('')}
-        </div>
+      <div class="bh-modal-box">
+        <p class="label c-accent">${isEn ? 'Required Conservation Treatments' : 'Tindakan Konservasi yang Dibutuhkan'}</p>
+        <div class="bh-modal-badges">${treatments}</div>
       </div>
 
       ${
         s.historical_impact
-          ? `<div class="p-3 frame" style="background:var(--tint)"><p class="label c-accent mb-1">${isEn ? 'Historical Conservation Impact' : 'Dampak Historis Konservasi'}</p><p class="text-xs text-slate-700 dark:text-slate-200 leading-relaxed">${s.historical_impact}</p></div>`
+          ? `<div class="bh-modal-box bh-modal-box--tint"><p class="label c-accent">${isEn ? 'Historical Conservation Impact' : 'Dampak Historis Konservasi'}</p><p class="bh-modal-note">${escapeHtml(s.historical_impact)}</p></div>`
           : ''
       }
 
       ${
         s.crisis_history
-          ? `<div class="p-3 frame border-amber-300 dark:border-amber-700"><p class="label text-amber-600 mb-1">${isEn ? 'Crisis History & Vulnerability' : 'Catatan Krisis & Kerentanan'}</p><p class="text-xs text-slate-700 dark:text-slate-200 leading-relaxed">${s.crisis_history}</p></div>`
+          ? `<div class="bh-modal-box bh-modal-box--warn"><p class="label">${isEn ? 'Crisis History & Vulnerability' : 'Catatan Krisis & Kerentanan'}</p><p class="bh-modal-note">${escapeHtml(s.crisis_history)}</p></div>`
           : ''
       }
 
-      <div class="pt-2 flex gap-3">
-        <button type="button" class="btn btn-teal w-full report-this-spring-btn">${isEn ? 'Submit Field Report for This Spring' : 'Kirim Laporan untuk Mata Air Ini'}</button>
-      </div>
+      <button type="button" class="btn btn-teal report-this-spring-btn">${isEn ? 'Submit Field Report for This Spring' : 'Kirim Laporan untuk Mata Air Ini'}</button>
     </div>
     `,
     true
@@ -1338,7 +1556,7 @@ const openSpringDetailModal = (s) => {
 
   modal.querySelector('.report-this-spring-btn')?.addEventListener('click', () => {
     closeModal();
-    openReportModal('Survei Mata Air', 100, s.name);
+    openReportModal('Survei Mata Air', 100, s.name || '');
   });
 };
 
@@ -1354,37 +1572,46 @@ const openReportModal = (reportType, points = 100, prefillLocation = '') => {
   openModal(
     `${isEn ? 'Report' : 'Laporan'}: ${reportType}`,
     `
-    <form id="community-report-form" class="space-y-4">
-      <div class="p-3 frame" style="background:var(--tint)">
-        <p class="text-xs leading-relaxed">
-          ${isEn ? 'Submit your field observations to be reviewed by our curation team. You will earn' : 'Kirimkan hasil pemantauan Anda untuk diverifikasi tim kurasi. Anda akan memperoleh'} 
-          <b class="c-accent text-sm font-mono">+<span id="pts-reward">${points}</span> ${isEn ? 'points' : 'poin'}</b> ${isEn ? 'once approved.' : 'setelah disetujui.'}
+    <form id="community-report-form" class="bh-modal-stack">
+      <div class="bh-modal-box bh-modal-box--tint">
+        <p class="bh-modal-note">
+          ${isEn ? 'Submit your field observations to be reviewed by our curation team. You will earn' : 'Kirimkan hasil pemantauan Anda untuk diverifikasi tim kurasi. Anda akan memperoleh'}
+          <strong class="c-accent">+<span id="pts-reward">${Number(points)}</span> ${isEn ? 'points' : 'poin'}</strong> ${isEn ? 'once approved.' : 'setelah disetujui.'}
         </p>
       </div>
 
-      <label class="block text-xs font-semibold">${isEn ? 'Location Name / Spring / Village' : 'Nama Lokasi / Mata Air / Desa'}
-        <input required name="location" value="${prefillLocation}" placeholder="${isEn ? 'e.g. Tuk Bismo, Bismo Village' : 'Contoh: Tuk Bismo, Desa Bismo'}" class="field mt-1" />
-      </label>
-
-      <div>
-        <div class="flex items-center justify-between mb-1">
-          <label class="text-xs font-semibold">${isEn ? 'GPS Field Coordinates' : 'Koordinat GPS Lapangan'}</label>
-          <button type="button" id="detect-gps-btn" class="link-arrow text-xs">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="5"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2"/></svg> ${isEn ? 'Capture My GPS' : 'Ambil GPS Saya'}
-          </button>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <input name="lat" type="number" step="any" placeholder="Latitude (-7.xxx)" class="field text-xs" />
-          <input name="lng" type="number" step="any" placeholder="Longitude (109.xxx)" class="field text-xs" />
-        </div>
-        <p class="text-[11px] muted mt-1">${isEn ? 'Coordinates will be automatically fuzzed to ~5 km grids on the public map.' : 'Koordinat akan disamarkan otomatis ke grid ~5 km untuk publik.'}</p>
+      <div class="field">
+        <label for="report-location">${isEn ? 'Location Name / Spring / Village' : 'Nama Lokasi / Mata Air / Desa'}</label>
+        <input id="report-location" required name="location" value="${escapeHtml(prefillLocation)}" placeholder="${isEn ? 'e.g. Tuk Bismo, Bismo Village' : 'Contoh: Tuk Bismo, Desa Bismo'}" />
       </div>
 
-      <label class="block text-xs font-semibold">${isEn ? 'Field Notes' : 'Catatan Lapangan'}
-        <textarea required name="notes" rows="3" placeholder="${isEn ? 'Describe water flow, clarity, surrounding flora, or actions performed...' : 'Jelaskan kondisi debit air, vegetasi sekitar, atau pekerjaan yang telah dilakukan...'}" class="field mt-1"></textarea>
-      </label>
+      <div class="bh-modal-stack">
+        <div class="bh-modal-split">
+          <span class="label">${isEn ? 'GPS Field Coordinates' : 'Koordinat GPS Lapangan'}</span>
+          <button type="button" id="detect-gps-btn" class="bh-link-btn">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="5"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2"/></svg>
+            <span>${isEn ? 'Capture My GPS' : 'Ambil GPS Saya'}</span>
+          </button>
+        </div>
+        <div class="bh-modal-grid">
+          <div class="field">
+            <label for="report-lat">Latitude</label>
+            <input id="report-lat" name="lat" type="number" step="any" placeholder="-7.xxx" />
+          </div>
+          <div class="field">
+            <label for="report-lng">Longitude</label>
+            <input id="report-lng" name="lng" type="number" step="any" placeholder="109.xxx" />
+          </div>
+        </div>
+        <p class="bh-modal-note">${isEn ? 'Coordinates will be automatically fuzzed to ~5 km grids on the public map.' : 'Koordinat akan disamarkan otomatis ke grid ~5 km untuk publik.'}</p>
+      </div>
 
-      <button id="submit-report-btn" class="btn btn-teal w-full mt-4" type="submit">
+      <div class="field">
+        <label for="report-notes">${isEn ? 'Field Notes' : 'Catatan Lapangan'}</label>
+        <textarea id="report-notes" required name="notes" rows="3" placeholder="${isEn ? 'Describe water flow, clarity, surrounding flora, or actions performed...' : 'Jelaskan kondisi debit air, vegetasi sekitar, atau pekerjaan yang telah dilakukan...'}"></textarea>
+      </div>
+
+      <button id="submit-report-btn" class="btn btn-teal" type="submit">
         ${isEn ? 'Submit Field Report →' : 'Kirim Laporan Lapangan →'}
       </button>
     </form>
@@ -1447,7 +1674,7 @@ $$('.report-card').forEach((btn) => {
     e.preventDefault();
     const reportType = btn.dataset.report || 'Survei Mata Air';
     const ptsMatch = btn.textContent.match(/\+[\d.]+/);
-    const pts = ptsMatch ? parseInt(ptsMatch[0].replace(/[^\d]/g, '')) : 100;
+    const pts = ptsMatch ? parseInt(ptsMatch[0].replace(/[^\d]/g, ''), 10) : 100;
     openReportModal(reportType, pts);
   });
 });
@@ -1457,17 +1684,17 @@ $('#points-btn')?.addEventListener('click', () => {
   openModal(
     isEn ? 'BelikHub Volunteer Points System' : 'Sistem Poin Relawan BelikHub',
     `
-    <div class="space-y-4">
-      <p class="muted text-xs">${isEn ? 'Every contribution is awarded measurable points upon verification by field coordinators:' : 'Setiap kontribusi Anda diapresiasi dengan poin terukur setelah diverifikasi tim lapangan:'}</p>
-      <div class="space-y-2">
+    <div class="bh-modal-stack">
+      <p class="bh-modal-note">${isEn ? 'Every contribution is awarded measurable points upon verification by field coordinators:' : 'Setiap kontribusi Anda diapresiasi dengan poin terukur setelah diverifikasi tim lapangan:'}</p>
+      <div>
         <div class="log-line"><span>${isEn ? 'Initial Spring Survey' : 'Survei Mata Air Awal'}</span><b class="label c-accent">+100 pts</b></div>
         <div class="log-line"><span>${isEn ? 'Spring Cleaning / Restoration' : 'Pembersihan / Restorasi Mata Air'}</span><b class="label c-accent">+1.000 pts</b></div>
         <div class="log-line"><span>${isEn ? 'Rorak Infiltration Trench Digging' : 'Pembangunan Rorak Resapan Air'}</span><b class="label c-accent">+500 pts</b></div>
         <div class="log-line"><span>${isEn ? 'Native Tree Planting' : 'Penanaman Bibit Pohon Endemik'}</span><b class="label c-accent">+100 pts</b></div>
       </div>
-      <div class="p-3 frame" style="background:var(--tint)">
-        <p class="label c-accent mb-1">${isEn ? 'Points Benefit' : 'Manfaat Poin Relawan'}</p>
-        <p class="text-xs text-slate-700 dark:text-slate-200">
+      <div class="bh-modal-box bh-modal-box--tint">
+        <p class="label c-accent">${isEn ? 'Points Benefit' : 'Manfaat Poin Relawan'}</p>
+        <p class="bh-modal-note">
           ${isEn ? 'Volunteers accumulating ≥ 20,000 points may sponsor and propose an independent village spring recovery project directly funded via BelikHub community partnerships.' : 'Relawan dengan akumulasi ≥ 20.000 poin dapat mengajukan inisiatif pemulihan belik desa secara mandiri untuk didanai melalui program kemitraan komunitas BelikHub.'}
         </p>
       </div>
@@ -1482,48 +1709,52 @@ const openOrderRorakModal = () => {
   openModal(
     isEn ? 'Order Roraks for Your Land' : 'Pemesanan Rorak untuk Lahan Anda',
     `
-    <form id="rorak-order-form" class="space-y-4">
-      <p class="muted text-xs leading-relaxed">
+    <form id="rorak-order-form" class="bh-modal-stack">
+      <p class="bh-modal-note">
         ${isEn ? 'Order contour infiltration trenches (roraks) for your sloped orchard or farmland. Trained local villagers will dig trenches according to contour lines.' : 'Pesan pembuatan parit rorak resapan di lahan perkebunan atau pekarangan miring Anda. Tenaga kerja lokal yang terlatih akan menggali rorak sesuai garis kontur.'}
       </p>
 
-      <div class="grid sm:grid-cols-2 gap-3">
-        <label class="block text-xs font-semibold">${isEn ? 'Landowner Name' : 'Nama Pemilik Lahan'}
-          <input required name="name" placeholder="${isEn ? 'Full name' : 'Nama lengkap'}" class="field mt-1" />
-        </label>
-        <label class="block text-xs font-semibold">${isEn ? 'WhatsApp Phone' : 'Nomor WhatsApp'}
-          <input required name="phone" placeholder="08xxxxxxxxxx" class="field mt-1" />
-        </label>
-      </div>
-
-      <label class="block text-xs font-semibold">${isEn ? 'Land Location (Village & District)' : 'Lokasi Lahan (Desa & Kecamatan)'}
-        <input required name="location" placeholder="Contoh: Desa Bismo, Kec. Blado, Kab. Batang" class="field mt-1" />
-      </label>
-
-      <div>
-        <label class="block text-xs font-semibold mb-1">${isEn ? 'Number of Rorak Units Ordered' : 'Jumlah Rorak yang Dipesan'}</label>
-        <div class="flex items-center gap-3">
-          <input id="rorak-qty" type="number" min="1" max="100" value="5" class="field w-24 text-center font-bold text-lg" />
-          <span class="text-xs muted">${isEn ? 'Units (standard 200 × 50 × 50 cm)' : 'Unit rorak (dimensi baku 200 × 50 × 50 cm)'}</span>
+      <div class="bh-modal-grid">
+        <div class="field">
+          <label for="order-name">${isEn ? 'Landowner Name' : 'Nama Pemilik Lahan'}</label>
+          <input id="order-name" required name="name" placeholder="${isEn ? 'Full name' : 'Nama lengkap'}" />
+        </div>
+        <div class="field">
+          <label for="order-phone">${isEn ? 'WhatsApp Phone' : 'Nomor WhatsApp'}</label>
+          <input id="order-phone" required name="phone" type="tel" placeholder="08xxxxxxxxxx" />
         </div>
       </div>
 
-      <div class="p-4 frame" style="background:var(--tint)">
-        <div class="flex justify-between items-baseline">
+      <div class="field">
+        <label for="order-location">${isEn ? 'Land Location (Village & District)' : 'Lokasi Lahan (Desa & Kecamatan)'}</label>
+        <input id="order-location" required name="location" placeholder="${isEn ? 'e.g. Bismo Village, Blado, Batang' : 'Contoh: Desa Bismo, Kec. Blado, Kab. Batang'}" />
+      </div>
+
+      <div class="field">
+        <label for="rorak-qty">${isEn ? 'Number of Rorak Units Ordered' : 'Jumlah Rorak yang Dipesan'}</label>
+        <div class="bh-qty-row">
+          <input id="rorak-qty" name="quantity" type="number" min="1" max="100" value="5" />
+          <span class="bh-modal-note">${isEn ? 'Units (standard 200 × 50 × 50 cm)' : 'Unit rorak (dimensi baku 200 × 50 × 50 cm)'}</span>
+        </div>
+      </div>
+
+      <div class="bh-modal-box bh-modal-box--tint">
+        <div class="bh-modal-split">
           <span class="label c-accent">${isEn ? 'Estimated Digging Cost:' : 'Estimasi Biaya Penggalian:'}</span>
-          <b id="rorak-cost" class="serif text-2xl font-bold text-forest">Rp100.000</b>
+          <b id="rorak-cost" class="bh-modal-stat">Rp100.000</b>
         </div>
-        <p class="text-xs muted mt-1">${isEn ? 'Cost Rp20,000/unit (Rp16,000 paid to village diggers + Rp4,000 field audit).' : 'Biaya Rp20.000/unit (Rp16.000 untuk upah warga penggali + Rp4.000 audit operasional).'}</p>
-        <div class="mt-2 text-xs text-forest font-semibold">
-          ${isEn ? 'Infiltration Capacity:' : 'Kapasitas Resapan:'} <span id="rorak-absorption">~10.000 Liter air hujan/musim</span>
-        </div>
+        <p class="bh-modal-note">${isEn ? 'Cost Rp20,000/unit (Rp16,000 paid to village diggers + Rp4,000 field audit).' : 'Biaya Rp20.000/unit (Rp16.000 untuk upah warga penggali + Rp4.000 audit operasional).'}</p>
+        <p class="bh-modal-note">
+          <strong>${isEn ? 'Infiltration Capacity:' : 'Kapasitas Resapan:'}</strong> <span id="rorak-absorption">~10.000 Liter air hujan/musim</span>
+        </p>
       </div>
 
-      <label class="block text-xs font-semibold">${isEn ? 'Land Condition Notes (Optional)' : 'Catatan Kondisi Lahan (Opsional)'}
-        <textarea name="notes" rows="2" placeholder="${isEn ? 'Slope steepness, crops, or access paths...' : 'Kemiringan lahan, jenis tanaman, atau akses jalan...'}" class="field mt-1"></textarea>
-      </label>
+      <div class="field">
+        <label for="order-notes">${isEn ? 'Land Condition Notes (Optional)' : 'Catatan Kondisi Lahan (Opsional)'}</label>
+        <textarea id="order-notes" name="notes" rows="2" placeholder="${isEn ? 'Slope steepness, crops, or access paths...' : 'Kemiringan lahan, jenis tanaman, atau akses jalan...'}"></textarea>
+      </div>
 
-      <button id="submit-rorak-order-btn" class="btn btn-teal w-full mt-2" type="submit">
+      <button id="submit-rorak-order-btn" class="btn btn-teal" type="submit">
         ${isEn ? 'Confirm Rorak Order →' : 'Konfirmasi Pesanan Rorak →'}
       </button>
     </form>
@@ -1536,11 +1767,11 @@ const openOrderRorakModal = () => {
   const absorptionEl = $('#rorak-absorption');
 
   const updateCalculations = () => {
-    const qty = Math.max(1, parseInt(qtyInput?.value || '1', 10));
+    const qty = Math.max(1, Math.min(100, parseInt(qtyInput?.value || '1', 10) || 1));
     const cost = qty * 20000;
     const absorption = qty * 2000;
     if (costEl) costEl.textContent = `Rp${cost.toLocaleString('id-ID')}`;
-    if (absorptionEl) absorptionEl.textContent = `~${absorption.toLocaleString('id-ID')} Liter`;
+    if (absorptionEl) absorptionEl.textContent = `~${absorption.toLocaleString('id-ID')} ${isEn ? 'Liters/season' : 'Liter air hujan/musim'}`;
   };
 
   qtyInput?.addEventListener('input', updateCalculations);
@@ -1552,7 +1783,7 @@ const openOrderRorakModal = () => {
     btn.textContent = isEn ? 'Submitting order…' : 'Mendaftarkan pesanan…';
 
     const formData = new FormData(form);
-    const qty = parseInt(qtyInput?.value || '1', 10);
+    const qty = Math.max(1, Math.min(100, parseInt(qtyInput?.value || '1', 10) || 1));
 
     try {
       const data = await apiRequest(
@@ -1575,19 +1806,18 @@ const openOrderRorakModal = () => {
       openModal(
         isEn ? 'Rorak Order Recorded!' : 'Pesanan Rorak Berhasil Dicatat!',
         `
-        <div class="space-y-4 text-center">
-          <div class="h-16 w-16 mx-auto rounded-full bg-forest text-white flex items-center justify-center text-3xl">
+        <div class="bh-modal-stack bh-modal-center">
+          <div class="bh-modal-check">
             <svg width="26" height="26" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2 6.8-7"/></svg>
           </div>
-          <h4 class="serif font-bold text-xl">${isEn ? 'Thank You for Taking Action!' : 'Terima Kasih atas Aksi Nyata Anda!'}</h4>
-          <p class="muted text-xs leading-relaxed max-w-sm mx-auto">
-            ${isEn ? `Your order for <b>${qty} rorak units</b> has been received with reference code <b>#${data.id || 'RO-2026'}</b>. Our field coordinator will contact your WhatsApp within 24 hours for slope verification.` : `Pesanan pembuatan <b>${qty} unit rorak</b> telah diterima dengan kode referensi <b>#${data.id || 'RO-2026'}</b>. Koordinator lapangan BelikHub akan menghubungi WhatsApp Anda dalam 1×24 jam untuk survei kontur lahan.`}
+          <h3 class="bh-modal-subtitle">${isEn ? 'Thank You for Taking Action!' : 'Terima Kasih atas Aksi Nyata Anda!'}</h3>
+          <p class="bh-modal-note">
+            ${isEn ? `Your order for <strong>${qty} rorak units</strong> has been received with reference code <strong>#${escapeHtml(data.id || 'RO-2026')}</strong>. Our field coordinator will contact your WhatsApp within 24 hours for slope verification.` : `Pesanan pembuatan <strong>${qty} unit rorak</strong> telah diterima dengan kode referensi <strong>#${escapeHtml(data.id || 'RO-2026')}</strong>. Koordinator lapangan BelikHub akan menghubungi WhatsApp Anda dalam 1×24 jam untuk survei kontur lahan.`}
           </p>
-          <button type="button" data-close-modal class="btn btn-teal w-full mt-4">${isEn ? 'Close & Return' : 'Tutup & Kembali'}</button>
+          <button type="button" data-close-modal class="btn btn-teal">${isEn ? 'Close & Return' : 'Tutup & Kembali'}</button>
         </div>
         `
       );
-      modal.querySelector('[data-close-modal]')?.addEventListener('click', closeModal);
     } catch (err) {
       btn.disabled = false;
       btn.textContent = isEn ? 'Confirm Rorak Order →' : 'Konfirmasi Pesanan Rorak →';
@@ -1608,40 +1838,43 @@ const openJoinMakerModal = () => {
   openModal(
     isEn ? 'Register as a Rorak Digger' : 'Pendaftaran Tenaga Pembuat Rorak',
     `
-    <form id="join-maker-form" class="space-y-4">
-      <p class="muted text-xs leading-relaxed">
+    <form id="join-maker-form" class="bh-modal-stack">
+      <p class="bh-modal-note">
         ${isEn ? 'Join our trained village taskforce. Earn Rp16,000 for every verified rorak completed on contour.' : 'Bergabung menjadi tenaga penggali rorak terlatih di desa Anda. Dapatkan insentif Rp16.000 per unit rorak yang selesai digali dan terverifikasi.'}
       </p>
 
-      <div class="grid sm:grid-cols-2 gap-3">
-        <label class="block text-xs font-semibold">${isEn ? 'Full Name' : 'Nama Lengkap'}
-          <input required name="name" placeholder="${isEn ? 'Your name' : 'Nama Anda'}" class="field mt-1" />
-        </label>
-        <label class="block text-xs font-semibold">${isEn ? 'WhatsApp Phone' : 'Nomor WhatsApp'}
-          <input required name="phone" placeholder="08xxxxxxxxxx" class="field mt-1" />
-        </label>
+      <div class="bh-modal-grid">
+        <div class="field">
+          <label for="maker-name">${isEn ? 'Full Name' : 'Nama Lengkap'}</label>
+          <input id="maker-name" required name="name" placeholder="${isEn ? 'Your name' : 'Nama Anda'}" />
+        </div>
+        <div class="field">
+          <label for="maker-phone">${isEn ? 'WhatsApp Phone' : 'Nomor WhatsApp'}</label>
+          <input id="maker-phone" required name="phone" type="tel" placeholder="08xxxxxxxxxx" />
+        </div>
       </div>
 
-      <label class="block text-xs font-semibold">${isEn ? 'Village / District Domicile' : 'Desa / Kecamatan Domisili'}
-        <input required name="domicile" placeholder="Contoh: Desa Bismo, Kec. Blado" class="field mt-1" />
-      </label>
+      <div class="field">
+        <label for="maker-domicile">${isEn ? 'Village / District Domicile' : 'Desa / Kecamatan Domisili'}</label>
+        <input id="maker-domicile" required name="domicile" placeholder="${isEn ? 'e.g. Bismo Village, Blado' : 'Contoh: Desa Bismo, Kec. Blado'}" />
+      </div>
 
-      <label class="block text-xs font-semibold">${isEn ? 'Field / Farming Experience' : 'Pengalaman Pekerjaan Fisik / Tani'}
-        <select name="experience" class="field mt-1">
+      <div class="field">
+        <label for="maker-experience">${isEn ? 'Field / Farming Experience' : 'Pengalaman Pekerjaan Fisik / Tani'}</label>
+        <select id="maker-experience" name="experience">
           <option value="Petani / Buruh Tani">${isEn ? 'Active Farmer / Farmworker' : 'Petani / Buruh Tani Aktif'}</option>
           <option value="Tukang Bangunan / Galian">${isEn ? 'Construction / Excavation Worker' : 'Tukang Bangunan / Galian Tanah'}</option>
           <option value="Warga Komunitas">${isEn ? 'Community Member / Youth' : 'Warga Komunitas / Pemuda Desa'}</option>
         </select>
-      </label>
+      </div>
 
-      <label class="block text-xs font-semibold">${isEn ? 'Available Tools' : 'Ketersediaan Alat Kerja'}
-        <div class="mt-2 space-y-1.5 text-xs text-muted">
-          <label class="flex items-center gap-2"><input type="checkbox" name="tool_cangkul" checked /> ${isEn ? 'Own a hoe (cangkul)' : 'Memiliki cangkul sendiri'}</label>
-          <label class="flex items-center gap-2"><input type="checkbox" name="tool_linggis" checked /> ${isEn ? 'Own a crowbar (linggis)' : 'Memiliki linggis / gancu'}</label>
-        </div>
-      </label>
+      <fieldset class="bh-fieldset">
+        <legend>${isEn ? 'Available Tools' : 'Ketersediaan Alat Kerja'}</legend>
+        <label class="bh-checkbox-row"><input type="checkbox" name="tool_cangkul" checked /> <span>${isEn ? 'Own a hoe (cangkul)' : 'Memiliki cangkul sendiri'}</span></label>
+        <label class="bh-checkbox-row"><input type="checkbox" name="tool_linggis" checked /> <span>${isEn ? 'Own a crowbar (linggis)' : 'Memiliki linggis / gancu'}</span></label>
+      </fieldset>
 
-      <button id="submit-join-maker-btn" class="btn btn-teal w-full mt-4" type="submit">
+      <button id="submit-join-maker-btn" class="btn btn-teal" type="submit">
         ${isEn ? 'Register as a Digger →' : 'Daftar Sebagai Pembuat Rorak →'}
       </button>
     </form>
@@ -1665,7 +1898,11 @@ const openJoinMakerModal = () => {
           phone: formData.get('phone'),
           details: {
             domicile: formData.get('domicile'),
-            experience: formData.get('experience')
+            experience: formData.get('experience'),
+            tools: [
+              formData.get('tool_cangkul') ? 'cangkul' : null,
+              formData.get('tool_linggis') ? 'linggis' : null
+            ].filter(Boolean)
           }
         },
         { auth: false }
@@ -1675,19 +1912,18 @@ const openJoinMakerModal = () => {
       openModal(
         isEn ? 'Digger Registration Received' : 'Pendaftaran Pembuat Rorak Diterima',
         `
-        <div class="space-y-4 text-center">
-          <div class="h-16 w-16 mx-auto rounded-full bg-forest text-white flex items-center justify-center text-3xl">
+        <div class="bh-modal-stack bh-modal-center">
+          <div class="bh-modal-check">
             <svg width="26" height="26" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2 6.8-7"/></svg>
           </div>
-          <h4 class="serif font-bold text-xl">${isEn ? 'Welcome Aboard!' : 'Selamat Bergabung!'}</h4>
-          <p class="muted text-xs leading-relaxed max-w-sm mx-auto">
+          <h3 class="bh-modal-subtitle">${isEn ? 'Welcome Aboard!' : 'Selamat Bergabung!'}</h3>
+          <p class="bh-modal-note">
             ${isEn ? 'Your information has been logged into the BelikHub taskforce. We will send technical contour guidelines via WhatsApp.' : 'Data Anda telah tercatat dalam satgas penggalian BelikHub. Kami akan mengirimkan jadwal pengarahan teknis garis kontur via WhatsApp.'}
           </p>
-          <button type="button" data-close-modal class="btn btn-teal w-full mt-4">${isEn ? 'Finish' : 'Selesai'}</button>
+          <button type="button" data-close-modal class="btn btn-teal">${isEn ? 'Finish' : 'Selesai'}</button>
         </div>
         `
       );
-      modal.querySelector('[data-close-modal]')?.addEventListener('click', closeModal);
     } catch (err) {
       btn.disabled = false;
       btn.textContent = isEn ? 'Register as a Digger →' : 'Daftar Sebagai Pembuat Rorak →';
@@ -1714,36 +1950,39 @@ $$('.rsvp-btn').forEach((btn) => {
     openModal(
       `${isEn ? 'Sign Up to Join' : 'Daftar Ikut'}: ${eventTitle}`,
       `
-      <form id="rsvp-form" class="space-y-4">
-        <div class="p-3 frame" style="background:var(--tint)">
+      <form id="rsvp-form" class="bh-modal-stack">
+        <div class="bh-modal-box bh-modal-box--tint">
           <p class="label c-accent">${isEn ? 'Event Information' : 'Informasi Kegiatan'}</p>
-          <p class="font-bold text-sm text-forest mt-0.5">${eventTitle}</p>
-          <p class="text-xs text-muted mt-1">&bull; ${isEn ? 'Date' : 'Tanggal'}: <b>${date}</b> &bull; ${isEn ? 'Meeting Point' : 'Titik'}: <b>${location}</b></p>
+          <p class="bh-modal-subtitle">${escapeHtml(eventTitle)}</p>
+          <p class="bh-modal-note">&bull; ${isEn ? 'Date' : 'Tanggal'}: <strong>${escapeHtml(date)}</strong> &bull; ${isEn ? 'Meeting Point' : 'Titik'}: <strong>${escapeHtml(location)}</strong></p>
         </div>
 
-        <div class="grid sm:grid-cols-2 gap-3">
-          <label class="block text-xs font-semibold">${isEn ? 'Volunteer Name' : 'Nama Lengkap Relawan'}
-            <input required name="name" placeholder="${isEn ? 'Your full name' : 'Nama Anda'}" class="field mt-1" />
-          </label>
-          <label class="block text-xs font-semibold">${isEn ? 'WhatsApp Phone' : 'Nomor WhatsApp'}
-            <input required name="phone" placeholder="08xxxxxxxxxx" class="field mt-1" />
-          </label>
+        <div class="bh-modal-grid">
+          <div class="field">
+            <label for="rsvp-name">${isEn ? 'Volunteer Name' : 'Nama Lengkap Relawan'}</label>
+            <input id="rsvp-name" required name="name" placeholder="${isEn ? 'Your full name' : 'Nama Anda'}" />
+          </div>
+          <div class="field">
+            <label for="rsvp-phone">${isEn ? 'WhatsApp Phone' : 'Nomor WhatsApp'}</label>
+            <input id="rsvp-phone" required name="phone" type="tel" placeholder="08xxxxxxxxxx" />
+          </div>
         </div>
 
-        <label class="block text-xs font-semibold">${isEn ? 'Institution / Community (Optional)' : 'Instansi / Komunitas / Kampus (Opsional)'}
-          <input name="community" placeholder="Contoh: Mapala / Pribadi / BUMDes" class="field mt-1" />
-        </label>
+        <div class="field">
+          <label for="rsvp-community">${isEn ? 'Institution / Community (Optional)' : 'Instansi / Komunitas / Kampus (Opsional)'}</label>
+          <input id="rsvp-community" name="community" placeholder="Contoh: Mapala / Pribadi / BUMDes" />
+        </div>
 
-        <div class="border-t pt-3" style="border-color:var(--line)">
-          <p class="label c-accent mb-2">${isEn ? 'Required Field Gear:' : 'Perlengkapan Wajib yang Perlu Dibawa:'}</p>
-          <ul class="text-xs text-muted list-disc list-inside space-y-1">
+        <div class="bh-modal-box">
+          <p class="label c-accent">${isEn ? 'Required Field Gear:' : 'Perlengkapan Wajib yang Perlu Dibawa:'}</p>
+          <ul class="bh-modal-list">
             <li>${isEn ? 'Trekking boots or non-slip footwear.' : 'Sepatu boots atau sepatu trekking anti-selip.'}</li>
             <li>${isEn ? 'Personal water tumbler.' : 'Botol minum pribadi (tumbler).'}</li>
             <li>${isEn ? 'Work gloves for soil work.' : 'Sarung tangan kain untuk pekerjaan tanah.'}</li>
           </ul>
         </div>
 
-        <button id="submit-rsvp-btn" class="btn btn-teal w-full mt-4" type="submit">
+        <button id="submit-rsvp-btn" class="btn btn-teal" type="submit">
           ${isEn ? 'Confirm Field Participation →' : 'Konfirmasi Keikutsertaan Aksi →'}
         </button>
       </form>
@@ -1779,23 +2018,22 @@ $$('.rsvp-btn').forEach((btn) => {
         openModal(
           isEn ? 'Field Registration Confirmed!' : 'Pendaftaran Kegiatan Terkonfirmasi!',
           `
-          <div class="space-y-4 text-center">
-            <div class="h-16 w-16 mx-auto rounded-full bg-forest text-white flex items-center justify-center text-3xl">
+          <div class="bh-modal-stack bh-modal-center">
+            <div class="bh-modal-check">
               <svg width="26" height="26" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="12" height="8" rx="1.5"/><path d="M6 8h4M8 6.5v3"/></svg>
             </div>
-            <h4 class="serif font-bold text-xl">${isEn ? 'Field Volunteer Pass' : 'Tiket Relawan Lapangan'}</h4>
-            <div class="frame p-4 text-left text-xs space-y-1 max-w-sm mx-auto" style="background:var(--tint)">
-              <p><b>${isEn ? 'Event:' : 'Kegiatan:'}</b> ${eventTitle}</p>
-              <p><b>${isEn ? 'Volunteer:' : 'Peserta:'}</b> ${formData.get('name')}</p>
-              <p><b>${isEn ? 'Date:' : 'Jadwal:'}</b> ${date}</p>
-              <p><b>${isEn ? 'Location:' : 'Lokasi:'}</b> ${location}</p>
+            <h3 class="bh-modal-subtitle">${isEn ? 'Field Volunteer Pass' : 'Tiket Relawan Lapangan'}</h3>
+            <div class="bh-modal-box bh-modal-box--tint" style="text-align:left">
+              <p class="bh-modal-note"><strong>${isEn ? 'Event:' : 'Kegiatan:'}</strong> ${escapeHtml(eventTitle)}</p>
+              <p class="bh-modal-note"><strong>${isEn ? 'Volunteer:' : 'Peserta:'}</strong> ${escapeHtml(formData.get('name'))}</p>
+              <p class="bh-modal-note"><strong>${isEn ? 'Date:' : 'Jadwal:'}</strong> ${escapeHtml(date)}</p>
+              <p class="bh-modal-note"><strong>${isEn ? 'Location:' : 'Lokasi:'}</strong> ${escapeHtml(location)}</p>
             </div>
-            <p class="muted text-xs">${isEn ? 'Your registration has been confirmed. See you on the ground!' : 'Pemberitahuan panduan keselamatan lapangan telah dicatat. Sampai jumpa di lokasi aksi!'}</p>
-            <button type="button" data-close-modal class="btn btn-teal w-full mt-4">${isEn ? 'Close' : 'Tutup'}</button>
+            <p class="bh-modal-note">${isEn ? 'Your registration has been confirmed. See you on the ground!' : 'Pemberitahuan panduan keselamatan lapangan telah dicatat. Sampai jumpa di lokasi aksi!'}</p>
+            <button type="button" data-close-modal class="btn btn-teal">${isEn ? 'Close' : 'Tutup'}</button>
           </div>
           `
         );
-        modal.querySelector('[data-close-modal]')?.addEventListener('click', closeModal);
       } catch (err) {
         submitBtn.disabled = false;
         submitBtn.textContent = isEn ? 'Confirm Field Participation →' : 'Konfirmasi Keikutsertaan Aksi →';
@@ -1928,9 +2166,9 @@ $$('[data-course]').forEach((btn) => {
     const modulesHtml = course.modules
       .map(
         (m) => `
-        <div class="border p-4 frame">
-          <h4 class="font-bold text-sm c-accent mb-1">${m.title[langKey]}</h4>
-          <p class="muted text-xs leading-relaxed">${m.desc[langKey]}</p>
+        <div class="bh-modal-box">
+          <h3 class="bh-modal-subtitle">${escapeHtml(m.title[langKey])}</h3>
+          <p class="bh-modal-note">${escapeHtml(m.desc[langKey])}</p>
         </div>
       `
       )
@@ -1939,48 +2177,49 @@ $$('[data-course]').forEach((btn) => {
     openModal(
       course.title[langKey],
       `
-      <div class="space-y-4">
-        <p class="muted text-xs">${isEn ? 'Field handbook for BelikHub volunteers and coordinators:' : 'Modul praktis pegangan relawan dan petugas lapangan BelikHub:'}</p>
-        <div class="space-y-3">
+      <div class="bh-modal-stack">
+        <p class="bh-modal-note">${isEn ? 'Field handbook for BelikHub volunteers and coordinators:' : 'Modul praktis pegangan relawan dan petugas lapangan BelikHub:'}</p>
+        <div class="bh-modal-stack">
           ${modulesHtml}
         </div>
-        <div class="pt-2">
-          <button type="button" data-close-modal class="btn btn-teal w-full text-xs font-bold">
-            ${isEn ? 'Complete Reading' : 'Selesai Membaca Modul'}
-          </button>
-        </div>
+        <button type="button" data-close-modal class="btn btn-teal">
+          ${isEn ? 'Complete Reading' : 'Selesai Membaca Modul'}
+        </button>
       </div>
       `,
       true
     );
-    modal.querySelector('[data-close-modal]')?.addEventListener('click', closeModal);
   });
 });
 
-// Learn Tab Switching (supports courses, readings, agenda, media)
-const learnPanels = ['courses', 'readings', 'agenda', 'media'];
-$$('.learn-tab').forEach((tab) => {
-  tab.addEventListener('click', (e) => {
-    e.preventDefault();
-    const activeTab = tab.dataset.tab || 'courses';
-    $$('.learn-tab').forEach((t) => {
-      const isSelected = t === tab;
-      t.classList.toggle('tab-active', isSelected);
-      t.classList.toggle('tab-idle', !isSelected);
-      t.setAttribute('aria-selected', isSelected ? 'true' : 'false');
-    });
-
-    learnPanels.forEach((panelId) => {
-      document.getElementById(panelId)?.classList.toggle('hidden', panelId !== activeTab);
-    });
-    if (activeTab === 'media') {
-      const vid = document.getElementById('learn-media-video');
-      if (vid && !vid.getAttribute('src') && vid.dataset.src) {
-        vid.src = vid.dataset.src;
-      }
+// Learn Tab Visual Sync & Lazy Video Loader (pairs with system.js tabs() aria-selected + [hidden])
+const syncLearnTabs = () => {
+  const mediaPanel = document.getElementById('media');
+  $$('.learn-tab').forEach((t) => {
+    const isSelected = t.getAttribute('aria-selected') === 'true';
+    t.classList.toggle('tab-active', isSelected);
+    t.classList.toggle('tab-idle', !isSelected);
+  });
+  if (mediaPanel && !mediaPanel.hidden) {
+    const vid = document.getElementById('learn-media-video');
+    if (vid && !vid.getAttribute('src') && vid.dataset.src) {
+      vid.src = vid.dataset.src;
     }
+  }
+};
+
+const learnTabList = $('#learn [role="tablist"]');
+if (learnTabList && typeof MutationObserver === 'function') {
+  new MutationObserver(syncLearnTabs).observe(learnTabList, {
+    attributes: true,
+    attributeFilter: ['aria-selected'],
+    subtree: true
   });
+}
+$$('.learn-tab').forEach((tab) => {
+  tab.addEventListener('click', () => requestAnimationFrame(syncLearnTabs));
 });
+syncLearnTabs();
 
 // Full Story Reader
 const storiesData = {
@@ -2069,14 +2308,13 @@ $$('.story-read-btn').forEach((btn) => {
     openModal(
       story.title[langKey],
       `
-      <div class="space-y-3 text-sm leading-relaxed">
-        ${story.body[langKey]}
-        <button type="button" data-close-modal class="btn btn-teal w-full text-xs font-bold mt-4">${isEn ? 'Close Notes' : 'Tutup Catatan'}</button>
+      <div class="bh-modal-stack">
+        <div class="bh-modal-note">${story.body[langKey]}</div>
+        <button type="button" data-close-modal class="btn btn-teal">${isEn ? 'Close Notes' : 'Tutup Catatan'}</button>
       </div>
       `,
       true
     );
-    modal.querySelector('[data-close-modal]')?.addEventListener('click', closeModal);
   });
 });
 
@@ -2087,6 +2325,8 @@ partnerForm?.querySelectorAll('input, select, textarea').forEach((input) => {
     const field = input.closest('.field');
     if (!field) return;
     field.classList.remove('is-invalid');
+    input.removeAttribute('aria-invalid');
+    input.removeAttribute('aria-describedby');
     const err = field.querySelector('.field__error');
     if (err) err.textContent = '';
   });
@@ -2101,6 +2341,13 @@ partnerForm?.addEventListener('submit', async (e) => {
     const err = field?.querySelector('.field__error');
     const valid = input.checkValidity();
     if (field) field.classList.toggle('is-invalid', !valid);
+    if (!valid) {
+      input.setAttribute('aria-invalid', 'true');
+      if (err?.id) input.setAttribute('aria-describedby', err.id);
+    } else {
+      input.removeAttribute('aria-invalid');
+      input.removeAttribute('aria-describedby');
+    }
     if (err) {
       err.textContent = valid
         ? ''
@@ -2121,6 +2368,7 @@ partnerForm?.addEventListener('submit', async (e) => {
   }
 
   const formData = new FormData(partnerForm);
+  const notes = String(formData.get('notes') || '').trim();
   try {
     await apiRequest(
       '/api/partnerships',
@@ -2128,7 +2376,8 @@ partnerForm?.addEventListener('submit', async (e) => {
         name: formData.get('name'),
         institution: formData.get('institution'),
         email: formData.get('email'),
-        need: formData.get('need')
+        need: formData.get('need'),
+        ...(notes ? { notes } : {})
       },
       { auth: false }
     );
@@ -2137,11 +2386,12 @@ partnerForm?.addEventListener('submit', async (e) => {
     toast(isEn ? 'Partnership inquiry sent successfully!' : 'Minat kemitraan berhasil dikirim!');
     partnerForm.reset();
   } catch (err) {
+    if (noteEl) noteEl.textContent = err.message;
     toast(err.message);
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;
-      submitBtn.textContent = isEn ? 'Submit Partnership Inquiry' : 'Kirim Minat Kemitraan';
+      submitBtn.textContent = translations[currentLanguage]['partner.btn_submit'];
     }
   }
 });
@@ -2154,11 +2404,16 @@ newsletterForm?.addEventListener('submit', async (e) => {
   const input = newsletterForm.querySelector('input[name=email]');
   const statusEl = $('#newsletter-status');
   const email = input?.value?.trim();
-  if (!email || !input.checkValidity()) {
+  if (!email || !input?.checkValidity()) {
+    input?.setAttribute('aria-invalid', 'true');
     if (statusEl) statusEl.textContent = isEn ? 'Please enter a valid email address.' : 'Mohon masukkan alamat email yang valid.';
     input?.focus();
     return;
   }
+  input?.removeAttribute('aria-invalid');
+
+  const submitBtn = newsletterForm.querySelector('button[type=submit]');
+  if (submitBtn) submitBtn.disabled = true;
 
   try {
     const res = await fetch('/api/newsletter', {
@@ -2166,13 +2421,19 @@ newsletterForm?.addEventListener('submit', async (e) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })
     });
-    const data = await res.json().catch(() => ({}));
+    const isJson = res.headers.get('content-type')?.includes('application/json');
+    const data = isJson ? await res.json().catch(() => ({})) : {};
+    if (!res.ok || !isJson) {
+      throw new Error(data.error || (isEn ? 'Newsletter service is currently unavailable.' : 'Layanan langganan kabar belum aktif pada server ini.'));
+    }
     if (statusEl) statusEl.textContent = data.message || (isEn ? 'Thank you for subscribing!' : 'Terima kasih telah berlangganan!');
     toast(isEn ? 'Your email has been registered!' : 'Email Anda berhasil didaftarkan!');
     newsletterForm.reset();
-  } catch {
-    toast(isEn ? 'Subscribed to field updates.' : 'Berhasil mendaftar kabar pembaruan.');
-    newsletterForm.reset();
+  } catch (err) {
+    if (statusEl) statusEl.textContent = err.message;
+    toast(err.message);
+  } finally {
+    if (submitBtn) submitBtn.disabled = false;
   }
 });
 
@@ -2182,42 +2443,42 @@ const footerModalContent = {
     title: { id: 'Pertanyaan yang Sering Diajukan (FAQ)', en: 'Frequently Asked Questions (FAQ)' },
     body: {
       id: `
-        <div class="space-y-4">
-          <div>
-            <h4 class="font-bold text-forest text-sm">Apa itu BelikHub?</h4>
-            <p class="muted text-xs mt-1">BelikHub adalah platform komunitas terbuka untuk mendokumentasikan, memantau debit, dan memulihkan mata air tradisional (belik) di seluruh Nusantara melalui partisipasi warga dan kemitraan kolaboratif.</p>
+        <div class="bh-modal-stack">
+          <div class="bh-modal-box">
+            <h3 class="bh-modal-subtitle">Apa itu BelikHub?</h3>
+            <p class="bh-modal-note">BelikHub adalah platform komunitas terbuka untuk mendokumentasikan, memantau debit, dan memulihkan mata air tradisional (belik) di seluruh Nusantara melalui partisipasi warga dan kemitraan kolaboratif.</p>
           </div>
-          <div>
-            <h4 class="font-bold text-forest text-sm">Apa itu Rorak dan mengapa penting?</h4>
-            <p class="muted text-xs mt-1">Rorak adalah parit buntu berukuran baku 200x50x50 cm yang digali memotong kemiringan kontur tanah. Rorak menjebak limpasan air hujan agar tidak terbuang sia-sia melainkan meresap mengisi kembali akuifer air tanah.</p>
+          <div class="bh-modal-box">
+            <h3 class="bh-modal-subtitle">Apa itu Rorak dan mengapa penting?</h3>
+            <p class="bh-modal-note">Rorak adalah parit buntu berukuran baku 200x50x50 cm yang digali memotong kemiringan kontur tanah. Rorak menjebak limpasan air hujan agar tidak terbuang sia-sia melainkan meresap mengisi kembali akuifer air tanah.</p>
           </div>
-          <div>
-            <h4 class="font-bold text-forest text-sm">Bagaimana cara mendapatkan poin relawan?</h4>
-            <p class="muted text-xs mt-1">Daftar akun relawan, kunjungi mata air sekitar Anda, dan kirimkan laporan survei, penanaman pohon, atau pembuatan rorak. Poin akan otomatis diverifikasi tim kurasi.</p>
+          <div class="bh-modal-box">
+            <h3 class="bh-modal-subtitle">Bagaimana cara mendapatkan poin relawan?</h3>
+            <p class="bh-modal-note">Daftar akun relawan, kunjungi mata air sekitar Anda, dan kirimkan laporan survei, penanaman pohon, atau pembuatan rorak. Poin akan otomatis diverifikasi tim kurasi.</p>
           </div>
-          <div>
-            <h4 class="font-bold text-forest text-sm">Apakah data lokasi mata air aman dari privatisasi komersial?</h4>
-            <p class="muted text-xs mt-1">Sangat aman. Seluruh koordinat publik di peta BelikHub disamarkan (fuzzed) dalam radius grid ~5 km untuk mencegah eksploitasi air komersial tanpa izin warga setempat.</p>
+          <div class="bh-modal-box">
+            <h3 class="bh-modal-subtitle">Apakah data lokasi mata air aman dari privatisasi komersial?</h3>
+            <p class="bh-modal-note">Sangat aman. Seluruh koordinat publik di peta BelikHub disamarkan (fuzzed) dalam radius grid ~5 km untuk mencegah eksploitasi air komersial tanpa izin warga setempat.</p>
           </div>
         </div>
       `,
       en: `
-        <div class="space-y-4">
-          <div>
-            <h4 class="font-bold text-forest text-sm">What is BelikHub?</h4>
-            <p class="muted text-xs mt-1">BelikHub is an open grassroots platform to document, monitor discharge, and restore traditional natural springs (belik) across Indonesia through community action and partnerships.</p>
+        <div class="bh-modal-stack">
+          <div class="bh-modal-box">
+            <h3 class="bh-modal-subtitle">What is BelikHub?</h3>
+            <p class="bh-modal-note">BelikHub is an open grassroots platform to document, monitor discharge, and restore traditional natural springs (belik) across Indonesia through community action and partnerships.</p>
           </div>
-          <div>
-            <h4 class="font-bold text-forest text-sm">What is a Rorak and why is it important?</h4>
-            <p class="muted text-xs mt-1">A rorak is a 200x50x50 cm dead-end trench dug along slope contours. It traps rainfall runoff, forcing it to percolate into groundwater aquifers rather than washing away as topsoil-eroding torrents.</p>
+          <div class="bh-modal-box">
+            <h3 class="bh-modal-subtitle">What is a Rorak and why is it important?</h3>
+            <p class="bh-modal-note">A rorak is a 200x50x50 cm dead-end trench dug along slope contours. It traps rainfall runoff, forcing it to percolate into groundwater aquifers rather than washing away as topsoil-eroding torrents.</p>
           </div>
-          <div>
-            <h4 class="font-bold text-forest text-sm">How do I earn volunteer points?</h4>
-            <p class="muted text-xs mt-1">Sign up for a volunteer account, observe nearby springs, and submit survey, planting, or trench reports. Points are credited once verified by curators.</p>
+          <div class="bh-modal-box">
+            <h3 class="bh-modal-subtitle">How do I earn volunteer points?</h3>
+            <p class="bh-modal-note">Sign up for a volunteer account, observe nearby springs, and submit survey, planting, or trench reports. Points are credited once verified by curators.</p>
           </div>
-          <div>
-            <h4 class="font-bold text-forest text-sm">Are spring locations protected from private exploitation?</h4>
-            <p class="muted text-xs mt-1">Yes. All public coordinates on BelikHub are fuzzed within ~5 km grids to protect vital community water sources from commercial exploitation.</p>
+          <div class="bh-modal-box">
+            <h3 class="bh-modal-subtitle">Are spring locations protected from private exploitation?</h3>
+            <p class="bh-modal-note">Yes. All public coordinates on BelikHub are fuzzed within ~5 km grids to protect vital community water sources from commercial exploitation.</p>
           </div>
         </div>
       `
@@ -2227,36 +2488,36 @@ const footerModalContent = {
     title: { id: 'Misi & Peta Jalan Pemulihan 2030', en: 'Mission & 2030 Restoration Roadmap' },
     body: {
       id: `
-        <div class="space-y-3">
-          <p class="muted text-xs leading-relaxed">BelikHub berkomitmen mengembalikan kedaulatan air bersih masyarakat desa melalui 3 pilar aksi strategis hingga tahun 2030:</p>
-          <div class="border p-3 frame">
+        <div class="bh-modal-stack">
+          <p class="bh-modal-note">BelikHub berkomitmen mengembalikan kedaulatan air bersih masyarakat desa melalui 3 pilar aksi strategis hingga tahun 2030:</p>
+          <div class="bh-modal-box">
             <p class="label c-accent">Pilar 1 &middot; 88 Mata Air Kritis</p>
-            <p class="text-xs text-muted mt-1">Restorasi menyeluruh pada 88 mata air kritis berdebit besar di lereng vulkanik Jawa Tengah &amp; DIY.</p>
+            <p class="bh-modal-note">Restorasi menyeluruh pada 88 mata air kritis berdebit besar di lereng vulkanik Jawa Tengah &amp; DIY.</p>
           </div>
-          <div class="border p-3 frame">
+          <div class="bh-modal-box">
             <p class="label c-accent">Pilar 2 &middot; 10.000 Rorak Resapan</p>
-            <p class="text-xs text-muted mt-1">Membangun benteng serapan air hujan di kawasan perkebunan rakyat untuk meresapkan &ge; 20 juta liter air per tahun.</p>
+            <p class="bh-modal-note">Membangun benteng serapan air hujan di kawasan perkebunan rakyat untuk meresapkan &ge; 20 juta liter air per tahun.</p>
           </div>
-          <div class="border p-3 frame">
+          <div class="bh-modal-box">
             <p class="label c-accent">Pilar 3 &middot; Perlindungan Berbasis Komunitas</p>
-            <p class="text-xs text-muted mt-1">Memberdayakan kelompok pengawas air desa (Satgas Belik) dengan instrumen pemantauan mandiri dan legalitas desa.</p>
+            <p class="bh-modal-note">Memberdayakan kelompok pengawas air desa (Satgas Belik) dengan instrumen pemantauan mandiri dan legalitas desa.</p>
           </div>
         </div>
       `,
       en: `
-        <div class="space-y-3">
-          <p class="muted text-xs leading-relaxed">BelikHub is dedicated to restoring community water sovereignty through 3 strategic pillars through 2030:</p>
-          <div class="border p-3 frame">
+        <div class="bh-modal-stack">
+          <p class="bh-modal-note">BelikHub is dedicated to restoring community water sovereignty through 3 strategic pillars through 2030:</p>
+          <div class="bh-modal-box">
             <p class="label c-accent">Pillar 1 &middot; 88 Critical Springs</p>
-            <p class="text-xs text-muted mt-1">Comprehensive restoration of 88 high-volume critical springs across volcanic slopes in Central Java &amp; Yogyakarta.</p>
+            <p class="bh-modal-note">Comprehensive restoration of 88 high-volume critical springs across volcanic slopes in Central Java &amp; Yogyakarta.</p>
           </div>
-          <div class="border p-3 frame">
+          <div class="bh-modal-box">
             <p class="label c-accent">Pillar 2 &middot; 10,000 Infiltration Roraks</p>
-            <p class="text-xs text-muted mt-1">Constructing groundwater infiltration trenches on rural farmlands to absorb ≥ 20 million liters of rainwater annually.</p>
+            <p class="bh-modal-note">Constructing groundwater infiltration trenches on rural farmlands to absorb ≥ 20 million liters of rainwater annually.</p>
           </div>
-          <div class="border p-3 frame">
+          <div class="bh-modal-box">
             <p class="label c-accent">Pillar 3 &middot; Community-Led Governance</p>
-            <p class="text-xs text-muted mt-1">Empowering village water taskforces with self-monitoring toolkits and village council legal protections.</p>
+            <p class="bh-modal-note">Empowering village water taskforces with self-monitoring toolkits and village council legal protections.</p>
           </div>
         </div>
       `
@@ -2266,22 +2527,22 @@ const footerModalContent = {
     title: { id: 'Kebijakan Privasi & Perlindungan Data Sumber Air', en: 'Privacy & Water Source Data Protection' },
     body: {
       id: `
-        <div class="space-y-3 text-xs leading-relaxed muted">
-          <p>BelikHub menjunjung tinggi privasi data pengguna dan kelestarian sumber daya air publik:</p>
-          <ul class="list-disc list-inside space-y-1">
-            <li><b>Perlindungan Koordinat:</b> Koordinat GPS asli mata air hanya disimpan di basis data terenkripsi untuk kebutuhan audit konservasi. Peta publik menerapkan penyamaran grid radius 5 km.</li>
-            <li><b>Data Pribadi Relawan:</b> Email, nomor telepon WhatsApp, dan identitas hanya digunakan untuk koordinasi aksi konservasi dan tidak pernah diperjualbelikan kepada pihak ketiga.</li>
-            <li><b>Transparansi Penggunaan Dana:</b> Pemesanan rorak diaudit secara terbuka dan disalurkan langsung kepada tenaga penggali lokal dari warga desa setempat.</li>
+        <div class="bh-modal-stack">
+          <p class="bh-modal-note">BelikHub menjunjung tinggi privasi data pengguna dan kelestarian sumber daya air publik:</p>
+          <ul class="bh-modal-list">
+            <li><strong>Perlindungan Koordinat:</strong> Koordinat GPS asli mata air hanya disimpan di basis data terenkripsi untuk kebutuhan audit konservasi. Peta publik menerapkan penyamaran grid radius 5 km.</li>
+            <li><strong>Data Pribadi Relawan:</strong> Email, nomor telepon WhatsApp, dan identitas hanya digunakan untuk koordinasi aksi konservasi dan tidak pernah diperjualbelikan kepada pihak ketiga.</li>
+            <li><strong>Transparansi Penggunaan Dana:</strong> Pemesanan rorak diaudit secara terbuka dan disalurkan langsung kepada tenaga penggali lokal dari warga desa setempat.</li>
           </ul>
         </div>
       `,
       en: `
-        <div class="space-y-3 text-xs leading-relaxed muted">
-          <p>BelikHub upholds user privacy and the ecological preservation of public water resources:</p>
-          <ul class="list-disc list-inside space-y-1">
-            <li><b>Coordinate Protection:</b> Exact spring coordinates are stored in encrypted databases for conservation audits only. The public map enforces a strict 5 km grid-fuzzing protocol.</li>
-            <li><b>Volunteer Data:</b> Emails, WhatsApp numbers, and personal info are solely used for field task coordination and never monetized or shared.</li>
-            <li><b>Fund Transparency:</b> Rorak digging fees are disbursed directly to local village diggers and audited openly.</li>
+        <div class="bh-modal-stack">
+          <p class="bh-modal-note">BelikHub upholds user privacy and the ecological preservation of public water resources:</p>
+          <ul class="bh-modal-list">
+            <li><strong>Coordinate Protection:</strong> Exact spring coordinates are stored in encrypted databases for conservation audits only. The public map enforces a strict 5 km grid-fuzzing protocol.</li>
+            <li><strong>Volunteer Data:</strong> Emails, WhatsApp numbers, and personal info are solely used for field task coordination and never monetized or shared.</li>
+            <li><strong>Fund Transparency:</strong> Rorak digging fees are disbursed directly to local village diggers and audited openly.</li>
           </ul>
         </div>
       `
@@ -2300,13 +2561,12 @@ $$('.footer-modal-btn').forEach((btn) => {
     openModal(
       content.title[langKey],
       `
-      <div class="space-y-4">
+      <div class="bh-modal-stack">
         ${content.body[langKey]}
-        <button type="button" data-close-modal class="btn btn-teal w-full text-xs font-bold mt-4">${isEn ? 'Close Information' : 'Tutup Informasi'}</button>
+        <button type="button" data-close-modal class="btn btn-teal">${isEn ? 'Close Information' : 'Tutup Informasi'}</button>
       </div>
       `,
       true
     );
-    modal.querySelector('[data-close-modal]')?.addEventListener('click', closeModal);
   });
 });

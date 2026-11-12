@@ -20,11 +20,14 @@ export default async function handler(request, response) {
     const auth = await requireAdmin(request, response);
     if (!auth.success) return json(response, auth.status, { error: auth.error });
 
-    const reportId = request.query.id;
-    if (!reportId) return json(response, 400, { error: 'Report ID is required' });
+    const reportId = request.query?.id;
+    if (typeof reportId !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(reportId)) {
+      return json(response, 400, { error: 'Valid Report ID is required' });
+    }
 
-    const status = request.body?.status;
-    if (!VALID_STATUSES.includes(status)) {
+    const body = request.body;
+    const status = body && typeof body === 'object' ? body.status : undefined;
+    if (typeof status !== 'string' || !VALID_STATUSES.includes(status)) {
       return json(response, 400, { error: 'Invalid status', validStatuses: VALID_STATUSES });
     }
 

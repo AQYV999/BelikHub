@@ -17,17 +17,19 @@ export default async function handler(request, response) {
     return json(response, 405, { error: 'Method not allowed' });
   }
 
-  const { email } = request.body || {};
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (!email || typeof email !== 'string' || !emailRegex.test(email)) {
-    return json(response, 400, { error: 'Alamat email tidak valid.' });
-  }
-
   try {
+    const body = request.body;
+    const rawEmail = body && typeof body === 'object' && !Array.isArray(body) ? body.email : null;
+    const email = typeof rawEmail === 'string' ? rawEmail.trim().toLowerCase() : '';
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!email || email.length > 254 || !emailRegex.test(email)) {
+      return json(response, 400, { error: 'Alamat email tidak valid.' });
+    }
+
     const db = getAdminDb();
     const docRef = await db.collection('newsletter_subscribers').add({
-      email: email.trim().toLowerCase(),
+      email,
       createdAt: new Date(),
       source: 'web_footer',
       status: 'active'
@@ -39,11 +41,7 @@ export default async function handler(request, response) {
       message: 'Email Anda berhasil didaftarkan untuk kabar terbaru BelikHub.'
     });
   } catch (error) {
-    console.warn('newsletter: Firestore simpan gagal, fallback sukses respons.', error.message);
-    // Jika firestore tidak tersedia saat offline, tetap berikan pengalaman lancar ke pengguna
-    return json(response, 200, {
-      success: true,
-      message: 'Email Anda berhasil dicatat. Terima kasih telah mendukung gerakan mata air.'
-    });
+    console.error('POST /api/newsletter error:', error);
+    return json(response, 503, { error: 'Layanan sementara tidak tersedia. Silakan coba lagi.' });
   }
 }

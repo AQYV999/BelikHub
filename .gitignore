@@ -22,3 +22,7 @@ yarn-error.log
 *.sqlite-wal
 
 .taste-skill/
+playwright-report/
+test-results/
+*.bak
+*.bak.*

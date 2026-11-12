@@ -1556,7 +1556,7 @@ class Diagram {
   // the system's pause button: one solid disc in the corner of the visual's box, for a loop that runs on
   pauseButton() {
     const loops = !this.still && !this.hoverPlay && !this.finished && !(this.cycles && this.cycles * this.T <= 5) && this.E && this.E.some(e => e.lit);
-    const host = this.el.closest('.panel__screen, .panel, .frame') || this.el;
+    const host = this.el.closest('.panel__screen, .panel, .frame, .bh-frame, .bh-diagram-wrap') || this.el.parentElement || this.el;
     let b = this.btn;
     if (!loops || this.opts.controls === false) { if (b) { b.remove(); this.btn = null; } return; }
     if (!b) {
@@ -1575,8 +1575,11 @@ class Diagram {
       b.style.right = corner[1] === 'l' ? 'auto' : '';
     }
     const paused = this.userPaused;
+    const isId = (document.documentElement.lang || '').toLowerCase().startsWith('id');
+    const playLabel = isId ? 'Putar animasi' : 'Play animation';
+    const pauseLabel = isId ? 'Jeda animasi' : 'Pause animation';
     b.setAttribute('aria-pressed', paused ? 'true' : 'false');
-    b.setAttribute('aria-label', paused ? 'Play animation' : 'Pause animation');
+    b.setAttribute('aria-label', paused ? playLabel : pauseLabel);
     b.classList.toggle('is-paused', paused);
     const icon = paused ? '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M4 2.5v9l7.5-4.5z"/></svg>' : '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 2.5h2.5v9H3.5zM8 2.5h2.5v9H8z"/></svg>';
     if (b.dataset.state !== String(paused)) { b.innerHTML = icon; b.dataset.state = String(paused); }

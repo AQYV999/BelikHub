@@ -108,7 +108,7 @@ function nav() {
   // a tap on any link in the open sheet closes it (a top-level word, a menu link, an action, an
   // in-page #anchor alike), so the page it leads to is never left under the sheet
   nav.addEventListener('click', e => {
-    if (nav.classList.contains('is-open') && e.target.closest?.('a[href]')) setOpen(false);
+    if (nav.classList.contains('is-open') && e.target.closest?.('a[href], #login-btn, #logout-btn, #user-profile-btn')) setOpen(false);
   });
   window.matchMedia('(min-width: 1024px)').addEventListener('change', e => { if (e.matches) setOpen(false); });
 }
@@ -534,10 +534,6 @@ function pictures() {
     if (img.complete && img.getAttribute('src') && !img.naturalWidth) img.decode().catch(() => fail(img));
     else img.addEventListener('error', () => fail(img), { once: true });
   });
-  const eager = () => document.querySelectorAll('img[loading="lazy"]').forEach(img => { img.loading = 'eager'; });
-  const idle = window.requestIdleCallback || (f => setTimeout(f, 200));
-  if (document.readyState === 'complete') idle(eager);
-  else window.addEventListener('load', () => idle(eager), { once: true });
 }
 
 /* ------------------------------------------------------------------ guards

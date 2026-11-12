@@ -13,7 +13,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/webp" href="icons/logo.webp">
 
-  <script>document.documentElement.classList.add('m-enter');setTimeout(function(){document.documentElement.classList.add('m-enter-done')},700)</script>
+  <script src="assets/enter.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,11 +22,9 @@
 
   <link rel="stylesheet" href="assets/system.css">
   <link rel="stylesheet" href="assets/motion/motion.css">
-  <link rel="stylesheet" href="assets/backgrounds/backgrounds.css">
   <link rel="stylesheet" href="assets/layout/layout.css">
   <link rel="stylesheet" href="assets/diagrams/diagram.css">
   <link rel="stylesheet" href="assets/moments/word-highlight/moment.css">
-  <link rel="stylesheet" href="assets/icons/icon.css">
 
   <style>
     :root {
@@ -41,11 +39,19 @@
       --p-inv-bg: #1f3038;
       --p-inv-surface: #2c3c44;
       --p-inv-ink: #f7f9fa;
-      --p-inv-muted: #9ea7ab;
+      --p-inv-muted: #c0c9ce;
       --p-inv-accent: #f7f9fa;
       --p-inv-accent-ink: #1f3038;
       --p-inv-action: #f7f9fa;
       --p-inv-action-ink: #1f3038;
+      --inv-bg: var(--p-inv-bg);
+      --inv-surface: var(--p-inv-surface);
+      --inv-ink: var(--p-inv-ink);
+      --inv-muted: var(--p-inv-muted);
+      --r-card: var(--r-md);
+      --r-ctl: var(--r-sm);
+      --line-2: var(--line-strong);
+      --tint: color-mix(in oklab, var(--accent) 8%, var(--bg));
       --font-display: "Epilogue", system-ui, sans-serif;
       --font-text: "Epilogue", system-ui, sans-serif;
       --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
@@ -55,9 +61,195 @@
       --ly-scale: 0.97;
     }
 
-    /* Section surfaces */
-    .ground-bg { background: var(--bg); }
-    .ground-surface { background: var(--surface); }
+    :root, .ground-base, .ground-surface, .ground-inverse {
+      --line-2: var(--line-strong);
+      --tint: color-mix(in oklab, var(--accent) 8%, var(--bg));
+    }
+
+    /* Dark / Night Mode Custom Theme Palette */
+    html[data-theme="dark"] {
+      --p-bg: #0c131a;
+      --p-surface: #141f28;
+      --p-ink: #f1f6f8;
+      --p-muted: #94a7b0;
+      --p-accent: #2dd4bf;
+      --p-accent-ink: #042f2e;
+      --p-action: #2dd4bf;
+      --p-action-ink: #042f2e;
+      --p-inv-bg: #f1f6f8;
+      --p-inv-surface: #ffffff;
+      --p-inv-ink: #0c131a;
+      --p-inv-muted: #52636b;
+      --p-inv-accent: #0f766e;
+      --p-inv-accent-ink: #ffffff;
+      --p-inv-action: #0f766e;
+      --p-inv-action-ink: #ffffff;
+      --line: rgba(241, 246, 248, 0.12);
+      --line-strong: rgba(241, 246, 248, 0.22);
+      --line-2: rgba(241, 246, 248, 0.22);
+      --tint: rgba(45, 212, 191, 0.1);
+      color-scheme: dark;
+    }
+
+    html[data-theme="dark"] body {
+      background: #0c131a;
+      color: #f1f6f8;
+    }
+
+    html[data-theme="dark"] .nav {
+      background: rgba(12, 19, 26, 0.92);
+      border-bottom: 1px solid rgba(241, 246, 248, 0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    html[data-theme="dark"] .bh-lang-menu {
+      background: #141f28;
+      border-color: rgba(241, 246, 248, 0.16);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+    }
+
+    html[data-theme="dark"] .bh-lang-option:hover {
+      background: #1c2b37;
+    }
+
+    html[data-theme="dark"] #hero::after {
+      background: linear-gradient(
+        90deg,
+        rgba(12, 19, 26, 0.82) 0%,
+        rgba(12, 19, 26, 0.45) 45%,
+        rgba(12, 19, 26, 0.12) 100%
+      );
+    }
+
+    html[data-theme="dark"] main > section.ground-base:not(#hero) {
+      background-color: #0c131a;
+      background-image:
+        linear-gradient(180deg, rgba(12, 19, 26, 0.65) 0%, rgba(12, 19, 26, 0.8) 100%),
+        url('images/bg-editorial-night.jpg');
+    }
+
+    html[data-theme="dark"] main > section.ground-surface {
+      background-color: #141f28;
+      background-image:
+        linear-gradient(180deg, rgba(20, 31, 40, 0.62) 0%, rgba(20, 31, 40, 0.78) 100%),
+        url('images/bg-editorial-night.jpg');
+    }
+
+    html[data-theme="dark"] .bh-app-frame,
+    html[data-theme="dark"] .bh-stat-card,
+    html[data-theme="dark"] .bh-diagram-card,
+    html[data-theme="dark"] .bh-module-card,
+    html[data-theme="dark"] .bh-partner-panel,
+    html[data-theme="dark"] .bh-project-box,
+    html[data-theme="dark"] .report-card,
+    html[data-theme="dark"] .bh-photo-frame,
+    html[data-theme="dark"] .bh-split-figure,
+    html[data-theme="dark"] .ly-float,
+    html[data-theme="dark"] .modal__box {
+      border-color: rgba(241, 246, 248, 0.14);
+      background-color: #141f28;
+    }
+
+    html[data-theme="dark"] .bh-control,
+    html[data-theme="dark"] .field input,
+    html[data-theme="dark"] .field select,
+    html[data-theme="dark"] .field textarea,
+    html[data-theme="dark"] .bh-search-bar {
+      background-color: #0c131a;
+      border-color: rgba(241, 246, 248, 0.2);
+      color: #f1f6f8;
+    }
+
+    html[data-theme="dark"] .bh-map-canvas {
+      background-color: #0d1720;
+      background-image:
+        linear-gradient(to right, rgba(45, 212, 191, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(45, 212, 191, 0.08) 1px, transparent 1px);
+    }
+
+    html[data-theme="dark"] #map-canvas .leaflet-tile {
+      filter: brightness(0.68) invert(1) contrast(3.2) hue-rotate(200deg) saturate(0.36);
+    }
+
+    html[data-theme="dark"] #map-canvas .leaflet-control-zoom a {
+      background: #141f28;
+      color: #f1f6f8;
+      border-color: rgba(241, 246, 248, 0.2);
+    }
+
+    html[data-theme="dark"] #map-canvas .leaflet-control-attribution {
+      background: rgba(12, 19, 26, 0.9);
+      color: #94a7b0;
+    }
+
+    html[data-theme="dark"] #map-canvas .leaflet-popup-content-wrapper,
+    html[data-theme="dark"] #map-canvas .leaflet-popup-tip {
+      background: #141f28;
+      color: #f1f6f8;
+      border: 1px solid rgba(241, 246, 248, 0.18);
+    }
+
+    html[data-theme="dark"] .bh-svg-panel rect[fill="#ffffff"] {
+      fill: #141f28;
+      stroke: rgba(241, 246, 248, 0.16);
+    }
+
+    html[data-theme="dark"] .bh-svg-panel rect[fill="#ecf0f2"] {
+      fill: #0c131a;
+      stroke: rgba(241, 246, 248, 0.22);
+    }
+
+    html[data-theme="dark"] .bh-svg-panel text[fill="#1f3038"] {
+      fill: #f1f6f8;
+    }
+
+    html[data-theme="dark"] .footer--dark {
+      background-color: #070c11;
+      border-top: 1px solid rgba(241, 246, 248, 0.1);
+    }
+
+    /* Ensure dense sections and 1366x768 desktop viewports grow gracefully instead of clipping */
+    @media (min-width: 1280px) {
+      main > :is(section, .section):not(.hero, .section--hero),
+      footer.closing {
+        height: auto;
+        min-height: calc(var(--h, 1) * 100svh);
+      }
+
+      main > :is(section, .section):not(.hero, .section--hero) > :is(.wrap, .container),
+      footer.closing > .wrap {
+        height: auto;
+      }
+    }
+
+    /* Fit 6 nav links cleanly at 1024px-1240px */
+    @media (min-width: 1024px) and (max-width: 1240px) {
+      .nav__bar {
+        gap: 12px;
+      }
+
+      .nav__link {
+        padding-inline: 8px;
+        font-size: 14px;
+      }
+
+      .nav__actions {
+        gap: 8px;
+      }
+
+      .nav__actions .btn {
+        padding-inline: 12px;
+        font-size: 14px;
+      }
+    }
+
+    .nav__link--btn {
+      background: transparent;
+      border: 0;
+      font-family: inherit;
+      cursor: pointer;
+    }
 
     /* Legibility & unified heading hierarchy */
     .section-head p:not(.label),
@@ -154,14 +346,131 @@
       background: var(--surface);
     }
 
+    .bh-theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border: 1px solid var(--line-2);
+      border-radius: var(--r-btn);
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+      flex: none;
+    }
+
+    .bh-theme-toggle:hover {
+      background: var(--surface);
+      border-color: var(--accent);
+    }
+
+    .bh-theme-toggle svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .bh-theme-toggle .icon-moon {
+      display: none;
+    }
+
+    html[data-theme="dark"] .bh-theme-toggle .icon-sun {
+      display: none;
+    }
+
+    html[data-theme="dark"] .bh-theme-toggle .icon-moon {
+      display: block;
+    }
+
     .bh-user-pill {
       display: inline-flex;
       align-items: center;
       gap: 8px;
     }
 
-    .hidden {
+    @media (max-width: 1023px) {
+      .nav.is-open .nav__actions {
+        grid-template-columns: auto auto 1fr;
+        align-items: center;
+      }
+
+      .nav.is-open .nav__actions .btn--primary {
+        grid-column: 1 / -1;
+        order: 1;
+      }
+
+      .nav.is-open .bh-theme-toggle {
+        order: 2;
+      }
+
+      .nav.is-open .bh-lang-wrap {
+        order: 3;
+      }
+
+      .nav.is-open .nav__actions #login-btn,
+      .nav.is-open .nav__actions #user-badge {
+        order: 4;
+        justify-self: end;
+      }
+
+      .nav.is-open .bh-lang-menu {
+        top: auto;
+        bottom: calc(100% + 8px);
+        left: 0;
+        right: auto;
+      }
+    }
+
+    .hidden,
+    [hidden] {
       display: none !important;
+    }
+
+    /* Subtle Generated Editorial Backgrounds */
+    #hero {
+      overflow: hidden;
+    }
+
+    #hero .bh-hero-layer {
+      opacity: 0.94;
+      pointer-events: none;
+      object-position: 62% 52%;
+    }
+
+    #hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: linear-gradient(
+        90deg,
+        rgba(247, 249, 250, 0.72) 0%,
+        rgba(247, 249, 250, 0.32) 48%,
+        rgba(247, 249, 250, 0.06) 100%
+      );
+    }
+
+    main > section.ground-base:not(#hero) {
+      background-color: var(--p-bg);
+      background-image:
+        linear-gradient(180deg, rgba(247, 249, 250, 0.14) 0%, rgba(247, 249, 250, 0.24) 100%),
+        url('images/bg-editorial-wash.jpg');
+      background-size: cover;
+      background-position: center 35%;
+      background-repeat: no-repeat;
+    }
+
+    main > section.ground-surface {
+      background-color: var(--p-surface);
+      background-image:
+        linear-gradient(180deg, rgba(236, 240, 242, 0.22) 0%, rgba(236, 240, 242, 0.32) 100%),
+        url('images/bg-editorial-wash.jpg');
+      background-size: cover;
+      background-position: 70% 65%;
+      background-repeat: no-repeat;
     }
 
     /* Hero Split Media Stage */
@@ -223,25 +532,31 @@
         height: auto;
         margin-left: 0;
         margin-right: 0;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
       }
 
-      .hero--split .ly-float--tr {
-        top: 8px;
-        right: 1px;
+      .hero--split .bh-split-figure {
+        grid-column: 1 / -1;
       }
 
-      .hero--split .ly-float--bl {
-        bottom: 8px;
-        left: 8px;
+      .hero--split .ly-float {
+        position: static;
+        inset: auto;
+        transform: none;
+        width: auto;
+        max-width: none;
       }
     }
 
     /* Map Workspace */
     .bh-app-frame {
       display: grid;
-      grid-template-columns: 340px minmax(0, 1fr);
+      grid-template-columns: 350px minmax(0, 1fr);
       width: 100%;
-      height: min(560px, 64svh);
+      min-height: 600px;
+      height: clamp(600px, 74svh, 760px);
       border: 1px solid var(--line);
       border-radius: var(--r-card);
       overflow: hidden;
@@ -252,8 +567,8 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      gap: 12px;
-      padding: 18px 18px 26px;
+      gap: 10px;
+      padding: 16px;
       border-right: 1px solid var(--line);
       background: var(--bg);
       overflow-y: auto;
@@ -332,9 +647,9 @@
       background: #0d7480;
     }
 
-    .bh-legend-dot--rehab { background: #d97706; }
+    .bh-legend-dot--rehab { background: #b45309; }
     .bh-legend-dot--planting { background: #15803d; }
-    .bh-legend-dot--rorak { background: #b45309; }
+    .bh-legend-dot--rorak { background: #92400e; }
 
     .bh-spring-list {
       margin: 0;
@@ -381,10 +696,14 @@
       position: relative;
       width: 100%;
       height: 100%;
-      min-height: 320px;
+      min-height: 580px;
       overflow: hidden;
       z-index: 1;
-      background-color: #dce5e7;
+      background-color: #dfeaec;
+      background-image:
+        linear-gradient(to right, rgba(13, 116, 128, 0.09) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(13, 116, 128, 0.09) 1px, transparent 1px);
+      background-size: 48px 48px;
     }
 
     #map-canvas .leaflet-tile,
@@ -425,6 +744,7 @@
       .bh-app-frame {
         grid-template-columns: minmax(0, 1fr);
         height: auto;
+        min-height: 0;
       }
 
       .app__pane--list {
@@ -433,8 +753,8 @@
       }
 
       .bh-map-canvas {
-        height: 320px;
-        min-height: 320px;
+        height: 420px;
+        min-height: 400px;
       }
     }
 
@@ -473,7 +793,7 @@
 
     .bh-stat-num {
       font-family: var(--font-display);
-      font-size: clamp(26px, 2.3vw, 36px);
+      font-size: var(--t-stat);
       line-height: 1.08;
       letter-spacing: var(--display-tracking);
       color: var(--ink);
@@ -508,6 +828,7 @@
     }
 
     .bh-diagram-wrap {
+      position: relative;
       width: 100%;
       min-height: 260px;
     }
@@ -537,6 +858,11 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px 20px;
       margin: 18px 0 22px;
+    }
+
+    #visi .stats dd {
+      font-size: var(--t-stat);
+      line-height: 1.1;
     }
 
     /* Split Photo Frame */
@@ -587,12 +913,16 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 6px;
+      width: 100%;
       padding: 14px;
       border: 1px solid var(--line);
       border-radius: var(--r-card);
       background: var(--surface);
       color: var(--ink);
+      font-family: inherit;
+      text-align: left;
       text-decoration: none;
+      cursor: pointer;
       transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
     }
 
@@ -819,9 +1149,9 @@
     }
 
     .field input,
-    .field select {
+    .field select,
+    .field textarea {
       width: 100%;
-      height: 44px;
       padding: 0 12px;
       border: 1px solid var(--line-2);
       border-radius: var(--r-ctl);
@@ -831,10 +1161,28 @@
       font-size: 14px;
     }
 
+    .field input,
+    .field select {
+      height: 44px;
+    }
+
+    .field textarea {
+      min-height: 88px;
+      padding: 10px 12px;
+      resize: vertical;
+    }
+
+    .field.is-invalid input,
+    .field.is-invalid select,
+    .field.is-invalid textarea,
+    .field [aria-invalid="true"] {
+      border-color: #b91c1c;
+    }
+
     .field__error {
       margin: 0;
       font-size: 12px;
-      line-height: 1.2;
+      line-height: 1.25;
       color: #b91c1c;
     }
 
@@ -887,14 +1235,13 @@
       }
 
       #map .bh-map-canvas {
-        height: 265px;
-        min-height: 265px;
+        height: 360px;
+        min-height: 360px;
       }
 
       #dashboard {
         --padt: 62px;
-        --padb: 18px;
-        --bar: 40px;
+        --padb: 24px;
       }
 
       #dashboard > .wrap {
@@ -1019,7 +1366,7 @@
       }
 
       #learn .bh-course-svg {
-        height: 128px;
+        height: auto;
         width: 100%;
       }
 
@@ -1032,8 +1379,17 @@
       }
 
       #kemitraan .bh-partner-panel .bh-svg-panel {
-        height: 86px;
+        height: auto;
         width: 100%;
+      }
+
+      #pulangkan-air .rows--spec li {
+        flex-wrap: wrap;
+        gap: 4px 10px;
+      }
+
+      #pulangkan-air .rows--spec .rows__value {
+        white-space: normal;
       }
     }
 
@@ -1063,7 +1419,7 @@
       min-width: 0;
       height: 44px;
       padding: 0 12px;
-      border: 1px solid rgba(247, 249, 250, 0.25);
+      border: 1px solid rgba(247, 249, 250, 0.5);
       border-radius: var(--r-ctl);
       background: var(--inv-surface);
       color: var(--inv-ink);
@@ -1074,7 +1430,14 @@
       color: var(--inv-muted);
     }
 
-    /* Modal System & Utility classes used dynamically by app.js */
+    .bh-video-caption {
+      margin: 8px 0 0;
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    /* Modal System, Dialog Components & Leaflet Popups */
     .modal {
       position: fixed;
       inset: 0;
@@ -1107,6 +1470,224 @@
       max-width: 680px;
     }
 
+    .bh-modal-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .bh-modal-title {
+      margin: 4px 0 0;
+      font-family: var(--font-display);
+      font-size: clamp(20px, 1.5vw, 24px);
+      line-height: 1.25;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .bh-modal-body {
+      padding: 20px 24px 24px;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--ink);
+    }
+
+    .bh-modal-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .bh-modal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    @media (max-width: 480px) {
+      .bh-modal-head,
+      .bh-modal-body {
+        padding: 16px;
+      }
+
+      .bh-modal-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .bh-modal-box {
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--r-ctl);
+      background: var(--bg);
+    }
+
+    .bh-modal-box--tint {
+      background: var(--tint);
+    }
+
+    .bh-modal-box--warn {
+      border-color: #b45309;
+      background: color-mix(in oklab, #b45309 8%, var(--bg));
+    }
+
+    .bh-modal-stat {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 4px 0;
+    }
+
+    .bh-modal-profile {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .bh-modal-avatar {
+      width: 52px;
+      height: 52px;
+      flex: none;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--accent-ink);
+      display: grid;
+      place-items: center;
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .bh-modal-subtitle {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .bh-modal-note {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .bh-modal-split {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .bh-modal-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .bh-status-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--accent);
+    }
+
+    .bh-status-pill--warn {
+      color: #b45309;
+    }
+
+    .bh-fieldset {
+      border: 1px solid var(--line);
+      border-radius: var(--r-ctl);
+      padding: 10px 12px;
+      margin: 0;
+      display: grid;
+      gap: 6px;
+    }
+
+    .bh-fieldset legend {
+      padding: 0 4px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .bh-checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .bh-checkbox-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+    }
+
+    .bh-qty-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bh-qty-row input {
+      width: 96px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .bh-link-btn {
+      background: transparent;
+      border: 0;
+      padding: 4px 0;
+      color: var(--accent);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .bh-modal-center {
+      text-align: center;
+    }
+
+    .bh-modal-check {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--accent-ink);
+      display: grid;
+      place-items: center;
+    }
+
+    .bh-modal-list {
+      margin: 6px 0 0;
+      padding-left: 18px;
+      font-size: 13px;
+      color: var(--muted);
+      display: grid;
+      gap: 4px;
+    }
+
     .bh-close-btn {
       min-width: 44px;
       min-height: 44px;
@@ -1114,6 +1695,8 @@
       border: 1px solid var(--line);
       background: transparent;
       color: var(--ink);
+      font-size: 22px;
+      line-height: 1;
       cursor: pointer;
     }
 
@@ -1121,6 +1704,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      width: 100%;
       height: 44px;
       padding: 0 18px;
       border-radius: var(--r-btn);
@@ -1135,6 +1719,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      width: 100%;
       height: 44px;
       padding: 0 18px;
       border-radius: var(--r-btn);
@@ -1145,17 +1730,56 @@
       cursor: pointer;
     }
 
-    .frame {
-      border: 1px solid var(--line);
-      border-radius: var(--r-ctl);
-    }
-
     .log-line {
       display: flex;
       justify-content: space-between;
       gap: 12px;
       padding: 8px 0;
       border-bottom: 1px solid var(--line);
+    }
+
+    /* Leaflet popup */
+    .bh-popup {
+      display: grid;
+      gap: 8px;
+      min-width: 220px;
+      font-family: var(--font-text);
+      color: var(--ink);
+    }
+
+    .bh-popup__head {
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .bh-popup__title {
+      margin: 4px 0 2px;
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .bh-popup__loc,
+    .bh-popup__target,
+    .bh-popup__notes,
+    .bh-popup__meta {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--muted);
+    }
+
+    .bh-popup__stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .bh-popup__stats strong {
+      display: block;
+      font-size: 14px;
+      color: var(--accent);
     }
 
     .toast {
@@ -1184,12 +1808,12 @@
   <header class="nav" role="banner">
     <a class="skip-link" href="#main" data-i18n="skip.main">Langsung ke isi</a>
     <div class="wrap nav__bar">
-      <a class="nav__logo" href="#hero" aria-label="BelikHub Beranda">
+      <a class="nav__logo" href="#hero" aria-label="BelikHub Beranda" data-i18n-aria-label="nav.logo_aria">
         <span class="nav__brand-mark" aria-hidden="true">B</span>
         <span>BelikHub</span>
       </a>
 
-      <nav class="nav__links" aria-label="Navigasi utama">
+      <nav class="nav__links" aria-label="Navigasi utama" data-i18n-aria-label="nav.main_aria">
         <div class="nav__item"><a class="nav__link" href="#map" data-i18n="nav.map">Peta</a></div>
         <div class="nav__item"><a class="nav__link" href="#dashboard" data-i18n="nav.impact">Dampak</a></div>
         <div class="nav__item"><a class="nav__link" href="#pulangkan-air" data-i18n="nav.rorak">Rorak</a></div>
@@ -1199,37 +1823,54 @@
       </nav>
 
       <div class="nav__actions">
+        <button type="button" class="bh-theme-toggle theme-toggle-btn" aria-label="Ganti mode terang atau gelap" data-i18n-aria-label="nav.theme_aria" aria-pressed="false" title="Mode gelap/terang">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
         <div class="bh-lang-wrap">
-          <a href="#" role="button" id="lang-toggle" class="nav__link" aria-haspopup="true" aria-label="Ganti bahasa">
+          <button type="button" id="lang-toggle" class="nav__link nav__link--btn" aria-haspopup="menu" aria-expanded="false" aria-controls="language-menu-desktop" aria-label="Ganti bahasa" data-i18n-aria-label="nav.lang_aria">
             <span class="lang-text">ID</span>
             <span aria-hidden="true">▾</span>
-          </a>
+          </button>
           <div id="language-menu-desktop" class="bh-lang-menu" role="menu">
-            <button type="button" class="bh-lang-option" data-language="id">
+            <button type="button" class="bh-lang-option" data-language="id" role="menuitem">
               <span>Bahasa Indonesia</span>
-              <span class="lang-check-id">✓</span>
+              <span class="lang-check-id" aria-hidden="true">✓</span>
             </button>
-            <button type="button" class="bh-lang-option" data-language="en">
+            <button type="button" class="bh-lang-option" data-language="en" role="menuitem">
               <span>English</span>
-              <span class="lang-check-en hidden">✓</span>
+              <span class="lang-check-en hidden" aria-hidden="true">✓</span>
             </button>
           </div>
         </div>
 
-        <a href="#" role="button" id="login-btn" class="nav__link" data-i18n="nav.login">Masuk</a>
+        <button type="button" id="login-btn" class="nav__link nav__link--btn" data-i18n="nav.login">Masuk</button>
 
         <div id="user-badge" class="hidden bh-user-pill">
-          <button type="button" id="user-profile-btn" class="nav__link">
+          <button type="button" id="user-profile-btn" class="nav__link nav__link--btn">
             <span id="user-display-name">Relawan</span>
             <span id="user-points-badge">0 pts</span>
           </button>
-          <button type="button" id="logout-btn" class="nav__link" data-i18n="nav.logout">Keluar</button>
+          <button type="button" id="logout-btn" class="nav__link nav__link--btn" data-i18n="nav.logout">Keluar</button>
         </div>
 
-        <a class="btn btn--primary" href="#pulangkan-air">Pesan rorak mata air</a>
+        <a class="btn btn--primary" href="#pulangkan-air" data-i18n="nav.order_rorak">Pesan rorak mata air</a>
       </div>
 
-      <button class="nav__toggle" type="button" aria-label="Buka menu navigasi" aria-expanded="false">
+      <button class="nav__toggle" type="button" aria-label="Buka menu navigasi" data-i18n-aria-label="nav.toggle_aria" aria-expanded="false">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
           <path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/>
         </svg>
@@ -1239,7 +1880,8 @@
 
   <main id="main">
     <!-- Hero Split -->
-    <section id="hero" class="hero hero--split ground-bg" data-enter data-group="hero">
+    <section id="hero" class="hero hero--split ground-base" data-enter data-group="hero">
+      <img class="layer bh-hero-layer" src="images/bg-hero-mist.jpg" alt="" aria-hidden="true" width="1600" height="900" loading="eager">
       <div class="wrap">
         <div class="hero-text grid hero__grid">
           <div class="hero__text span-5">
@@ -1255,19 +1897,19 @@
           <div class="hero__media span-6 start-7">
             <figure class="bh-split-figure">
               <img src="images/galeri-hutan.jpg"
-                   srcset="images/galeri-hutan-800.jpg 800w, images/galeri-hutan-1000.jpg 1200w, images/galeri-hutan.jpg 1400w"
-                   sizes="(max-width: 639px) 400px, 1000px"
+                   srcset="images/galeri-hutan-800.jpg 800w, images/galeri-hutan-1000.jpg 1000w, images/galeri-hutan.jpg 1400w"
+                   sizes="(max-width: 639px) 100vw, (max-width: 1023px) 90vw, 48vw"
                    alt="Hutan tangkapan air di lereng gunung Jawa Tengah"
-                   width="1400" height="932" loading="eager">
+                   width="1400" height="932" loading="eager" fetchpriority="high">
             </figure>
-            <div class="ly-float ly-float--tr" aria-label="Ringkasan jaringan mata air">
-              <span class="label c-accent">Grid Publik 5&nbsp;km</span>
-              <strong>88 mata air terdata</strong>
-              <span class="muted">1.350&nbsp;L/s total debit</span>
+            <div class="ly-float ly-float--tr" aria-label="Ringkasan jaringan mata air" data-i18n-aria-label="hero.float_springs_aria">
+              <span class="label c-accent" data-i18n="hero.float_grid">Grid Publik 5 km</span>
+              <strong data-i18n="hero.float_springs">88 mata air terdata</strong>
+              <span class="muted" data-i18n="hero.float_discharge">1.350 L/s total debit</span>
             </div>
-            <div class="ly-float ly-float--bl" aria-label="Kapasitas serapan rorak">
-              <span class="label">Rorak Standar</span>
-              <strong>2.000&nbsp;L / musim</strong>
+            <div class="ly-float ly-float--bl" aria-label="Kapasitas serapan rorak" data-i18n-aria-label="hero.float_rorak_aria">
+              <span class="label" data-i18n="hero.float_rorak_label">Rorak Standar</span>
+              <strong data-i18n="hero.float_rorak_val">2.000 L / musim</strong>
             </div>
           </div>
         </div>
@@ -1348,13 +1990,13 @@
             </ul>
           </aside>
 
-          <div id="map-canvas" class="bh-map-canvas" aria-label="Peta interaktif sebaran mata air BelikHub"></div>
+          <div id="map-canvas" class="bh-map-canvas" role="region" aria-label="Peta interaktif sebaran mata air BelikHub" data-i18n-aria-label="map.canvas_aria"></div>
         </div>
       </div>
     </section>
 
     <!-- Section 2: Hulu ke Hilir Vision -->
-    <section id="visi" class="section mo-wh ground-bg" data-moment="word-highlight" data-group="visi">
+    <section id="visi" class="section mo-wh ground-base" data-moment="word-highlight" data-group="visi">
       <div class="wrap">
         <div class="grid">
           <div class="span-6">
@@ -1371,25 +2013,25 @@
 
             <dl class="stats">
               <div>
-                <dt>Target Mata Air</dt>
-                <dd>88 belik</dd>
+                <dt data-i18n="visi.stat1_dt">Target Mata Air</dt>
+                <dd data-i18n="visi.stat1_dd">88 belik</dd>
               </div>
               <div>
-                <dt>Potensi Debit</dt>
+                <dt data-i18n="visi.stat2_dt">Potensi Debit</dt>
                 <dd>1.350&nbsp;L/s</dd>
               </div>
               <div>
-                <dt>Penerima Manfaat</dt>
-                <dd>2.500+&nbsp;KK</dd>
+                <dt data-i18n="visi.stat3_dt">Penerima Manfaat</dt>
+                <dd data-i18n="visi.stat3_dd">2.500+ KK</dd>
               </div>
               <div>
-                <dt>Mandiri Komunitas</dt>
+                <dt data-i18n="visi.stat4_dt">Mandiri Komunitas</dt>
                 <dd>20.000&nbsp;pts</dd>
               </div>
             </dl>
 
             <div class="btn-row">
-              <a class="btn btn--primary" href="#pulangkan-air">Pesan rorak mata air</a>
+              <a class="btn btn--primary" href="#pulangkan-air" data-i18n="nav.order_rorak">Pesan rorak mata air</a>
             </div>
           </div>
 
@@ -1404,16 +2046,16 @@
 
             <ul class="rows" aria-label="Tahapan pemulihan daerah tangkapan air">
               <li>
-                <span>01 · Pemetaan grid publik</span>
-                <span class="rows__value">Radius 5&nbsp;km</span>
+                <span data-i18n="visi.step1_label">01 · Pemetaan grid publik</span>
+                <span class="rows__value" data-i18n="visi.step1_val">Radius 5 km</span>
               </li>
               <li>
-                <span>02 · Parit resapan rorak</span>
-                <span class="rows__value">2.000&nbsp;L / unit</span>
+                <span data-i18n="visi.step2_label">02 · Parit resapan rorak</span>
+                <span class="rows__value" data-i18n="visi.step2_val">2.000 L / unit</span>
               </li>
               <li>
-                <span>03 · Audit debit tahunan</span>
-                <span class="rows__value">Jawa Tengah &amp; DIY</span>
+                <span data-i18n="visi.step3_label">03 · Audit debit tahunan</span>
+                <span class="rows__value" data-i18n="visi.step3_val">Jawa Tengah &amp; DIY</span>
               </li>
             </ul>
           </div>
@@ -1439,7 +2081,7 @@
                   <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
                 </svg>
               </div>
-              <p class="bh-stat-num"><span data-impact-stat="totalApproved">48</span> <span class="bh-stat-unit">laporan</span></p>
+              <p class="bh-stat-num"><span data-impact-stat="totalApproved">48</span> <span class="bh-stat-unit" data-i18n="impact.unit_reports">laporan</span></p>
               <p class="bh-body" data-i18n="impact.verified_desc">Validasi survei, restorasi, tanam, dan rorak.</p>
               <svg class="bh-stat-spark" viewBox="0 0 220 52" fill="none" role="img" aria-label="Tren laporan terverifikasi meningkat kuartal ke kuartal">
                 <polyline points="12,42 54,36 96,31 138,22 180,15 208,10" stroke="#0d7480" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1454,10 +2096,10 @@
                   <path d="M12 2.5C8.5 7 6 10.4 6 14a6 6 0 0 0 12 0c0-3.6-2.5-7-6-11.5z"/>
                 </svg>
               </div>
-              <p class="bh-stat-num"><span data-impact-stat="restoration">16</span> <span class="bh-stat-unit">belik</span></p>
+              <p class="bh-stat-num"><span data-impact-stat="restoration">16</span> <span class="bh-stat-unit" data-i18n="impact.unit_springs">belik</span></p>
               <p class="bh-body" data-i18n="impact.restoration_desc">Pembersihan sedimen &amp; perbaikan springbox.</p>
               <svg class="bh-stat-spark" viewBox="0 0 220 52" fill="none" role="img" aria-label="Grafik 16 titik belik dalam restorasi">
-                <rect x="16" y="32" width="22" height="12" rx="2" fill="#9ea7ab"/><rect x="52" y="26" width="22" height="18" rx="2" fill="#5d6b72"/><rect x="88" y="22" width="22" height="22" rx="2" fill="#0d7480"/><rect x="124" y="16" width="22" height="28" rx="2" fill="#0d7480"/><rect x="160" y="10" width="22" height="34" rx="2" fill="#0d7480"/>
+                <rect x="16" y="32" width="22" height="12" rx="2" fill="#4b585f"/><rect x="52" y="26" width="22" height="18" rx="2" fill="#5d6b72"/><rect x="88" y="22" width="22" height="22" rx="2" fill="#0d7480"/><rect x="124" y="16" width="22" height="28" rx="2" fill="#0d7480"/><rect x="160" y="10" width="22" height="34" rx="2" fill="#0d7480"/>
               </svg>
             </article>
 
@@ -1468,7 +2110,7 @@
                   <path d="M12 22v-9"/><path d="M12 13c-3.5 0-6-2.5-6-5.5C6 4.8 8.7 3 12 3s6 1.8 6 4.5c0 3-2.5 5.5-6 5.5z"/>
                 </svg>
               </div>
-              <p class="bh-stat-num"><span data-impact-stat="planting">1.800</span> <span class="bh-stat-unit">pohon</span></p>
+              <p class="bh-stat-num"><span data-impact-stat="planting">1.800</span> <span class="bh-stat-unit" data-i18n="impact.unit_trees">pohon</span></p>
               <p class="bh-body" data-i18n="impact.trees_desc">Bibit endemik pengikat air di area springshed.</p>
               <svg class="bh-stat-spark" viewBox="0 0 220 52" fill="none" role="img" aria-label="Pertumbuhan penanaman pohon endemik hulu">
                 <polyline points="12,40 52,38 92,28 132,21 172,14 208,9" stroke="#15803d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1483,10 +2125,10 @@
                   <polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 13 12 18 21 13"/><polyline points="3 17.5 12 22 21 17.5"/>
                 </svg>
               </div>
-              <p class="bh-stat-num"><span data-impact-stat="rorak">142</span> <span class="bh-stat-unit">unit</span></p>
+              <p class="bh-stat-num"><span data-impact-stat="rorak">142</span> <span class="bh-stat-unit" data-i18n="impact.unit_units">unit</span></p>
               <p class="bh-body" data-i18n="impact.rorak_desc">Menahan limpasan hujan masuk ke akuifer tanah.</p>
               <svg class="bh-stat-spark" viewBox="0 0 220 52" fill="none" role="img" aria-label="Pembangunan 142 unit parit resapan rorak">
-                <rect x="16" y="30" width="22" height="14" rx="2" fill="#9ea7ab"/><rect x="52" y="24" width="22" height="20" rx="2" fill="#d97706"/><rect x="88" y="20" width="22" height="24" rx="2" fill="#b45309"/><rect x="124" y="14" width="22" height="30" rx="2" fill="#0d7480"/><rect x="160" y="8" width="22" height="36" rx="2" fill="#0d7480"/>
+                <rect x="16" y="30" width="22" height="14" rx="2" fill="#4b585f"/><rect x="52" y="24" width="22" height="20" rx="2" fill="#b45309"/><rect x="88" y="20" width="22" height="24" rx="2" fill="#92400e"/><rect x="124" y="14" width="22" height="30" rx="2" fill="#0d7480"/><rect x="160" y="8" width="22" height="36" rx="2" fill="#0d7480"/>
               </svg>
             </article>
           </div>
@@ -1495,8 +2137,8 @@
         <div class="grid">
           <div class="span-6 bh-diagram-card">
             <div class="section-head">
-              <p class="label muted">Alur Data Hidrologi</p>
-              <h3>Alur validasi data peta mata air BelikHub</h3>
+              <p class="label muted" data-i18n="dash.flow_tag">Alur Data Hidrologi</p>
+              <h3 data-i18n="dash.flow_title">Alur validasi data peta mata air BelikHub</h3>
             </div>
             <div class="bh-diagram-wrap">
               <div class="dg" data-icon-base="assets/icons/demo/" data-diagram='{"layout":"hub","alt":"Pusat validasi BelikHub menghubungkan GPS lapangan, grid 5 km, uji debit, rorak, dan peta mata air.","center":{"label":"Grid 5 km","icon":"ui:shield"},"spokes":[{"label":"GPS","icon":"ui:map-pin"},{"label":"Survei","icon":"ui:waves"},{"label":"Rorak","icon":"ui:layers"},{"label":"Peta","icon":"ui:check"}]}'></div>
@@ -1507,7 +2149,7 @@
           <div class="span-6 bh-diagram-card">
             <div class="section-head">
               <p class="label muted" data-i18n="dash.audit_summary">Standar audit &amp; keselarasan target SDG</p>
-              <h3>Protokol pemantauan mata air SDG 6</h3>
+              <h3 data-i18n="dash.sdg_title">Protokol pemantauan mata air SDG 6</h3>
             </div>
 
             <svg class="bh-svg-panel" viewBox="0 0 480 245" fill="none" stroke="#1f3038" stroke-width="1.5" role="img" aria-label="Grafik debit mata air Tuk Bismo 260 L/s, Sikucing 85 L/s, Watulumbung 38 L/s, dan Wonomerto 4,5 L/s">
@@ -1519,23 +2161,23 @@
               <text x="186" y="124" fill="#1f3038" stroke="none" font-size="11" font-family="JetBrains Mono, monospace">85 L/s Sikucing</text>
               <rect x="40" y="144" width="78" height="22" rx="4" fill="#5d6b72" stroke="none"/>
               <text x="128" y="160" fill="#1f3038" stroke="none" font-size="11" font-family="JetBrains Mono, monospace">38 L/s Watulumbung</text>
-              <rect x="40" y="180" width="24" height="22" rx="4" fill="#d97706" stroke="none"/>
+              <rect x="40" y="180" width="24" height="22" rx="4" fill="#b45309" stroke="none"/>
               <text x="74" y="196" fill="#1f3038" stroke="none" font-size="11" font-family="JetBrains Mono, monospace">4,5 L/s Wonomerto</text>
             </svg>
 
             <ul class="rows">
               <li>
-                <span>Akurasi GPS &amp; Grid Publik</span>
-                <span class="rows__value">15&nbsp;meter · 5&nbsp;km</span>
+                <span data-i18n="dash.row1_label">Akurasi GPS &amp; Grid Publik</span>
+                <span class="rows__value" data-i18n="dash.row1_val">15 meter · 5 km</span>
               </li>
               <li>
-                <span>Target Uptime Kemarau</span>
-                <span class="rows__value">95%&nbsp;stabil</span>
+                <span data-i18n="dash.row2_label">Target Uptime Kemarau</span>
+                <span class="rows__value" data-i18n="dash.row2_val">95% stabil</span>
               </li>
             </ul>
 
             <div class="btn-row">
-              <a class="btn btn--secondary" href="#pulangkan-air">Pesan rorak mata air</a>
+              <a class="btn btn--secondary" href="#pulangkan-air" data-i18n="nav.order_rorak">Pesan rorak mata air</a>
             </div>
           </div>
         </div>
@@ -1543,7 +2185,7 @@
     </section>
 
     <!-- Section 4: Community Action & Volunteer Points -->
-    <section id="community" class="section ground-bg" data-group="komunitas">
+    <section id="community" class="section ground-base" data-group="komunitas">
       <div class="wrap">
         <div class="grid">
           <div class="span-6">
@@ -1568,7 +2210,7 @@
 
           <div class="span-6 start-7">
             <div class="bh-report-grid">
-              <a href="#" role="button" class="report-card" data-report="Survei Mata Air">
+              <button type="button" class="report-card" data-report="Survei Mata Air">
                 <svg class="bh-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M12 22s-7-6.2-7-12a7 7 0 1 1 14 0c0 5.8-7 12-7 12z"/>
                   <circle cx="12" cy="10" r="2.5"/>
@@ -1576,9 +2218,9 @@
                 <span class="bh-points-badge">+100 pts</span>
                 <h3 data-i18n="community.card1_title">Survei Mata Air</h3>
                 <p data-i18n="community.card1_desc">Cek debit aliran dan vegetasi sekitar</p>
-              </a>
+              </button>
 
-              <a href="#" role="button" class="report-card" data-report="Restorasi Mata Air">
+              <button type="button" class="report-card" data-report="Restorasi Mata Air">
                 <svg class="bh-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M12 2.5C8.5 7 6 10.4 6 14a6 6 0 0 0 12 0c0-3.6-2.5-7-6-11.5z"/>
                   <path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5"/>
@@ -1586,9 +2228,9 @@
                 <span class="bh-points-badge">+1.000 pts</span>
                 <h3 data-i18n="community.card2_title">Restorasi Mata Air</h3>
                 <p data-i18n="community.card2_desc">Bersih saluran, springbox, dan sedimen</p>
-              </a>
+              </button>
 
-              <a href="#" role="button" class="report-card" data-report="Penanaman Pohon">
+              <button type="button" class="report-card" data-report="Penanaman Pohon">
                 <svg class="bh-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M12 22v-9"/>
                   <path d="M12 13c-3.5 0-6-2.5-6-5.5C6 4.8 8.7 3 12 3s6 1.8 6 4.5c0 3-2.5 5.5-6 5.5z"/>
@@ -1597,9 +2239,9 @@
                 <span class="bh-points-badge">+100 pts</span>
                 <h3 data-i18n="community.card3_title">Tanam Pohon Endemik</h3>
                 <p data-i18n="community.card3_desc">Catat spesies bibit dan titik hulu</p>
-              </a>
+              </button>
 
-              <a href="#" role="button" class="report-card" data-report="Pembangunan Rorak">
+              <button type="button" class="report-card" data-report="Pembangunan Rorak">
                 <svg class="bh-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <polygon points="12 3 3 8 12 13 21 8 12 3"/>
                   <polyline points="3 13 12 18 21 13"/>
@@ -1608,7 +2250,7 @@
                 <span class="bh-points-badge">+500 pts</span>
                 <h3 data-i18n="community.card4_title">Pembangunan Rorak</h3>
                 <p data-i18n="community.card4_desc">Parit jebakan hujan searah kontur</p>
-              </a>
+              </button>
             </div>
 
             <div class="bh-community-ladder">
@@ -1644,20 +2286,20 @@
 
             <ul class="rows rows--spec" aria-label="Spesifikasi standar rorak BelikHub">
               <li>
-                <span>Dimensi lubang</span>
+                <span data-i18n="rorak.spec1_label">Dimensi lubang</span>
                 <span class="rows__value">200 x 50 x 50&nbsp;cm</span>
               </li>
               <li>
-                <span>Kapasitas serapan</span>
-                <span class="rows__value">2.000&nbsp;L / musim</span>
+                <span data-i18n="rorak.spec2_label">Kapasitas serapan</span>
+                <span class="rows__value" data-i18n="rorak.spec2_val">2.000 L / musim</span>
               </li>
               <li>
-                <span>Biaya galian lokal</span>
-                <span class="rows__value">Rp20.000 / unit</span>
+                <span data-i18n="rorak.spec3_label">Biaya galian lokal</span>
+                <span class="rows__value" data-i18n="rorak.spec3_val">Rp20.000 / unit</span>
               </li>
               <li>
-                <span>Tanggul hilir</span>
-                <span class="rows__value">15&nbsp;cm padat</span>
+                <span data-i18n="rorak.spec4_label">Tanggul hilir</span>
+                <span class="rows__value" data-i18n="rorak.spec4_val">15 cm padat</span>
               </li>
             </ul>
 
@@ -1706,7 +2348,7 @@
     </section>
 
     <!-- Section 6: Learning Hub, Readings, Agenda & Video -->
-    <section id="learn" class="section ground-bg" data-group="belajar">
+    <section id="learn" class="section ground-base" data-group="belajar">
       <div class="wrap">
         <div class="section-head">
           <p class="label" data-i18n="learn.section">05 · Pusat belajar praktis</p>
@@ -1715,10 +2357,10 @@
         </div>
 
         <div class="bh-tabs" role="tablist" aria-label="Kategori materi belajar">
-          <button type="button" role="tab" id="tab-courses" class="learn-tab tab-active" data-tab="courses" aria-selected="true" data-i18n="learn.tab_courses">Kursus</button>
-          <button type="button" role="tab" id="tab-readings" class="learn-tab" data-tab="readings" aria-selected="false" data-i18n="learn.tab_readings">Bacaan</button>
-          <button type="button" role="tab" id="tab-agenda" class="learn-tab" data-tab="agenda" aria-selected="false" data-i18n="learn.tab_agenda">Agenda</button>
-          <button type="button" role="tab" id="tab-media" class="learn-tab" data-tab="media" aria-selected="false" data-i18n="learn.tab_media">Video</button>
+          <button type="button" role="tab" id="tab-courses" class="learn-tab tab-active" data-tab="courses" aria-controls="courses" aria-selected="true" tabindex="0" data-i18n="learn.tab_courses">Kursus</button>
+          <button type="button" role="tab" id="tab-readings" class="learn-tab" data-tab="readings" aria-controls="readings" aria-selected="false" tabindex="-1" data-i18n="learn.tab_readings">Bacaan</button>
+          <button type="button" role="tab" id="tab-agenda" class="learn-tab" data-tab="agenda" aria-controls="agenda" aria-selected="false" tabindex="-1" data-i18n="learn.tab_agenda">Agenda</button>
+          <button type="button" role="tab" id="tab-media" class="learn-tab" data-tab="media" aria-controls="media" aria-selected="false" tabindex="-1" data-i18n="learn.tab_media">Video</button>
         </div>
 
         <div id="courses" class="bh-tab-grid" role="tabpanel" aria-labelledby="tab-courses">
@@ -1730,8 +2372,8 @@
               <circle cx="160" cy="68" r="10" fill="#0d7480" stroke="#ffffff" stroke-width="2"/>
               <text x="160" y="132" text-anchor="middle" fill="#1f3038" stroke="none" font-size="11" font-family="JetBrains Mono, monospace">Zona Springshed 5 km</text>
             </svg>
-            <h3>Ekosistem Mata Air &amp; Springshed</h3>
-            <p>Uji debit volumetrik, kejernihan air, dan tata cara adat survei di hulu.</p>
+            <h3 data-i18n="learn.c1_title">Ekosistem Mata Air &amp; Springshed</h3>
+            <p data-i18n="learn.c1_desc">Uji debit volumetrik, kejernihan air, dan tata cara adat survei di hulu.</p>
             <button type="button" class="btn btn--secondary" data-course="spring" data-i18n="learn.btn_open">Buka modul mata air</button>
           </article>
 
@@ -1743,8 +2385,8 @@
               <path d="M160 84 Q134 104 102 114 M160 84 Q160 108 160 120 M160 84 Q186 104 218 114" stroke="#0d7480"/>
               <text x="160" y="136" text-anchor="middle" fill="#1f3038" stroke="none" font-size="11" font-family="JetBrains Mono, monospace">Akar Dalam Pengikat Air</text>
             </svg>
-            <h3>Tanam Pohon Endemik Hulu</h3>
-            <p>Pemilihan spesies akar dalam beringin, aren, dan bambu di zona imbuhan.</p>
+            <h3 data-i18n="learn.c2_title">Tanam Pohon Endemik Hulu</h3>
+            <p data-i18n="learn.c2_desc">Pemilihan spesies akar dalam beringin, aren, dan bambu di zona imbuhan.</p>
             <button type="button" class="btn btn--secondary" data-course="trees" data-i18n="learn.btn_open">Buka modul mata air</button>
           </article>
 
@@ -1755,68 +2397,69 @@
               <line x1="114" y1="74" x2="206" y2="74" stroke="#0d7480" stroke-dasharray="4 4"/>
               <text x="160" y="132" text-anchor="middle" fill="#1f3038" stroke="none" font-size="11" font-family="JetBrains Mono, monospace">Kontur A-Frame · 200x50 cm</text>
             </svg>
-            <h3>Teknik Rorak Resapan Kontur</h3>
-            <p>Garis kontur A-frame, penggalian lubang baku, dan perawatan pra-hujan.</p>
+            <h3 data-i18n="learn.c3_title">Teknik Rorak Resapan Kontur</h3>
+            <p data-i18n="learn.c3_desc">Garis kontur A-frame, penggalian lubang baku, dan perawatan pra-hujan.</p>
             <button type="button" class="btn btn--secondary" data-course="rorak" data-i18n="learn.btn_open">Buka modul mata air</button>
           </article>
         </div>
 
-        <div id="readings" class="bh-tab-grid bh-tab-grid--4 hidden" role="tabpanel" aria-labelledby="tab-readings">
+        <div id="readings" class="bh-tab-grid bh-tab-grid--4" role="tabpanel" aria-labelledby="tab-readings" hidden>
           <article class="bh-module-card">
             <p class="label muted">Ekspedisi · Batang</p>
-            <h3>Ekspedisi Tuk Bismo: 200 Sumur &amp; Rorak</h3>
-            <p>Bagaimana 200 sumur resapan dan 2.000 pohon menaikkan debit mata air +9,57% di lereng Dieng.</p>
+            <h3 data-i18n="learn.r1_title">Ekspedisi Tuk Bismo: 200 Sumur &amp; Rorak</h3>
+            <p data-i18n="learn.r1_desc">Bagaimana 200 sumur resapan dan 2.000 pohon menaikkan debit mata air +9,57% di lereng Dieng.</p>
             <button type="button" class="btn btn--secondary story-read-btn" data-story="bismo" data-i18n="learn.btn_read_story">Baca kisah mata air</button>
           </article>
 
           <article class="bh-module-card">
             <p class="label muted">Pemulihan · Bandar</p>
-            <h3>Wonomerto: Dari Kekeringan ke 4,5&nbsp;L/s</h3>
-            <p>Kilas balik kekeringan 12 bulan di Desa Wonomerto hingga aliran kembali melayani 65 keluarga.</p>
+            <h3 data-i18n="learn.r2_title">Wonomerto: Dari Kekeringan ke 4,5 L/s</h3>
+            <p data-i18n="learn.r2_desc">Kilas balik kekeringan 12 bulan di Desa Wonomerto hingga aliran kembali melayani 65 keluarga.</p>
             <button type="button" class="btn btn--secondary story-read-btn" data-story="wonomerto" data-i18n="learn.btn_read_story">Baca kisah mata air</button>
           </article>
 
           <article class="bh-module-card">
             <p class="label muted">Panduan · Hidrologi</p>
-            <h3>Memulangkan Air Hujan ke Akuifer</h3>
-            <p>Rincian teknis mengapa rorak kontur Rp20.000/unit efektif menekan limpasan erosi di lereng.</p>
+            <h3 data-i18n="learn.r3_title">Memulangkan Air Hujan ke Akuifer</h3>
+            <p data-i18n="learn.r3_desc">Rincian teknis mengapa rorak kontur Rp20.000/unit efektif menekan limpasan erosi di lereng.</p>
             <button type="button" class="btn btn--secondary story-read-btn" data-story="rorak" data-i18n="stories.btn_guide">Baca panduan BelikHub</button>
           </article>
 
           <article class="bh-module-card">
             <p class="label muted">Kajian · Lereng Jawa</p>
-            <h3>Mengapa Debit Mata Air Menurun?</h3>
-            <p>Analisis koefisien infiltrasi tanah di lahan terbuka serta langkah perbaikannya.</p>
+            <h3 data-i18n="learn.r4_title">Mengapa Debit Mata Air Menurun?</h3>
+            <p data-i18n="learn.r4_desc">Analisis koefisien infiltrasi tanah di lahan terbuka serta langkah perbaikannya.</p>
             <button type="button" class="btn btn--secondary story-read-btn" data-story="artikel-debit" data-i18n="learn.btn_read_article">Baca artikel mata air</button>
           </article>
         </div>
 
-        <div id="agenda" class="bh-tab-grid hidden" role="tabpanel" aria-labelledby="tab-agenda">
+        <div id="agenda" class="bh-tab-grid" role="tabpanel" aria-labelledby="tab-agenda" hidden>
           <article class="bh-module-card">
             <p class="label muted">Sabtu · 16 Nov 2026</p>
-            <h3>Galian 30 Rorak Lereng Bismo</h3>
-            <p>Titik kumpul Balai Desa Bismo, Kec. Blado, Batang · pukul 07.30 WIB.</p>
+            <h3 data-i18n="learn.a1_title">Galian 30 Rorak Lereng Bismo</h3>
+            <p data-i18n="learn.a1_desc">Titik kumpul Balai Desa Bismo, Kec. Blado, Batang · pukul 07.30 WIB.</p>
             <button type="button" class="btn btn--secondary rsvp-btn" data-event="Galian 30 Rorak Lereng Bismo" data-date="16 Nov 2026" data-location="Desa Bismo, Batang" data-i18n="agenda.btn_rsvp">Ikut aksi mata air</button>
           </article>
 
           <article class="bh-module-card">
             <p class="label muted">Minggu · 24 Nov 2026</p>
-            <h3>Pembersihan Springbox Wonomerto</h3>
-            <p>Titik kumpul Mata Air Wonomerto, Kec. Bandar · pukul 08.00 WIB.</p>
+            <h3 data-i18n="learn.a2_title">Pembersihan Springbox Wonomerto</h3>
+            <p data-i18n="learn.a2_desc">Titik kumpul Mata Air Wonomerto, Kec. Bandar · pukul 08.00 WIB.</p>
             <button type="button" class="btn btn--secondary rsvp-btn" data-event="Pembersihan Springbox Wonomerto" data-date="24 Nov 2026" data-location="Desa Wonomerto, Bandar" data-i18n="agenda.btn_rsvp">Ikut aksi mata air</button>
           </article>
 
           <article class="bh-module-card">
             <p class="label muted">Sabtu · 30 Nov 2026</p>
-            <h3>Tanam 250 Bibit Hulu Watulumbung</h3>
-            <p>Titik kumpul Desa Tambakboyo, Kec. Reban · pukul 07.00 WIB.</p>
+            <h3 data-i18n="learn.a3_title">Tanam 250 Bibit Hulu Watulumbung</h3>
+            <p data-i18n="learn.a3_desc">Titik kumpul Desa Tambakboyo, Kec. Reban · pukul 07.00 WIB.</p>
             <button type="button" class="btn btn--secondary rsvp-btn" data-event="Tanam 250 Bibit Hulu Watulumbung" data-date="30 Nov 2026" data-location="Tambakboyo, Reban" data-i18n="agenda.btn_rsvp">Ikut aksi mata air</button>
           </article>
         </div>
 
-        <div id="media" class="bh-media-split hidden" role="tabpanel" aria-labelledby="tab-media">
+        <div id="media" class="bh-media-split" role="tabpanel" aria-labelledby="tab-media" hidden>
           <div>
             <video id="learn-media-video" class="bh-media-video" controls preload="none" poster="images/galeri-hulu.jpg" playsinline data-src="videos/media.mp4" aria-label="Dokumenter pemulihan belik desa oleh relawan BelikHub"></video>
+            <p class="bh-video-caption" data-i18n="media.video_note">Ringkasan naskah dokumenter tersedia melalui tombol bacaan di samping.</p>
           </div>
           <div class="bh-module-card">
             <p class="label c-accent" data-i18n="media.video_tag">Dokumenter 2026</p>
@@ -1837,9 +2480,9 @@
         <div class="grid">
           <div class="span-6">
             <div class="section-head">
-              <p class="label">Pertanyaan umum</p>
+              <p class="label" data-i18n="faq.label">Pertanyaan umum</p>
               <h2 data-i18n="faq.heading">Tanya jawab platform BelikHub.</h2>
-              <p class="bh-body">Pelindungan koordinat 5&nbsp;km, poin relawan, dan pengajuan restorasi desa.</p>
+              <p class="bh-body" data-i18n="faq.lead">Pelindungan koordinat 5 km, poin relawan, dan pengajuan restorasi desa.</p>
             </div>
 
             <svg class="bh-svg-panel" viewBox="0 0 480 210" fill="none" stroke="#1f3038" stroke-width="1.5" role="img" aria-label="Arsitektur keamanan data koordinat GPS ke grid publik 5 km di BelikHub">
@@ -1861,20 +2504,20 @@
           <div class="span-6 start-7">
             <div class="faq">
               <div class="faq__item">
-                <h3>Mengapa koordinat publik mata air BelikHub disamarkan ke grid 5&nbsp;km?</h3>
-                <p>Koordinat GPS asli dienkripsi agar mata air desa terlindung dari eksploitasi berlebih.</p>
+                <h3 data-i18n="faq.q1">Mengapa koordinat publik mata air BelikHub disamarkan ke grid 5 km?</h3>
+                <p data-i18n="faq.a1">Koordinat GPS asli dienkripsi agar mata air desa terlindung dari eksploitasi berlebih.</p>
               </div>
               <div class="faq__item">
-                <h3>Bagaimana sistem poin relawan di platform BelikHub bekerja?</h3>
-                <p>Survei 100 poin, tanam 100 poin, rorak 500 poin, restorasi 1.000 poin. Raih 20.000 poin untuk pengajuan restorasi desa.</p>
+                <h3 data-i18n="faq.q2">Bagaimana sistem poin relawan di platform BelikHub bekerja?</h3>
+                <p data-i18n="faq.a2">Survei 100 poin, tanam 100 poin, rorak 500 poin, restorasi 1.000 poin. Raih 20.000 poin untuk pengajuan restorasi desa.</p>
               </div>
               <div class="faq__item">
-                <h3>Apakah biaya pembuatan rorak BelikHub disalurkan langsung ke warga?</h3>
-                <p>Ya. Kontribusi Rp20.000 per unit disalurkan kepada kelompok penggali lokal bersama pemilik lahan.</p>
+                <h3 data-i18n="faq.q3">Apakah biaya pembuatan rorak BelikHub disalurkan langsung ke warga?</h3>
+                <p data-i18n="faq.a3">Ya. Kontribusi Rp20.000 per unit disalurkan kepada kelompok penggali lokal bersama pemilik lahan.</p>
               </div>
               <div class="faq__item">
-                <h3>Bagaimana PDAM atau BUMDes mengakses data mata air BelikHub?</h3>
-                <p>Instansi mengajukan kolaborasi data historis lewat formulir kemitraan BelikHub di bawah.</p>
+                <h3 data-i18n="faq.q4">Bagaimana PDAM atau BUMDes mengakses data mata air BelikHub?</h3>
+                <p data-i18n="faq.a4">Instansi mengajukan kolaborasi data historis lewat formulir kemitraan BelikHub di bawah.</p>
               </div>
             </div>
           </div>
@@ -1883,7 +2526,7 @@
     </section>
 
     <!-- Section 8: Institutional Partnership -->
-    <section id="kemitraan" class="section ground-bg" data-group="kemitraan">
+    <section id="kemitraan" class="section ground-base" data-group="kemitraan">
       <div class="wrap">
         <div class="grid">
           <div class="span-6">
@@ -1896,7 +2539,7 @@
             <figure class="bh-photo-frame bh-photo-frame--topo">
               <img src="images/topo-light.webp"
                    srcset="images/topo-light-800.webp 800w, images/topo-light.webp 2400w"
-                   sizes="(max-width: 639px) 400px, 600px"
+                   sizes="(max-width: 639px) 100vw, 600px"
                    alt="Peta garis kontur elevasi wilayah tangkapan air BelikHub"
                    width="2400" height="1792" loading="lazy">
             </figure>
@@ -1913,36 +2556,36 @@
               <div class="bh-form-grid">
                 <div class="field">
                   <label for="partner-name" data-i18n="partner.label_name">Nama Penanggung Jawab</label>
-                  <input id="partner-name" name="name" type="text" required autocomplete="name" placeholder="Nama lengkap PIC">
-                  <p class="field__error" aria-live="polite"></p>
+                  <input id="partner-name" name="name" type="text" required autocomplete="name" placeholder="Nama lengkap PIC" data-i18n-placeholder="partner.placeholder_name">
+                  <p id="partner-name-error" class="field__error" aria-live="polite"></p>
                 </div>
 
                 <div class="field">
                   <label for="partner-inst" data-i18n="partner.label_inst">Instansi / Perusahaan</label>
-                  <input id="partner-inst" name="institution" type="text" required autocomplete="organization" placeholder="BUMDes Bismo / PDAM">
-                  <p class="field__error" aria-live="polite"></p>
+                  <input id="partner-inst" name="institution" type="text" required autocomplete="organization" placeholder="BUMDes Bismo / PDAM" data-i18n-placeholder="partner.placeholder_inst">
+                  <p id="partner-inst-error" class="field__error" aria-live="polite"></p>
                 </div>
 
                 <div class="field">
                   <label for="partner-email" data-i18n="partner.label_email">Email Resmi</label>
-                  <input id="partner-email" name="email" type="email" required autocomplete="email" placeholder="nama@instansi.go.id">
-                  <p class="field__error" aria-live="polite"></p>
+                  <input id="partner-email" name="email" type="email" required autocomplete="email" placeholder="nama@instansi.go.id" data-i18n-placeholder="partner.placeholder_email">
+                  <p id="partner-email-error" class="field__error" aria-live="polite"></p>
                 </div>
 
                 <div class="field">
                   <label for="partner-need" data-i18n="partner.label_need">Kategori Kebutuhan</label>
                   <select id="partner-need" name="need" required>
-                    <option value="Restorasi Mata Air & Rorak (CSR)">Restorasi Mata Air &amp; Rorak</option>
-                    <option value="Kajian Riset & KKN Konservasi">Kajian Riset &amp; KKN</option>
-                    <option value="Integrasi Data PDAM / Pemda">Integrasi Data PDAM / Pemda</option>
+                    <option value="Restorasi Mata Air & Rorak (CSR)" data-i18n="partner.opt_csr">Restorasi Mata Air &amp; Rorak</option>
+                    <option value="Kajian Riset & KKN Konservasi" data-i18n="partner.opt_research">Kajian Riset &amp; KKN</option>
+                    <option value="Integrasi Data PDAM / Pemda" data-i18n="partner.opt_pdam">Integrasi Data PDAM / Pemda</option>
                   </select>
-                  <p class="field__error" aria-live="polite"></p>
+                  <p id="partner-need-error" class="field__error" aria-live="polite"></p>
                 </div>
 
                 <div class="field bh-form-full">
-                  <label for="partner-notes">Catatan wilayah sasaran</label>
-                  <input id="partner-notes" name="notes" type="text" placeholder="Sebutkan kabupaten/kecamatan atau target unit rorak">
-                  <p class="field__error" aria-live="polite"></p>
+                  <label for="partner-notes" data-i18n="partner.label_notes">Catatan wilayah sasaran</label>
+                  <input id="partner-notes" name="notes" type="text" placeholder="Sebutkan kabupaten/kecamatan atau target unit rorak" data-i18n-placeholder="partner.placeholder_notes">
+                  <p id="partner-notes-error" class="field__error" aria-live="polite"></p>
                 </div>
 
                 <div class="bh-form-full">
@@ -1968,7 +2611,7 @@
     <div class="wrap">
       <div class="closing__cta close--type">
         <h2 data-i18n="footer.closing_title">Jaga mata air desa tetap mengalir.</h2>
-        <p class="bh-footer-body">Peta terpadu, parit resapan rorak, dan aksi warga untuk kedaulatan air bersih Nusantara.</p>
+        <p class="bh-footer-body" data-i18n="footer.closing_desc">Peta terpadu, parit resapan rorak, dan aksi warga untuk kedaulatan air bersih Nusantara.</p>
         <a class="btn btn--primary btn--xl" href="#map">
           <span data-i18n="footer.closing_cta">Jelajahi peta</span>
           <svg class="m-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1995,8 +2638,8 @@
             </form>
           </div>
 
-          <div class="span-2 start-6">
-            <p class="footer__heading" data-i18n="footer.explore">Jelajahi</p>
+          <div class="span-2 start-6 footer__col">
+            <h3 class="footer__heading" data-i18n="footer.explore">Jelajahi</h3>
             <ul class="footer__list">
               <li><a href="#map" data-i18n="nav.map">Peta</a></li>
               <li><a href="#dashboard" data-i18n="nav.impact">Dampak</a></li>
@@ -2005,8 +2648,8 @@
             </ul>
           </div>
 
-          <div class="span-2 start-8">
-            <p class="footer__heading" data-i18n="footer.community_actions">Aksi Komunitas</p>
+          <div class="span-2 start-8 footer__col">
+            <h3 class="footer__heading" data-i18n="footer.community_actions">Aksi Komunitas</h3>
             <ul class="footer__list">
               <li><a href="#pulangkan-air" id="footer-order-rorak" data-i18n="footer.order_rorak">Pemesanan Rorak Tanah</a></li>
               <li><a href="#pulangkan-air" id="footer-join-maker" data-i18n="footer.join_maker">Pendaftaran Tukang Rorak</a></li>
@@ -2014,8 +2657,8 @@
             </ul>
           </div>
 
-          <div class="span-3 start-10">
-            <p class="footer__heading" data-i18n="footer.transparency">Transparansi &amp; Info</p>
+          <div class="span-3 start-10 footer__col">
+            <h3 class="footer__heading" data-i18n="footer.transparency">Transparansi &amp; Info</h3>
             <ul class="footer__list">
               <li><button type="button" class="footer__modal-btn footer-modal-btn" data-modal="faq" data-i18n="footer.faq">Tanya Jawab (FAQ)</button></li>
               <li><button type="button" class="footer__modal-btn footer-modal-btn" data-modal="misi" data-i18n="footer.mission">Misi &amp; Peta Jalan 2030</button></li>
@@ -2032,12 +2675,12 @@
     </div>
   </footer>
 
-  <nav class="actionbar" aria-label="Aksi cepat">
-    <a class="btn btn--secondary" href="#pulangkan-air">Pesan rorak</a>
+  <nav class="actionbar" aria-label="Aksi cepat" data-i18n-aria-label="actionbar.aria">
+    <a class="btn btn--secondary" href="#pulangkan-air" data-i18n="actionbar.order">Pesan rorak</a>
     <a class="btn btn--primary" href="#map" data-i18n="hero.btn_map">Jelajahi peta</a>
   </nav>
 
-  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
     <div id="modal-content" class="modal-card"></div>
   </div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -2046,7 +2689,6 @@
   <script type="module" src="assets/system.js"></script>
   <script type="module" src="assets/diagrams/mount.js"></script>
   <script type="module" src="assets/motion/motion.js"></script>
-  <script type="module" src="assets/moments/word-highlight/moment.js"></script>
   <script type="module" src="assets/app.js"></script>
 </body>
 </html>

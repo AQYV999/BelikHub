@@ -1,0 +1,11 @@
+data/
+*.bak
+*.bak.*
+server.mjs
+playwright-audit.mjs
+playwright-report/
+test-results/
+.taste-skill/
+.vscode/
+.env
+.env.local
