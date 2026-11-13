@@ -194,7 +194,8 @@
       border: 1px solid rgba(241, 246, 248, 0.18);
     }
 
-    html[data-theme="dark"] .bh-svg-panel rect[fill="#ffffff"] {
+    html[data-theme="dark"] .bh-svg-panel rect[fill="#ffffff"],
+    html[data-theme="dark"] .bh-svg-panel circle[fill="#ffffff"] {
       fill: #141f28;
       stroke: rgba(241, 246, 248, 0.16);
     }
@@ -228,8 +229,18 @@
     }
 
     html[data-theme="dark"] .bh-svg-panel rect[fill="#0d7480"],
+    html[data-theme="dark"] .bh-svg-panel rect[fill="#2dd4bf"],
     html[data-theme="dark"] .drawing__svg text[fill="#0d7480"] {
       fill: #2dd4bf;
+    }
+
+    html[data-theme="dark"] .bh-svg-panel rect[fill="#2dd4bf"] {
+      stroke: #2dd4bf;
+    }
+
+    html[data-theme="dark"] .bh-svg-panel .bh-svg-accent-text,
+    html[data-theme="dark"] .bh-svg-panel text.bh-svg-accent-text {
+      fill: #061016 !important;
     }
 
     html[data-theme="dark"] .footer--dark {
@@ -241,9 +252,13 @@
     html[data-theme="dark"] .footer--dark .bh-footer-body,
     html[data-theme="dark"] .footer--dark .closing__cta p,
     html[data-theme="dark"] .footer--dark .footer__col p,
-    html[data-theme="dark"] .footer--dark a,
+    html[data-theme="dark"] .footer--dark a:not(.btn),
     html[data-theme="dark"] .footer--dark .footer__modal-btn {
       color: #f1f6f8;
+    }
+
+    html[data-theme="dark"] .footer--dark .btn--primary {
+      color: #042f2e !important;
     }
 
     html[data-theme="dark"] .footer--dark .bh-newsletter label,
@@ -2215,7 +2230,7 @@
             <article class="bh-stat-card">
               <div class="bh-stat-head">
                 <p class="label muted" data-i18n="impact.verified">Laporan Terverifikasi</p>
-                <img src="images/icon-clay-verified.webp" alt="Laporan Terverifikasi" class="bh-card-3d-icon" width="44" height="44" loading="lazy">
+                <img src="images/icon-clay-verified.webp" alt="Laporan Terverifikasi" class="bh-card-3d-icon" width="40" height="40" loading="lazy">
               </div>
               <p class="bh-stat-num"><span data-impact-stat="totalApproved">48</span> <span class="bh-stat-unit" data-i18n="impact.unit_reports">laporan</span></p>
               <p class="bh-body" data-i18n="impact.verified_desc">Validasi survei, restorasi, tanam, dan rorak.</p>
@@ -2228,7 +2243,7 @@
             <article class="bh-stat-card">
               <div class="bh-stat-head">
                 <p class="label muted" data-i18n="impact.restoration">Titik Restorasi</p>
-                <img src="images/icon-clay-restoration.webp" alt="Titik Restorasi" class="bh-card-3d-icon" width="44" height="44" loading="lazy">
+                <img src="images/icon-clay-restoration.webp" alt="Titik Restorasi" class="bh-card-3d-icon" width="40" height="40" loading="lazy">
               </div>
               <p class="bh-stat-num"><span data-impact-stat="restoration">16</span> <span class="bh-stat-unit" data-i18n="impact.unit_springs">belik</span></p>
               <p class="bh-body" data-i18n="impact.restoration_desc">Pembersihan sedimen &amp; perbaikan springbox.</p>
@@ -2240,7 +2255,7 @@
             <article class="bh-stat-card">
               <div class="bh-stat-head">
                 <p class="label muted" data-i18n="impact.trees">Pohon Ditanam</p>
-                <img src="images/icon-clay-tree.webp" alt="Pohon Ditanam" class="bh-card-3d-icon" width="44" height="44" loading="lazy">
+                <img src="images/icon-clay-tree.webp" alt="Pohon Ditanam" class="bh-card-3d-icon" width="40" height="40" loading="lazy">
               </div>
               <p class="bh-stat-num"><span data-impact-stat="planting">1.800</span> <span class="bh-stat-unit" data-i18n="impact.unit_trees">pohon</span></p>
               <p class="bh-body" data-i18n="impact.trees_desc">Bibit endemik pengikat air di area springshed.</p>
@@ -2253,7 +2268,7 @@
             <article class="bh-stat-card">
               <div class="bh-stat-head">
                 <p class="label muted" data-i18n="impact.rorak">Rorak Digali</p>
-                <img src="images/icon-clay-rorak.webp" alt="Rorak Digali" class="bh-card-3d-icon" width="44" height="44" loading="lazy">
+                <img src="images/icon-clay-rorak.webp" alt="Rorak Digali" class="bh-card-3d-icon" width="40" height="40" loading="lazy">
               </div>
               <p class="bh-stat-num"><span data-impact-stat="rorak">142</span> <span class="bh-stat-unit" data-i18n="impact.unit_units">unit</span></p>
               <p class="bh-body" data-i18n="impact.rorak_desc">Menahan limpasan hujan masuk ke akuifer tanah.</p>
@@ -2344,40 +2359,44 @@
                 <img src="images/icon-clay-survey.webp" alt="Survei Mata Air" class="bh-card-3d-icon" width="40" height="40" loading="lazy">
                 <span class="bh-points-badge">+100 pts</span>
                 <h3 data-i18n="community.card1_title">Survei Mata Air</h3>
-                <p data-i18n="community.card1_desc">Cek debit aliran dan vegetasi sekitar</p>
+                <p data-i18n="community.card1_desc">Cek kondisi fisik, debit, dan vegetasi sekitar</p>
               </button>
 
               <button type="button" class="report-card" data-report="Restorasi Mata Air">
                 <img src="images/icon-clay-restoration.webp" alt="Restorasi Mata Air" class="bh-card-3d-icon" width="40" height="40" loading="lazy">
                 <span class="bh-points-badge">+1.000 pts</span>
                 <h3 data-i18n="community.card2_title">Restorasi Mata Air</h3>
-                <p data-i18n="community.card2_desc">Bersih saluran, springbox, dan sedimen</p>
+                <p data-i18n="community.card2_desc">Pembersihan saluran, bak resapan, atau sedimen</p>
               </button>
 
               <button type="button" class="report-card" data-report="Penanaman Pohon">
                 <img src="images/icon-clay-tree.webp" alt="Tanam Pohon Endemik" class="bh-card-3d-icon" width="40" height="40" loading="lazy">
                 <span class="bh-points-badge">+100 pts</span>
                 <h3 data-i18n="community.card3_title">Tanam Pohon Endemik</h3>
-                <p data-i18n="community.card3_desc">Catat spesies bibit dan titik hulu</p>
+                <p data-i18n="community.card3_desc">Catat spesies bibit dan titik tanam di hulu</p>
               </button>
 
               <button type="button" class="report-card" data-report="Pembangunan Rorak">
                 <img src="images/icon-clay-rorak.webp" alt="Pembangunan Rorak" class="bh-card-3d-icon" width="40" height="40" loading="lazy">
                 <span class="bh-points-badge">+500 pts</span>
                 <h3 data-i18n="community.card4_title">Pembangunan Rorak</h3>
-                <p data-i18n="community.card4_desc">Parit jebakan hujan searah kontur</p>
+                <p data-i18n="community.card4_desc">Pembuatan parit jebakan air hujan searah kontur</p>
               </button>
             </div>
 
             <div class="bh-community-ladder">
-              <svg class="bh-svg-panel" viewBox="0 0 480 120" fill="none" stroke="#1f3038" stroke-width="1.5" role="img" aria-label="Skema poin relawan BelikHub dari 100 poin survei hingga 20.000 poin pengajuan restorasi desa">
-                <rect x="20" y="12" width="440" height="96" rx="10" fill="#ffffff" stroke="#d5dde0"/>
-                <text x="42" y="32" fill="#1f3038" stroke="none" font-size="11" font-family="Epilogue, sans-serif" font-weight="600">Tangga Poin Relawan Menuju Restorasi Mandiri</text>
-                <line x1="56" y1="58" x2="424" y2="58" stroke="#9ea7ab" stroke-dasharray="4 4"/>
-                <image href="images/icon-clay-survey.webp" x="51" y="45" width="26" height="26"/>
-                <image href="images/icon-clay-rorak.webp" x="163" y="45" width="26" height="26"/>
-                <image href="images/icon-clay-restoration.webp" x="279" y="45" width="26" height="26"/>
-                <image href="images/icon-clay-milestone-mandiri.webp" x="397" y="42" width="30" height="30"/>
+              <svg class="bh-svg-panel" viewBox="0 0 480 118" fill="none" stroke="#1f3038" stroke-width="1.5" role="img" aria-label="Skema poin relawan BelikHub dari 100 poin survei hingga 20.000 poin pengajuan restorasi desa">
+                <rect x="20" y="10" width="440" height="98" rx="10" fill="#ffffff" stroke="#d5dde0"/>
+                <text x="42" y="30" fill="#1f3038" stroke="none" font-size="11" font-family="Epilogue, sans-serif" font-weight="600">Tangga Poin Relawan Menuju Restorasi Mandiri</text>
+                <line x1="64" y1="58" x2="412" y2="58" stroke="#9ea7ab" stroke-dasharray="4 4"/>
+                <circle cx="64" cy="58" r="14" fill="#ffffff" stroke="#0d7480" stroke-width="1.5"/>
+                <image href="images/icon-clay-survey.webp" x="52" y="46" width="24" height="24"/>
+                <circle cx="176" cy="58" r="14" fill="#ffffff" stroke="#0d7480" stroke-width="1.5"/>
+                <image href="images/icon-clay-rorak.webp" x="164" y="46" width="24" height="24"/>
+                <circle cx="292" cy="58" r="14" fill="#ffffff" stroke="#0d7480" stroke-width="1.5"/>
+                <image href="images/icon-clay-restoration.webp" x="280" y="46" width="24" height="24"/>
+                <circle cx="412" cy="58" r="16" fill="#ffffff" stroke="#2dd4bf" stroke-width="2"/>
+                <image href="images/icon-clay-milestone-mandiri.webp" x="398" y="44" width="28" height="28"/>
                 <text x="64" y="94" text-anchor="middle" fill="#1f3038" stroke="none" font-size="11" font-family="JetBrains Mono, monospace">100 pts</text>
                 <text x="176" y="94" text-anchor="middle" fill="#1f3038" stroke="none" font-size="11" font-family="JetBrains Mono, monospace">500 pts</text>
                 <text x="292" y="94" text-anchor="middle" fill="#1f3038" stroke="none" font-size="11" font-family="JetBrains Mono, monospace">1.000 pts</text>
@@ -2602,9 +2621,9 @@
               <text x="100" y="90" text-anchor="middle" fill="#1f3038" stroke="none" font-size="12" font-family="Epilogue, sans-serif" font-weight="600">GPS Lapangan</text>
               <text x="100" y="108" text-anchor="middle" fill="#5d6b72" stroke="none" font-size="10" font-family="JetBrains Mono, monospace">Terenkripsi</text>
               <line x1="156" y1="93" x2="188" y2="93" stroke="#0d7480"/>
-              <rect x="188" y="58" width="112" height="70" rx="8" fill="#0d7480" stroke="none"/>
-              <text x="244" y="90" text-anchor="middle" fill="#ffffff" stroke="none" font-size="12" font-family="Epilogue, sans-serif" font-weight="600">Grid 5 km</text>
-              <text x="244" y="108" text-anchor="middle" fill="#ecf0f2" stroke="none" font-size="10" font-family="JetBrains Mono, monospace">Filter Privasi</text>
+              <rect x="188" y="58" width="112" height="70" rx="8" fill="#2dd4bf" stroke="#0d7480" stroke-width="1.5"/>
+              <text x="244" y="90" text-anchor="middle" fill="#061016" class="bh-svg-accent-text" stroke="none" font-size="12" font-family="Epilogue, sans-serif" font-weight="600">Grid 5 km</text>
+              <text x="244" y="108" text-anchor="middle" fill="#061016" class="bh-svg-accent-text" stroke="none" font-size="10" font-family="JetBrains Mono, monospace">Filter Privasi</text>
               <line x1="300" y1="93" x2="332" y2="93" stroke="#0d7480"/>
               <rect x="332" y="64" width="104" height="58" rx="8" fill="#ecf0f2" stroke="#1f3038"/>
               <text x="384" y="90" text-anchor="middle" fill="#1f3038" stroke="none" font-size="12" font-family="Epilogue, sans-serif" font-weight="600">Peta Publik</text>
