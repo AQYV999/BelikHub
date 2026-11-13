@@ -1,5 +1,6 @@
 // assets/app.js - BelikHub Platform V4 Interactive Client Logic with Complete i18n
 import { SPRINGS } from './springs-seed.js';
+import { initDataVTelemetry } from './datav-telemetry.js';
 
 // DOM Utilities
 const $ = (s) => document.querySelector(s);
@@ -2574,3 +2575,6 @@ $$('.footer-modal-btn').forEach((btn) => {
     );
   });
 });
+
+// Initialize DataV Telemetry Engine
+initDataVTelemetry();

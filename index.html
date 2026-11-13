@@ -896,6 +896,258 @@
       min-height: 260px;
     }
 
+    /* DataV Cockpit Styles */
+    .bh-datav-cockpit {
+      position: relative;
+      width: 100%;
+      height: 310px;
+      background: radial-gradient(circle at center, #0e1a24 0%, #060b10 100%);
+      border: 1px solid rgba(45, 212, 191, 0.35);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.85), 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+    html[data-theme="light"] .bh-datav-cockpit {
+      background: radial-gradient(circle at center, #0a1b24 0%, #050d12 100%);
+      border-color: rgba(13, 116, 128, 0.45);
+      box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(15, 23, 42, 0.15);
+    }
+
+    .bh-datav-cockpit::before,
+    .bh-datav-cockpit::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .bh-datav-cockpit::before {
+      top: 6px; left: 6px;
+      border-top: 2px solid #2dd4bf;
+      border-left: 2px solid #2dd4bf;
+    }
+    .bh-datav-cockpit::after {
+      bottom: 6px; right: 6px;
+      border-bottom: 2px solid #2dd4bf;
+      border-right: 2px solid #2dd4bf;
+    }
+    .bh-corner-tr {
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 14px; height: 14px;
+      border-top: 2px solid #2dd4bf;
+      border-right: 2px solid #2dd4bf;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .bh-corner-bl {
+      position: absolute;
+      bottom: 6px; left: 6px;
+      width: 14px; height: 14px;
+      border-bottom: 2px solid #2dd4bf;
+      border-left: 2px solid #2dd4bf;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .bh-datav-scanlines {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.22) 50%), linear-gradient(90deg, rgba(45, 212, 191, 0.02), rgba(0, 0, 0, 0.01), rgba(45, 212, 191, 0.02));
+      background-size: 100% 3px, 6px 100%;
+      pointer-events: none;
+      z-index: 3;
+      opacity: 0.7;
+    }
+
+    #bh-datav-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 2;
+    }
+
+    .bh-datav-hud-top {
+      position: absolute;
+      top: 10px;
+      left: 14px;
+      right: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      color: #94a7b0;
+      z-index: 5;
+      pointer-events: none;
+    }
+    .bh-datav-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      color: #2dd4bf;
+      letter-spacing: 0.06em;
+    }
+    .bh-datav-pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #2dd4bf;
+      box-shadow: 0 0 8px #2dd4bf;
+      animation: bh-blink 1.4s infinite ease-in-out;
+    }
+    @keyframes bh-blink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.8); }
+    }
+
+    .bh-datav-hud-left {
+      position: absolute;
+      top: 36px;
+      left: 14px;
+      width: 112px;
+      background: rgba(8, 14, 20, 0.78);
+      border: 1px solid rgba(45, 212, 191, 0.25);
+      border-radius: 6px;
+      padding: 6px 8px;
+      z-index: 5;
+      font-family: 'JetBrains Mono', monospace;
+      backdrop-filter: blur(4px);
+      pointer-events: none;
+    }
+    .bh-hud-title {
+      font-size: 8px;
+      color: #94a7b0;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 2px;
+    }
+    .bh-hud-metric {
+      font-size: 13px;
+      font-weight: 700;
+      color: #2dd4bf;
+      line-height: 1.1;
+    }
+    .bh-hud-submetric {
+      font-size: 7.5px;
+      color: #64748b;
+      margin-bottom: 4px;
+    }
+    .bh-hud-wave {
+      width: 100%;
+      height: 22px;
+      display: block;
+    }
+
+    .bh-datav-hud-right {
+      position: absolute;
+      top: 36px;
+      right: 14px;
+      width: 126px;
+      background: rgba(8, 14, 20, 0.78);
+      border: 1px solid rgba(45, 212, 191, 0.25);
+      border-radius: 6px;
+      padding: 6px 8px;
+      z-index: 5;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      backdrop-filter: blur(4px);
+      pointer-events: none;
+    }
+    .bh-pipe-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2.5px 0;
+      border-bottom: 1px dashed rgba(241, 246, 248, 0.08);
+      color: #94a7b0;
+    }
+    .bh-pipe-item:last-child { border-bottom: none; }
+    .bh-pipe-item .val {
+      font-weight: 700;
+      font-size: 8px;
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+    .bh-pipe-item .val-ok { background: rgba(45, 212, 191, 0.18); color: #2dd4bf; }
+    .bh-pipe-item .val-gold { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+
+    .bh-datav-hud-bottom {
+      position: absolute;
+      bottom: 8px;
+      left: 14px;
+      right: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      z-index: 5;
+      background: rgba(8, 14, 20, 0.85);
+      border: 1px solid rgba(45, 212, 191, 0.25);
+      border-radius: 4px;
+      padding: 4px 8px;
+      backdrop-filter: blur(4px);
+    }
+    .bh-ticker-wrap {
+      overflow: hidden;
+      white-space: nowrap;
+      color: #cbd5e1;
+      flex: 1;
+      margin-right: 10px;
+    }
+    .bh-ticker-text {
+      display: inline-block;
+      animation: bh-marquee 20s linear infinite;
+    }
+    @keyframes bh-marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .bh-ctrl-btn {
+      background: rgba(45, 212, 191, 0.12);
+      border: 1px solid rgba(45, 212, 191, 0.35);
+      color: #2dd4bf;
+      border-radius: 3px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      padding: 2px 7px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      transition: all 0.2s;
+    }
+    .bh-ctrl-btn:hover {
+      background: #2dd4bf;
+      color: #061016;
+    }
+
+    @media (max-width: 639px) {
+      .bh-datav-cockpit {
+        height: 290px;
+      }
+      .bh-datav-hud-left {
+        width: 95px;
+        padding: 4px 6px;
+      }
+      .bh-datav-hud-right {
+        width: 105px;
+        padding: 4px 6px;
+        font-size: 7.5px;
+      }
+      .bh-hud-metric {
+        font-size: 11px;
+      }
+      .bh-datav-hud-top {
+        font-size: 8px;
+      }
+    }
+
     .bh-svg-panel {
       width: 100%;
       height: auto;
@@ -2286,7 +2538,51 @@
               <h3 data-i18n="dash.flow_title">Alur validasi data peta mata air BelikHub</h3>
             </div>
             <div class="bh-diagram-wrap">
-              <div class="dg" data-icon-base="assets/icons/demo/" data-diagram='{"layout":"hub","alt":"Pusat validasi BelikHub menghubungkan GPS lapangan, grid 5 km, uji debit, rorak, dan peta mata air.","center":{"label":"Grid 5 km","icon":"ui:shield"},"spokes":[{"label":"GPS","icon":"ui:map-pin"},{"label":"Survei","icon":"ui:waves"},{"label":"Rorak","icon":"ui:layers"},{"label":"Peta","icon":"ui:check"}]}'></div>
+              <div class="bh-datav-cockpit" id="bh-datav-container" role="region" aria-label="Visualisasi telemetri alur data hidrologi BelikHub DataV">
+                <div class="bh-corner-tr" aria-hidden="true"></div>
+                <div class="bh-corner-bl" aria-hidden="true"></div>
+                <div class="bh-datav-scanlines" aria-hidden="true"></div>
+
+                <!-- HUD Top -->
+                <div class="bh-datav-hud-top" aria-hidden="true">
+                  <span class="bh-datav-tag">
+                    <span class="bh-datav-pulse-dot"></span>
+                    DATAV // HYDRO-LOGIC TELEMETRY
+                  </span>
+                  <span>LAT -7.18° LON 109.95° // GRID 5KM SHA-256</span>
+                </div>
+
+                <!-- HUD Left: Waveform -->
+                <div class="bh-datav-hud-left" aria-hidden="true">
+                  <div class="bh-hud-title">Debit Komunitas</div>
+                  <div class="bh-hud-metric">387.5 <span style="font-size:9px;font-weight:400">L/s</span></div>
+                  <div class="bh-hud-submetric">BASELINE 16 BELIK</div>
+                  <canvas class="bh-hud-wave" id="bh-hud-wave-canvas" width="96" height="22"></canvas>
+                </div>
+
+                <!-- HUD Right: Validation Pipeline -->
+                <div class="bh-datav-hud-right" aria-hidden="true">
+                  <div class="bh-hud-title" style="margin-bottom:3px;">Protokol Validasi</div>
+                  <div class="bh-pipe-item"><span>01 GPS FIELD</span><span class="val val-gold">AES-256</span></div>
+                  <div class="bh-pipe-item"><span>02 GRID 5KM</span><span class="val val-ok">MASKED</span></div>
+                  <div class="bh-pipe-item"><span>03 VOLUMETRIK</span><span class="val val-ok">98.4%</span></div>
+                  <div class="bh-pipe-item"><span>04 PETA PUBLIK</span><span class="val val-ok">SECURE</span></div>
+                </div>
+
+                <!-- 3D Canvas -->
+                <canvas id="bh-datav-canvas"></canvas>
+
+                <!-- HUD Bottom: Telemetry Ticker & Control -->
+                <div class="bh-datav-hud-bottom">
+                  <div class="bh-ticker-wrap" aria-hidden="true">
+                    <span class="bh-ticker-text">
+                      ● NODE #01 TUK BISMO 260 L/S [VERIFIED] &nbsp;·&nbsp; NODE #02 SIKUCING 85 L/S [ACTIVE] &nbsp;·&nbsp; NODE #03 WATULUMBUNG 38 L/S &nbsp;·&nbsp; NODE #04 WONOMERTO 4.5 L/S &nbsp;·&nbsp; PARIT RORAK 142 UNIT &nbsp;·&nbsp; PROTEKSI SPASIAL 5 KM AKTIF &nbsp;·&nbsp;
+                      ● NODE #01 TUK BISMO 260 L/S [VERIFIED] &nbsp;·&nbsp; NODE #02 SIKUCING 85 L/S [ACTIVE] &nbsp;·&nbsp; NODE #03 WATULUMBUNG 38 L/S &nbsp;·&nbsp; NODE #04 WONOMERTO 4.5 L/S &nbsp;·&nbsp; PARIT RORAK 142 UNIT &nbsp;·&nbsp; PROTEKSI SPASIAL 5 KM AKTIF &nbsp;·&nbsp;
+                    </span>
+                  </div>
+                  <button type="button" class="bh-ctrl-btn" id="bh-rot-toggle" aria-label="Jeda atau lanjutkan animasi telemetri" aria-pressed="false">PAUSE</button>
+                </div>
+              </div>
             </div>
             <p class="bh-body" id="dashboard-impact-status" data-i18n="impact.status_loading">Memuat data capaian…</p>
           </div>
