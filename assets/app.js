@@ -68,7 +68,7 @@ if (sectionNavLinks.length && 'IntersectionObserver' in window) {
 export const translations = {
   id: {
     'doc.title': 'BelikHub: Platform Peta Mata Air & Pemulihan Daerah Tangkapan Air',
-    'doc.desc': 'Platform peta mata air komunitas di Jawa Tengah dan DIY: pemantauan debit, grid privasi 5 km, parit resapan rorak, dan aksi relawan hulu ke hilir.',
+    'doc.desc': 'Platform peta mata air komunitas & pemulihan daerah tangkapan air Indonesia: pemantauan debit, grid privasi 5 km, parit resapan rorak, dan aksi konservasi terpadu (pilot project berbasis di Jawa Tengah).',
 
     // Nav
     'skip.main': 'Langsung ke isi',
@@ -82,7 +82,7 @@ export const translations = {
     'nav.impact': 'Dampak',
     'nav.map': 'Peta',
     'nav.rorak': 'Rorak',
-    'nav.order_rorak': 'Pesan rorak mata air',
+    'nav.order_rorak': 'Aksi Pulangkan Air',
     'nav.learn': 'Belajar',
     'nav.media': 'Video lapangan',
     'nav.community': 'Komunitas',
@@ -93,9 +93,9 @@ export const translations = {
     'nav.join_action': 'Gabung Aksi',
 
     // Hero
-    'hero.tag': 'Platform Peta Mata Air · Jawa Tengah & DIY',
+    'hero.tag': 'Platform Peta & Konservasi Mata Air Indonesia',
     'hero.title': 'Platform peta mata air untuk desa.',
-    'hero.intro': 'Dokumentasi debit mata air, pemetaan grid 5 km, dan parit resapan rorak bersama warga hulu.',
+    'hero.intro': 'Dokumentasi debit mata air, pemetaan grid spasial 5 km, dan inisiatif parit resapan rorak tanah di seluruh penjuru Indonesia — dirintis dari laboratorium hidrologi lereng pegunungan Jawa Tengah.',
     'hero.btn_map': 'Jelajahi peta',
     'hero.btn_impact': 'Lihat capaian BelikHub',
     'hero.btn_action': 'Aksi pulangkan air',
@@ -117,7 +117,7 @@ export const translations = {
     'visi.btn_volunteer': 'Gabung menjadi relawan',
     'visi.btn_roadmap': 'Peta jalan 2030',
     'visi.stat1_dt': 'Target Mata Air',
-    'visi.stat1_dd': '88 belik',
+    'visi.stat1_dd': '88 belik pilot',
     'visi.stat2_dt': 'Potensi Debit',
     'visi.stat3_dt': 'Penerima Manfaat',
     'visi.stat3_dd': '2.500+ KK',
@@ -127,7 +127,7 @@ export const translations = {
     'visi.step2_label': '02 · Parit resapan rorak',
     'visi.step2_val': '2.000 L / unit',
     'visi.step3_label': '03 · Audit debit tahunan',
-    'visi.step3_val': 'Jawa Tengah & DIY',
+    'visi.step3_val': 'Seluruh Indonesia (Pilot: Jawa Tengah)',
 
     // Home Impact
     'impact.tag': 'Dampak terukur',
@@ -197,7 +197,7 @@ export const translations = {
     'dash.title': 'Dampak nyata pemulihan mata air.',
     'dash.lead': 'Ringkasan capaian restorasi, metrik baseline, dan kontribusi relawan di seluruh wilayah dampingan.',
     'dash.target_springs': 'Target Mata Air',
-    'dash.target_springs_desc': 'Kawasan kritis Jawa Tengah & DIY',
+    'dash.target_springs_desc': 'Kawasan pilot & target prioritas nasional',
     'dash.potential_discharge': 'Potensi Debit Terdata',
     'dash.potential_discharge_desc': 'Kapasitas baseline mata air',
     'dash.beneficiaries': 'Penerima Manfaat',
@@ -230,26 +230,26 @@ export const translations = {
     'community.card4_desc': 'Pembuatan parit jebakan air hujan searah kontur',
 
     // Pulangkan Air
-    'rorak.section': '§ 04 — Aksi nyata',
-    'rorak.title': 'Pulangkan air hujan lewat rorak.',
-    'rorak.lead': 'Rorak adalah parit resapan yang memotong aliran limpasan permukaan (surface runoff), menjebak air hujan agar meresap mengisi kembali akuifer pembentuk mata air. Warga menggali, pemilik lahan memesan, BelikHub mengaudit.',
-    'rorak.subtitle': 'Buat rorak di lahan Anda atau jadi tenaga penggali',
-    'rorak.desc': 'Setiap 1 unit rorak standar (2m x 0.5m x 0.5m) berpotensi meresapkan hingga 2.000 liter air hujan per musim ke dalam tanah, mencegah erosi tanah pucuk dan banjir bandang hilir.',
-    'rorak.btn_order': 'Pesan Rorak (Rp20.000/unit)',
-    'rorak.btn_maker': 'Daftar Jadi Pembuat Rorak',
-    'rorak.spec_title': 'Spesifikasi Standar Rorak BelikHub',
-    'rorak.spec1_label': 'Dimensi lubang',
+    'rorak.section': '04 · Gerakan konservasi',
+    'rorak.title': 'Pulangkan air hujan ke dalam tanah.',
+    'rorak.lead': 'Rorak adalah teknik konservasi tanah dan air: parit resapan penahan limpasan di lereng hulu agar meresap kembali mengisi cadangan akuifer mata air. Diinisiasi gotong royong warga, didukung padat karya tani lokal, dan diverifikasi berbasis data spasial.',
+    'rorak.subtitle': 'Inisiasi rorak di lahan Anda atau bergabung satgas konservasi',
+    'rorak.desc': 'Setiap 1 unit rorak kontur baku (2m × 0.5m × 0.5m) berpotensi meresapkan hingga 2.000 liter air hujan per musim ke dalam tanah, mencegah erosi hara permukaan dan menstabilkan debit mata air di hilir.',
+    'rorak.btn_order': 'Inisiasi Rorak di Lahan',
+    'rorak.btn_maker': 'Gabung Satgas Konservasi',
+    'rorak.spec_title': 'Spesifikasi Teknis Rorak Resapan BelikHub',
+    'rorak.spec1_label': 'Dimensi lubang baku',
     'rorak.spec2_label': 'Kapasitas serapan',
     'rorak.spec2_val': '2.000 L / musim',
-    'rorak.spec3_label': 'Biaya galian lokal',
-    'rorak.spec3_val': 'Rp20.000 / unit',
+    'rorak.spec3_label': 'Skema pelaksanaan',
+    'rorak.spec3_val': 'Padat karya tani lokal',
     'rorak.spec4_label': 'Tanggul hilir',
     'rorak.spec4_val': '15 cm padat',
-    'rorak.project_label': 'Proyek Komunitas Berjalan',
+    'rorak.project_label': 'Aksi Komunitas Berjalan',
     'rorak.project_status': 'Terbuka',
     'rorak.project_title': '100 Rorak untuk Konservasi Belik Soka',
-    'rorak.project_desc': 'Membangun benteng resapan air hujan di area bukit kapur untuk menghidupkan kembali mata air Belik Soka.',
-    'rorak.btn_support': 'Dukung Proyek Ini',
+    'rorak.project_desc': 'Sabuk resapan air hujan di perbukitan tangkapan air untuk memulihkan kontinuitas aliran mata air Belik Soka.',
+    'rorak.btn_support': 'Dukung Aksi Belik Soka',
 
     // Agenda
     'agenda.section': '§ 05 — Jadwal lapangan',
@@ -297,7 +297,7 @@ export const translations = {
     'learn.r2_title': 'Wonomerto: Dari Kekeringan ke 4,5 L/s',
     'learn.r2_desc': 'Kilas balik kekeringan 12 bulan di Desa Wonomerto hingga aliran kembali melayani 65 keluarga.',
     'learn.r3_title': 'Memulangkan Air Hujan ke Akuifer',
-    'learn.r3_desc': 'Rincian teknis mengapa rorak kontur Rp20.000/unit efektif menekan limpasan erosi di lereng.',
+    'learn.r3_desc': 'Rincian teknis mengapa rorak kontur padat karya efektif menahan erosi dan meresapkan jutaan liter air ke tanah.',
     'learn.r4_title': 'Mengapa Debit Mata Air Menurun?',
     'learn.r4_desc': 'Analisis koefisien infiltrasi tanah di lahan terbuka serta langkah perbaikannya.',
     'learn.a1_title': 'Galian 30 Rorak Lereng Bismo',
@@ -307,6 +307,9 @@ export const translations = {
     'learn.a3_title': 'Tanam 250 Bibit Hulu Watulumbung',
     'learn.a3_desc': 'Titik kumpul Desa Tambakboyo, Kec. Reban · pukul 07.00 WIB.',
     'learn.btn_open': 'Buka modul mata air',
+    'learn.btn_open_spring': 'Buka modul springshed',
+    'learn.btn_open_trees': 'Buka modul pohon endemik',
+    'learn.btn_open_rorak': 'Buka modul rorak kontur',
     'learn.btn_read_article': 'Baca artikel mata air',
     'learn.btn_read_story': 'Baca kisah mata air',
 
@@ -329,8 +332,8 @@ export const translations = {
     'faq.a1': 'Koordinat GPS asli dienkripsi agar mata air desa terlindung dari eksploitasi berlebih.',
     'faq.q2': 'Bagaimana sistem poin relawan di platform BelikHub bekerja?',
     'faq.a2': 'Survei 100 poin, tanam 100 poin, rorak 500 poin, restorasi 1.000 poin. Raih 20.000 poin untuk pengajuan restorasi desa.',
-    'faq.q3': 'Apakah biaya pembuatan rorak BelikHub disalurkan langsung ke warga?',
-    'faq.a3': 'Ya. Kontribusi Rp20.000 per unit disalurkan kepada kelompok penggali lokal bersama pemilik lahan.',
+    'faq.q3': 'Apakah BelikHub menjual rorak sebagai produk komersial?',
+    'faq.a3': 'Tidak. BelikHub adalah platform teknologi komunitas. Rorak adalah gerakan konservasi tanah dan air yang dikerjakan gotong royong serta padat karya warga lokal. Dukungan dana 100% disalurkan sebagai upah kerja tenaga penggali desa bersama pendampingan teknis kontur.',
     'faq.q4': 'Bagaimana PDAM atau BUMDes mengakses data mata air BelikHub?',
     'faq.a4': 'Instansi mengajukan kolaborasi data historis lewat formulir kemitraan BelikHub di bawah.',
 
@@ -339,14 +342,14 @@ export const translations = {
     'footer.closing_title': 'Jaga mata air desa tetap mengalir.',
     'footer.closing_desc': 'Peta terpadu, parit resapan rorak, dan aksi warga untuk kedaulatan air bersih Nusantara.',
     'footer.closing_cta': 'Jelajahi peta',
-    'footer.photo_credit': 'Foto lapangan oleh tim relawan BelikHub, Jawa Tengah dan DIY.',
+    'footer.photo_credit': 'Foto lapangan oleh tim relawan BelikHub Indonesia. Pilot project & riset hidrologi berbasis di Jawa Tengah.',
     'footer.newsletter_title': 'Berlangganan Kabar Pemulihan',
     'footer.newsletter_placeholder': 'Masukkan email Anda',
     'footer.newsletter_btn': 'Daftar kabar BelikHub',
     'footer.explore': 'Jelajahi',
     'footer.community_actions': 'Aksi Komunitas',
-    'footer.order_rorak': 'Pemesanan Rorak Tanah',
-    'footer.join_maker': 'Pendaftaran Tukang Rorak',
+    'footer.order_rorak': 'Inisiasi Rorak Resapan',
+    'footer.join_maker': 'Satgas Konservasi Desa',
     'footer.csr': 'Program Kemitraan CSR',
     'footer.transparency': 'Transparansi & Info',
     'footer.faq': 'Tanya Jawab (FAQ)',
@@ -354,12 +357,12 @@ export const translations = {
     'footer.privacy': 'Kebijakan Privasi & Data',
     'footer.copyright': '© 2026 BelikHub Indonesia.',
     'actionbar.aria': 'Aksi cepat',
-    'actionbar.order': 'Pesan rorak'
+    'actionbar.order': 'Aksi resapan'
   },
 
   en: {
     'doc.title': 'BelikHub: Community Spring Mapping & Watershed Restoration Platform',
-    'doc.desc': 'Community spring mapping platform across Central Java and Yogyakarta: discharge monitoring, 5 km privacy grid, rorak infiltration trenches, and volunteer conservation.',
+    'doc.desc': 'Nationwide community spring mapping & watershed restoration platform across Indonesia: flow tracking, 5 km privacy grid, contour rorak infiltration trenches, and community actions (pilot project based in Central Java).',
 
     // Nav
     'skip.main': 'Skip to content',
@@ -373,7 +376,7 @@ export const translations = {
     'nav.impact': 'Impact',
     'nav.map': 'Map',
     'nav.rorak': 'Roraks',
-    'nav.order_rorak': 'Order spring rorak',
+    'nav.order_rorak': 'Water Return Action',
     'nav.learn': 'Learn',
     'nav.media': 'Field video',
     'nav.community': 'Community',
@@ -384,9 +387,9 @@ export const translations = {
     'nav.join_action': 'Join Action',
 
     // Hero
-    'hero.tag': 'Central Java & DIY Spring Recovery',
+    'hero.tag': 'National Spring Mapping & Conservation · Indonesia',
     'hero.title': 'Village spring map tool.',
-    'hero.intro': 'Spring flow tracking, 5 km public grid mapping, and contour rorak trenches with upstream villagers.',
+    'hero.intro': 'Participatory spring flow documentation, 5 km spatial grid mapping, and community rorak infiltration initiatives across Indonesia — pioneered from Central Java mountain hydrology pilots.',
     'hero.btn_map': 'Explore map',
     'hero.btn_impact': 'View Verified Impact',
     'hero.btn_action': 'Return Water Action',
@@ -408,7 +411,7 @@ export const translations = {
     'visi.btn_volunteer': 'Join as a Volunteer',
     'visi.btn_roadmap': 'Explore 2030 Roadmap',
     'visi.stat1_dt': 'Target Springs',
-    'visi.stat1_dd': '88 springs',
+    'visi.stat1_dd': '88 pilot springs',
     'visi.stat2_dt': 'Potential Flow',
     'visi.stat3_dt': 'Beneficiaries',
     'visi.stat3_dd': '2,500+ families',
@@ -418,7 +421,7 @@ export const translations = {
     'visi.step2_label': '02 · Rorak infiltration trench',
     'visi.step2_val': '2,000 L / unit',
     'visi.step3_label': '03 · Annual discharge audit',
-    'visi.step3_val': 'Central Java & DIY',
+    'visi.step3_val': 'All Indonesia (Pilot: Central Java)',
 
     // Home Impact
     'impact.tag': 'Measurable Impact',
@@ -488,7 +491,7 @@ export const translations = {
     'dash.title': 'Measurable spring recovery impact.',
     'dash.lead': 'Summary of ecological restoration, baseline metrics, and volunteer contributions across all assisted regions.',
     'dash.target_springs': 'Target Springs',
-    'dash.target_springs_desc': 'Critical zones across Central Java & DIY',
+    'dash.target_springs_desc': 'Pilot zones & national priority springs',
     'dash.potential_discharge': 'Recorded Potential Flow',
     'dash.potential_discharge_desc': 'Baseline spring capacity',
     'dash.beneficiaries': 'Beneficiary Families',
@@ -521,26 +524,26 @@ export const translations = {
     'community.card4_desc': 'Dig contour infiltration trenches to recharge groundwater',
 
     // Pulangkan Air
-    'rorak.section': '§ 04 — Real Action',
-    'rorak.title': 'Return rainwater via rorak trenches.',
-    'rorak.lead': 'Roraks are contour infiltration trenches that intercept surface runoff, trapping rainwater so it seeps down to feed spring aquifers. Villagers dig, landowners order, BelikHub verifies.',
-    'rorak.subtitle': 'Build trenches on your land or join as a paid digger',
-    'rorak.desc': 'A standard 1-unit rorak (2m x 0.5m x 0.5m) infiltrates up to 2,000 liters of rainwater per season into the soil, halting topsoil erosion and downstream flash floods.',
-    'rorak.btn_order': 'Order Roraks (Rp20,000/unit)',
-    'rorak.btn_maker': 'Register as a Rorak Digger',
-    'rorak.spec_title': 'BelikHub Standard Rorak Specifications',
-    'rorak.spec1_label': 'Trench dimensions',
+    'rorak.section': '04 · Conservation Action',
+    'rorak.title': 'Return rainwater deep into the ground.',
+    'rorak.lead': 'Roraks are nature-based soil and water conservation trenches: contour infiltration trenches that intercept surface runoff so rainwater infiltrates to recharge aquifers. Initiated by community gotong royong, powered by local agricultural labor, and verified with geospatial data.',
+    'rorak.subtitle': 'Initiate roraks on your land or join the conservation taskforce',
+    'rorak.desc': 'Each standard contour rorak unit (2m × 0.5m × 0.5m) infiltrates up to 2,000 liters of rainwater per season, preventing topsoil erosion and stabilizing downstream spring discharge.',
+    'rorak.btn_order': 'Initiate Rorak on Land',
+    'rorak.btn_maker': 'Join Conservation Taskforce',
+    'rorak.spec_title': 'BelikHub Technical Rorak Specifications',
+    'rorak.spec1_label': 'Standard pit dimensions',
     'rorak.spec2_label': 'Infiltration capacity',
     'rorak.spec2_val': '2,000 L / season',
-    'rorak.spec3_label': 'Local digging fee',
-    'rorak.spec3_val': 'Rp20,000 / unit',
+    'rorak.spec3_label': 'Implementation scheme',
+    'rorak.spec3_val': 'Local agricultural labor & gotong royong',
     'rorak.spec4_label': 'Downslope berm',
     'rorak.spec4_val': '15 cm compacted',
-    'rorak.project_label': 'Ongoing Community Project',
+    'rorak.project_label': 'Active Community Initiative',
     'rorak.project_status': 'Open',
     'rorak.project_title': '100 Roraks for Belik Soka Conservation',
-    'rorak.project_desc': 'Building groundwater retention trenches in limestone hills to revive the dried Belik Soka spring.',
-    'rorak.btn_support': 'Support This Project',
+    'rorak.project_desc': 'Rainwater infiltration belts across catchment hills to revive perennial flow at Belik Soka spring.',
+    'rorak.btn_support': 'Support Belik Soka Action',
 
     // Agenda
     'agenda.section': '§ 05 — Field Schedules',
@@ -588,7 +591,7 @@ export const translations = {
     'learn.r2_title': 'Wonomerto: From Drought to 4.5 L/s',
     'learn.r2_desc': 'A 12-month drought turnaround in Wonomerto Village restoring water for 65 families.',
     'learn.r3_title': 'Returning Rainwater to Aquifers',
-    'learn.r3_desc': 'Technical breakdown of why Rp20,000 contour roraks effectively cut slope erosion runoff.',
+    'learn.r3_desc': 'Technical breakdown of how community-built contour roraks halt runoff erosion and recharge millions of liters to aquifers.',
     'learn.r4_title': 'Why Are Spring Flows Declining?',
     'learn.r4_desc': 'Soil infiltration loss analysis on cleared slopes and practical community fixes.',
     'learn.a1_title': 'Digging 30 Roraks on Bismo Slope',
@@ -598,6 +601,9 @@ export const translations = {
     'learn.a3_title': 'Planting 250 Seedlings at Watulumbung',
     'learn.a3_desc': 'Meeting point: Tambakboyo Village, Reban · 07:00 WIB.',
     'learn.btn_open': 'Open spring module',
+    'learn.btn_open_spring': 'Open springshed module',
+    'learn.btn_open_trees': 'Open native tree module',
+    'learn.btn_open_rorak': 'Open contour rorak module',
     'learn.btn_read_article': 'Read Full Article',
     'learn.btn_read_story': 'Read Full Story',
 
@@ -620,8 +626,8 @@ export const translations = {
     'faq.a1': 'Exact GPS coordinates stay encrypted so village springs remain protected from over-extraction.',
     'faq.q2': 'How does the volunteer points system work on BelikHub?',
     'faq.a2': 'Survey 100 pts, tree planting 100 pts, rorak 500 pts, restoration 1,000 pts. Reach 20,000 pts to propose a village restoration.',
-    'faq.q3': 'Do rorak construction fees go directly to local villagers?',
-    'faq.a3': 'Yes. The Rp20,000/unit fee goes directly to local village digger groups and participating landowners.',
+    'faq.q3': 'Does BelikHub sell roraks as commercial products?',
+    'faq.a3': 'No. BelikHub is a civic technology platform. Rorak construction is a nature-based watershed conservation movement carried out through cash-for-work community labor by local farmers. 100% of funding is disbursed as direct living wages to village excavators alongside technical contour support.',
     'faq.q4': 'How can PDAMs or BUMDes access BelikHub spring records?',
     'faq.a4': 'Institutions can request historical discharge collaborations via the BelikHub partnership form below.',
 
@@ -630,14 +636,14 @@ export const translations = {
     'footer.closing_title': 'Keep rural water springs flowing.',
     'footer.closing_desc': 'Unified mapping, rorak infiltration trenches, and community action for rural clean-water sovereignty.',
     'footer.closing_cta': 'Explore map',
-    'footer.photo_credit': 'Field photography by BelikHub volunteers, Central Java and DIY.',
+    'footer.photo_credit': 'Field photography by BelikHub Indonesia volunteers. Hydrology research & pilot projects based in Central Java.',
     'footer.newsletter_title': 'Subscribe to Field Updates',
     'footer.newsletter_placeholder': 'Enter your email address',
     'footer.newsletter_btn': 'Subscribe',
     'footer.explore': 'Explore',
     'footer.community_actions': 'Community Actions',
-    'footer.order_rorak': 'Soil Rorak Trench Orders',
-    'footer.join_maker': 'Digger Taskforce Registration',
+    'footer.order_rorak': 'Initiate Infiltration Rorak',
+    'footer.join_maker': 'Village Conservation Taskforce',
     'footer.csr': 'Institutional CSR Programs',
     'footer.transparency': 'Transparency & Info',
     'footer.faq': 'Frequently Asked Questions (FAQ)',
@@ -645,7 +651,7 @@ export const translations = {
     'footer.privacy': 'Privacy & Data Protection',
     'footer.copyright': '© 2026 BelikHub Indonesia.',
     'actionbar.aria': 'Quick actions',
-    'actionbar.order': 'Order roraks'
+    'actionbar.order': 'Infiltration action'
   }
 };
 
@@ -776,11 +782,6 @@ const applyTheme = (theme, showToast = false) => {
   const heroBg = $('#hero .bh-hero-layer');
   if (heroBg) {
     heroBg.setAttribute('src', isDark ? 'images/bg-hero-night.jpg' : 'images/bg-hero-mist.jpg');
-  }
-
-  const topoImg = $('#kemitraan .bh-photo-frame--topo img');
-  if (topoImg) {
-    topoImg.setAttribute('src', isDark ? 'images/topo-dark.webp' : 'images/topo-light.webp');
   }
 
   localStorage.setItem('belikhub-theme', isDark ? 'dark' : 'light');
@@ -1707,16 +1708,16 @@ $('#points-btn')?.addEventListener('click', () => {
 const openOrderRorakModal = () => {
   const isEn = currentLanguage === 'en';
   openModal(
-    isEn ? 'Order Roraks for Your Land' : 'Pemesanan Rorak untuk Lahan Anda',
+    isEn ? 'Initiate Contour Rorak Infiltration' : 'Inisiasi Pembuatan Parit Rorak Resapan',
     `
     <form id="rorak-order-form" class="bh-modal-stack">
       <p class="bh-modal-note">
-        ${isEn ? 'Order contour infiltration trenches (roraks) for your sloped orchard or farmland. Trained local villagers will dig trenches according to contour lines.' : 'Pesan pembuatan parit rorak resapan di lahan perkebunan atau pekarangan miring Anda. Tenaga kerja lokal yang terlatih akan menggali rorak sesuai garis kontur.'}
+        ${isEn ? 'Initiate contour infiltration trenches (roraks) for your sloped orchard, garden, or critical catchment land. BelikHub coordinates technical A-frame contour layout and empowers local farming groups through fair-wage community labor.' : 'Ajukan inisiatif pembuatan rorak resapan air di pekarangan, kebun lereng, atau kawasan tangkapan air Anda. BelikHub mengoordinasikan pendampingan garis kontur A-frame dan memberdayakan kelompok tani lokal sebagai pelaksana padat karya.'}
       </p>
 
       <div class="bh-modal-grid">
         <div class="field">
-          <label for="order-name">${isEn ? 'Landowner Name' : 'Nama Pemilik Lahan'}</label>
+          <label for="order-name">${isEn ? 'Landowner / Initiator Name' : 'Nama Pemilik Lahan / Pengusul'}</label>
           <input id="order-name" required name="name" placeholder="${isEn ? 'Full name' : 'Nama lengkap'}" />
         </div>
         <div class="field">
@@ -1726,12 +1727,12 @@ const openOrderRorakModal = () => {
       </div>
 
       <div class="field">
-        <label for="order-location">${isEn ? 'Land Location (Village & District)' : 'Lokasi Lahan (Desa & Kecamatan)'}</label>
+        <label for="order-location">${isEn ? 'Land Location (Village, District & Regency)' : 'Lokasi Lahan (Desa, Kecamatan & Kabupaten)'}</label>
         <input id="order-location" required name="location" placeholder="${isEn ? 'e.g. Bismo Village, Blado, Batang' : 'Contoh: Desa Bismo, Kec. Blado, Kab. Batang'}" />
       </div>
 
       <div class="field">
-        <label for="rorak-qty">${isEn ? 'Number of Rorak Units Ordered' : 'Jumlah Rorak yang Dipesan'}</label>
+        <label for="rorak-qty">${isEn ? 'Target Number of Rorak Units' : 'Target Jumlah Rorak Resapan'}</label>
         <div class="bh-qty-row">
           <input id="rorak-qty" name="quantity" type="number" min="1" max="100" value="5" />
           <span class="bh-modal-note">${isEn ? 'Units (standard 200 × 50 × 50 cm)' : 'Unit rorak (dimensi baku 200 × 50 × 50 cm)'}</span>
@@ -1740,22 +1741,22 @@ const openOrderRorakModal = () => {
 
       <div class="bh-modal-box bh-modal-box--tint">
         <div class="bh-modal-split">
-          <span class="label c-accent">${isEn ? 'Estimated Digging Cost:' : 'Estimasi Biaya Penggalian:'}</span>
+          <span class="label c-accent">${isEn ? 'Estimated Community Labor Support:' : 'Estimasi Dukungan Padat Karya:'}</span>
           <b id="rorak-cost" class="bh-modal-stat">Rp100.000</b>
         </div>
-        <p class="bh-modal-note">${isEn ? 'Cost Rp20,000/unit (Rp16,000 paid to village diggers + Rp4,000 field audit).' : 'Biaya Rp20.000/unit (Rp16.000 untuk upah warga penggali + Rp4.000 audit operasional).'}</p>
+        <p class="bh-modal-note">${isEn ? 'Disbursed directly as local living wages for village diggers and geospatial verification.' : 'Disalurkan langsung 100% sebagai upah kerja padat karya warga lokal dan verifikasi geospasial titik resapan.'}</p>
         <p class="bh-modal-note">
-          <strong>${isEn ? 'Infiltration Capacity:' : 'Kapasitas Resapan:'}</strong> <span id="rorak-absorption">~10.000 Liter air hujan/musim</span>
+          <strong>${isEn ? 'Infiltration Capacity:' : 'Potensi Resapan Air:'}</strong> <span id="rorak-absorption">~10.000 Liter air hujan/musim</span>
         </p>
       </div>
 
       <div class="field">
         <label for="order-notes">${isEn ? 'Land Condition Notes (Optional)' : 'Catatan Kondisi Lahan (Opsional)'}</label>
-        <textarea id="order-notes" name="notes" rows="2" placeholder="${isEn ? 'Slope steepness, crops, or access paths...' : 'Kemiringan lahan, jenis tanaman, atau akses jalan...'}"></textarea>
+        <textarea id="order-notes" name="notes" rows="2" placeholder="${isEn ? 'Slope steepness, crops, or access paths...' : 'Kemiringan lereng, tutupan tanaman, atau akses jalan...'}"></textarea>
       </div>
 
       <button id="submit-rorak-order-btn" class="btn btn-teal" type="submit">
-        ${isEn ? 'Confirm Rorak Order →' : 'Konfirmasi Pesanan Rorak →'}
+        ${isEn ? 'Submit Rorak Initiative →' : 'Kirim Pengajuan Inisiasi Rorak →'}
       </button>
     </form>
     `
@@ -1780,7 +1781,7 @@ const openOrderRorakModal = () => {
     e.preventDefault();
     const btn = $('#submit-rorak-order-btn');
     btn.disabled = true;
-    btn.textContent = isEn ? 'Submitting order…' : 'Mendaftarkan pesanan…';
+    btn.textContent = isEn ? 'Submitting proposal…' : 'Mengirimkan pengajuan…';
 
     const formData = new FormData(form);
     const qty = Math.max(1, Math.min(100, parseInt(qtyInput?.value || '1', 10) || 1));
@@ -1804,7 +1805,7 @@ const openOrderRorakModal = () => {
 
       closeModal();
       openModal(
-        isEn ? 'Rorak Order Recorded!' : 'Pesanan Rorak Berhasil Dicatat!',
+        isEn ? 'Rorak Initiative Recorded!' : 'Pengajuan Inisiasi Rorak Berhasil Dicatat!',
         `
         <div class="bh-modal-stack bh-modal-center">
           <div class="bh-modal-check">
@@ -1812,7 +1813,7 @@ const openOrderRorakModal = () => {
           </div>
           <h3 class="bh-modal-subtitle">${isEn ? 'Thank You for Taking Action!' : 'Terima Kasih atas Aksi Nyata Anda!'}</h3>
           <p class="bh-modal-note">
-            ${isEn ? `Your order for <strong>${qty} rorak units</strong> has been received with reference code <strong>#${escapeHtml(data.id || 'RO-2026')}</strong>. Our field coordinator will contact your WhatsApp within 24 hours for slope verification.` : `Pesanan pembuatan <strong>${qty} unit rorak</strong> telah diterima dengan kode referensi <strong>#${escapeHtml(data.id || 'RO-2026')}</strong>. Koordinator lapangan BelikHub akan menghubungi WhatsApp Anda dalam 1×24 jam untuk survei kontur lahan.`}
+            ${isEn ? `Your proposal for <strong>${qty} rorak units</strong> has been received with reference code <strong>#${escapeHtml(data.id || 'RO-2026')}</strong>. Our field hydrology coordinator will contact your WhatsApp within 24 hours for land contour alignment.` : `Pengajuan pembuatan <strong>${qty} unit rorak</strong> telah diterima dengan kode referensi <strong>#${escapeHtml(data.id || 'RO-2026')}</strong>. Koordinator lapangan BelikHub akan menghubungi WhatsApp Anda dalam 1×24 jam untuk survei dan panduan kontur lahan.`}
           </p>
           <button type="button" data-close-modal class="btn btn-teal">${isEn ? 'Close & Return' : 'Tutup & Kembali'}</button>
         </div>
@@ -1820,7 +1821,7 @@ const openOrderRorakModal = () => {
       );
     } catch (err) {
       btn.disabled = false;
-      btn.textContent = isEn ? 'Confirm Rorak Order →' : 'Konfirmasi Pesanan Rorak →';
+      btn.textContent = isEn ? 'Submit Rorak Initiative →' : 'Kirim Pengajuan Inisiasi Rorak →';
       toast(err.message);
     }
   });
@@ -1836,11 +1837,11 @@ $$('#order-rorak-btn, #order-rorak-support-btn, #footer-order-rorak').forEach((b
 const openJoinMakerModal = () => {
   const isEn = currentLanguage === 'en';
   openModal(
-    isEn ? 'Register as a Rorak Digger' : 'Pendaftaran Tenaga Pembuat Rorak',
+    isEn ? 'Join Village Conservation Taskforce' : 'Pendaftaran Satgas Konservasi Desa',
     `
     <form id="join-maker-form" class="bh-modal-stack">
       <p class="bh-modal-note">
-        ${isEn ? 'Join our trained village taskforce. Earn Rp16,000 for every verified rorak completed on contour.' : 'Bergabung menjadi tenaga penggali rorak terlatih di desa Anda. Dapatkan insentif Rp16.000 per unit rorak yang selesai digali dan terverifikasi.'}
+        ${isEn ? 'Join the community soil and water conservation taskforce. Receive hands-on A-frame contour training and fair cash-for-work wages for every verified rorak completed.' : 'Bergabung menjadi satgas konservasi tanah dan air di desa Anda. Dapatkan pelatihan kontur A-frame serta insentif padat karya tunai untuk setiap unit rorak yang selesai digali dan terverifikasi.'}
       </p>
 
       <div class="bh-modal-grid">
@@ -1860,22 +1861,22 @@ const openJoinMakerModal = () => {
       </div>
 
       <div class="field">
-        <label for="maker-experience">${isEn ? 'Field / Farming Experience' : 'Pengalaman Pekerjaan Fisik / Tani'}</label>
+        <label for="maker-experience">${isEn ? 'Field / Agricultural Background' : 'Pengalaman Pekerjaan Fisik / Tani'}</label>
         <select id="maker-experience" name="experience">
-          <option value="Petani / Buruh Tani">${isEn ? 'Active Farmer / Farmworker' : 'Petani / Buruh Tani Aktif'}</option>
-          <option value="Tukang Bangunan / Galian">${isEn ? 'Construction / Excavation Worker' : 'Tukang Bangunan / Galian Tanah'}</option>
-          <option value="Warga Komunitas">${isEn ? 'Community Member / Youth' : 'Warga Komunitas / Pemuda Desa'}</option>
+          <option value="Petani / Kelompok Tani">${isEn ? 'Farmer / Agricultural Group' : 'Petani / Anggota Kelompok Tani'}</option>
+          <option value="Pekerja Galian / Fisik">${isEn ? 'Construction / Excavation Worker' : 'Pekerja Galian / Konstruksi Desa'}</option>
+          <option value="Warga Komunitas / Pemuda">${isEn ? 'Community Member / Youth Volunteer' : 'Warga Komunitas / Pemuda Desa'}</option>
         </select>
       </div>
 
       <fieldset class="bh-fieldset">
-        <legend>${isEn ? 'Available Tools' : 'Ketersediaan Alat Kerja'}</legend>
+        <legend>${isEn ? 'Available Field Tools' : 'Ketersediaan Alat Kerja'}</legend>
         <label class="bh-checkbox-row"><input type="checkbox" name="tool_cangkul" checked /> <span>${isEn ? 'Own a hoe (cangkul)' : 'Memiliki cangkul sendiri'}</span></label>
         <label class="bh-checkbox-row"><input type="checkbox" name="tool_linggis" checked /> <span>${isEn ? 'Own a crowbar (linggis)' : 'Memiliki linggis / gancu'}</span></label>
       </fieldset>
 
       <button id="submit-join-maker-btn" class="btn btn-teal" type="submit">
-        ${isEn ? 'Register as a Digger →' : 'Daftar Sebagai Pembuat Rorak →'}
+        ${isEn ? 'Register for Taskforce →' : 'Daftar Satgas Konservasi →'}
       </button>
     </form>
     `
@@ -1910,7 +1911,7 @@ const openJoinMakerModal = () => {
 
       closeModal();
       openModal(
-        isEn ? 'Digger Registration Received' : 'Pendaftaran Pembuat Rorak Diterima',
+        isEn ? 'Taskforce Registration Received' : 'Pendaftaran Satgas Konservasi Diterima',
         `
         <div class="bh-modal-stack bh-modal-center">
           <div class="bh-modal-check">
@@ -1918,7 +1919,7 @@ const openJoinMakerModal = () => {
           </div>
           <h3 class="bh-modal-subtitle">${isEn ? 'Welcome Aboard!' : 'Selamat Bergabung!'}</h3>
           <p class="bh-modal-note">
-            ${isEn ? 'Your information has been logged into the BelikHub taskforce. We will send technical contour guidelines via WhatsApp.' : 'Data Anda telah tercatat dalam satgas penggalian BelikHub. Kami akan mengirimkan jadwal pengarahan teknis garis kontur via WhatsApp.'}
+            ${isEn ? 'Your registration has been logged into the BelikHub conservation network. We will send technical contour guidelines and upcoming field schedules via WhatsApp.' : 'Data Anda telah tercatat dalam satgas konservasi BelikHub. Kami akan mengirimkan jadwal pembekalan teknis garis kontur dan aksi lapangan via WhatsApp.'}
           </p>
           <button type="button" data-close-modal class="btn btn-teal">${isEn ? 'Finish' : 'Selesai'}</button>
         </div>
@@ -1926,7 +1927,7 @@ const openJoinMakerModal = () => {
       );
     } catch (err) {
       btn.disabled = false;
-      btn.textContent = isEn ? 'Register as a Digger →' : 'Daftar Sebagai Pembuat Rorak →';
+      btn.textContent = isEn ? 'Register for Taskforce →' : 'Daftar Satgas Konservasi →';
       toast(err.message);
     }
   });
@@ -2249,8 +2250,8 @@ const storiesData = {
       en: 'Guide: Returning Rainwater to Aquifers via Contour Roraks'
     },
     body: {
-      id: '<p class="mb-3">Air hujan bukanlah limbah yang harus segera dibuang ke selokan dan dialirkan ke sungai. Dalam siklus hidrologi seimbang, sebagian besar air hujan seharusnya meresap ke dalam bumi untuk mengisi cadangan air bawah tanah (groundwater).</p><p class="mb-3">Pembangunan rorak seluas 200x50x50 cm dengan biaya Rp20.000 per unit terbukti menjadi investasi konservasi air paling hemat biaya dan berdampak langsung bagi masyarakat agraris pegunungan.</p>',
-      en: '<p class="mb-3">Rainwater is a resource, not wastewater to be channeled away. In a balanced hydrological cycle, rain must infiltrate deep into the earth to recharge groundwater stores.</p><p class="mb-3">Standard 200x50x50 cm contour trenches costing Rp20,000/unit represent the most cost-effective water conservation investment for agrarian mountain communities.</p>'
+      id: '<p class="mb-3">Air hujan bukanlah limbah yang harus segera dibuang ke selokan dan dialirkan ke sungai. Dalam siklus hidrologi seimbang, sebagian besar air hujan seharusnya meresap ke dalam bumi untuk mengisi cadangan air bawah tanah (groundwater).</p><p class="mb-3">Pembangunan rorak seluas 200x50x50 cm yang dikerjakan melalui padat karya tani gotong royong terbukti menjadi investasi konservasi air berbasis alam paling hemat biaya dan berdampak langsung bagi masyarakat agraris pegunungan.</p>',
+      en: '<p class="mb-3">Rainwater is a resource, not wastewater to be channeled away. In a balanced hydrological cycle, rain must infiltrate deep into the earth to recharge groundwater stores.</p><p class="mb-3">Standard 200x50x50 cm contour trenches built through community cash-for-work labor represent the most cost-effective nature-based water conservation investment for agrarian mountain communities.</p>'
     }
   },
   'artikel-debit': {
@@ -2489,10 +2490,10 @@ const footerModalContent = {
     body: {
       id: `
         <div class="bh-modal-stack">
-          <p class="bh-modal-note">BelikHub berkomitmen mengembalikan kedaulatan air bersih masyarakat desa melalui 3 pilar aksi strategis hingga tahun 2030:</p>
+          <p class="bh-modal-note">BelikHub berkomitmen mengembalikan kedaulatan air bersih masyarakat desa melalui 3 pilar aksi strategis di seluruh Indonesia hingga tahun 2030:</p>
           <div class="bh-modal-box">
-            <p class="label c-accent">Pilar 1 &middot; 88 Mata Air Kritis</p>
-            <p class="bh-modal-note">Restorasi menyeluruh pada 88 mata air kritis berdebit besar di lereng vulkanik Jawa Tengah &amp; DIY.</p>
+            <p class="label c-accent">Pilar 1 &middot; 88 Mata Air Kritis (Pilot)</p>
+            <p class="bh-modal-note">Restorasi menyeluruh dan pemantauan 88 mata air kritis pilot di lereng Jawa Tengah, sebagai model acuan replikasi untuk daerah tangkapan air se-Indonesia.</p>
           </div>
           <div class="bh-modal-box">
             <p class="label c-accent">Pilar 2 &middot; 10.000 Rorak Resapan</p>
@@ -2506,10 +2507,10 @@ const footerModalContent = {
       `,
       en: `
         <div class="bh-modal-stack">
-          <p class="bh-modal-note">BelikHub is dedicated to restoring community water sovereignty through 3 strategic pillars through 2030:</p>
+          <p class="bh-modal-note">BelikHub is dedicated to restoring community water sovereignty through 3 strategic pillars across Indonesia through 2030:</p>
           <div class="bh-modal-box">
-            <p class="label c-accent">Pillar 1 &middot; 88 Critical Springs</p>
-            <p class="bh-modal-note">Comprehensive restoration of 88 high-volume critical springs across volcanic slopes in Central Java &amp; Yogyakarta.</p>
+            <p class="label c-accent">Pillar 1 &middot; 88 Critical Springs (Pilot)</p>
+            <p class="bh-modal-note">Comprehensive restoration of 88 pilot springs in Central Java, serving as the benchmark model for replication across Indonesian springsheds.</p>
           </div>
           <div class="bh-modal-box">
             <p class="label c-accent">Pillar 2 &middot; 10,000 Infiltration Roraks</p>
@@ -2532,7 +2533,7 @@ const footerModalContent = {
           <ul class="bh-modal-list">
             <li><strong>Perlindungan Koordinat:</strong> Koordinat GPS asli mata air hanya disimpan di basis data terenkripsi untuk kebutuhan audit konservasi. Peta publik menerapkan penyamaran grid radius 5 km.</li>
             <li><strong>Data Pribadi Relawan:</strong> Email, nomor telepon WhatsApp, dan identitas hanya digunakan untuk koordinasi aksi konservasi dan tidak pernah diperjualbelikan kepada pihak ketiga.</li>
-            <li><strong>Transparansi Penggunaan Dana:</strong> Pemesanan rorak diaudit secara terbuka dan disalurkan langsung kepada tenaga penggali lokal dari warga desa setempat.</li>
+            <li><strong>Transparansi Penggunaan Dana:</strong> Dukungan padat karya rorak diaudit secara terbuka dan dialokasikan langsung kepada kelompok tani serta warga penggali lokal setempat.</li>
           </ul>
         </div>
       `,
@@ -2542,7 +2543,7 @@ const footerModalContent = {
           <ul class="bh-modal-list">
             <li><strong>Coordinate Protection:</strong> Exact spring coordinates are stored in encrypted databases for conservation audits only. The public map enforces a strict 5 km grid-fuzzing protocol.</li>
             <li><strong>Volunteer Data:</strong> Emails, WhatsApp numbers, and personal info are solely used for field task coordination and never monetized or shared.</li>
-            <li><strong>Fund Transparency:</strong> Rorak digging fees are disbursed directly to local village diggers and audited openly.</li>
+            <li><strong>Fund Transparency:</strong> Rorak community labor support is audited transparently and allocated directly to local farmer groups and village diggers.</li>
           </ul>
         </div>
       `

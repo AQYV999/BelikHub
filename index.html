@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BelikHub: Platform Peta Mata Air &amp; Pemulihan Daerah Tangkapan Air</title>
-  <meta name="description" content="Platform peta mata air komunitas di Jawa Tengah dan DIY: pemantauan debit, grid privasi 5 km, parit resapan rorak, dan aksi relawan hulu ke hilir.">
+  <meta name="description" content="Platform peta mata air komunitas &amp; pemulihan daerah tangkapan air Indonesia: pemantauan debit, grid privasi 5 km, parit resapan rorak, dan aksi konservasi terpadu (pilot project berbasis di Jawa Tengah).">
   <meta name="theme-color" content="#f7f9fa">
   <meta property="og:title" content="BelikHub: Platform Peta Mata Air &amp; Konservasi">
   <meta property="og:description" content="Pemetaan debit mata air, parit resapan rorak, dan aksi restorasi warga bersama pengelola sumber air.">
@@ -76,14 +76,18 @@
       --p-accent-ink: #042f2e;
       --p-action: #2dd4bf;
       --p-action-ink: #042f2e;
-      --p-inv-bg: #f1f6f8;
-      --p-inv-surface: #ffffff;
-      --p-inv-ink: #0c131a;
-      --p-inv-muted: #52636b;
-      --p-inv-accent: #0f766e;
-      --p-inv-accent-ink: #ffffff;
-      --p-inv-action: #0f766e;
-      --p-inv-action-ink: #ffffff;
+      --p-inv-bg: #070c11;
+      --p-inv-surface: #111a22;
+      --p-inv-ink: #f1f6f8;
+      --p-inv-muted: #94a7b0;
+      --p-inv-accent: #2dd4bf;
+      --p-inv-accent-ink: #042f2e;
+      --p-inv-action: #2dd4bf;
+      --p-inv-action-ink: #042f2e;
+      --inv-bg: #070c11;
+      --inv-surface: #111a22;
+      --inv-ink: #f1f6f8;
+      --inv-muted: #94a7b0;
       --line: rgba(241, 246, 248, 0.12);
       --line-strong: rgba(241, 246, 248, 0.22);
       --line-2: rgba(241, 246, 248, 0.22);
@@ -207,6 +211,26 @@
     html[data-theme="dark"] .footer--dark {
       background-color: #070c11;
       border-top: 1px solid rgba(241, 246, 248, 0.1);
+      color: #f1f6f8;
+    }
+
+    html[data-theme="dark"] .footer--dark .bh-footer-body,
+    html[data-theme="dark"] .footer--dark .closing__cta p,
+    html[data-theme="dark"] .footer--dark .footer__col p,
+    html[data-theme="dark"] .footer--dark a,
+    html[data-theme="dark"] .footer--dark .footer__modal-btn {
+      color: #f1f6f8;
+    }
+
+    html[data-theme="dark"] .footer--dark .bh-newsletter label,
+    html[data-theme="dark"] .footer--dark .footer__legal {
+      color: #94a7b0;
+    }
+
+    html[data-theme="dark"] .footer--dark .bh-newsletter-row input {
+      background: #111a22;
+      border-color: rgba(241, 246, 248, 0.2);
+      color: #f1f6f8;
     }
 
     /* Ensure dense sections and 1366x768 desktop viewports grow gracefully instead of clipping */
@@ -876,6 +900,15 @@
 
     .bh-photo-frame--lanskap {
       margin-top: 0;
+      margin-bottom: 24px;
+    }
+
+    #visi .rows > li:first-child {
+      padding-top: 14px;
+    }
+
+    #visi .rows > li {
+      padding-block: 14px;
     }
 
     .bh-photo-frame img {
@@ -1062,6 +1095,28 @@
 
     .bh-module-card .btn {
       margin-top: auto;
+    }
+
+    .bh-course-figure {
+      margin: 0 0 4px;
+      width: 100%;
+      border-radius: calc(var(--r-card) - 2px);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: var(--bg);
+    }
+
+    .bh-course-figure img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      height: auto;
+      display: block;
+      object-fit: cover;
+      transition: transform 320ms var(--ease);
+    }
+
+    .bh-module-card:hover .bh-course-figure img {
+      transform: scale(1.03);
     }
 
     .bh-course-svg {
@@ -1867,7 +1922,7 @@
           <button type="button" id="logout-btn" class="nav__link nav__link--btn" data-i18n="nav.logout">Keluar</button>
         </div>
 
-        <a class="btn btn--primary" href="#pulangkan-air" data-i18n="nav.order_rorak">Pesan rorak mata air</a>
+        <a class="btn btn--primary" href="#pulangkan-air" data-i18n="nav.order_rorak">Aksi Pulangkan Air</a>
       </div>
 
       <button class="nav__toggle" type="button" aria-label="Buka menu navigasi" data-i18n-aria-label="nav.toggle_aria" aria-expanded="false">
@@ -1885,9 +1940,9 @@
       <div class="wrap">
         <div class="hero-text grid hero__grid">
           <div class="hero__text span-5">
-            <p class="label" data-i18n="hero.tag">Platform Peta Mata Air · Jawa Tengah &amp; DIY</p>
+            <p class="label" data-i18n="hero.tag">Platform Peta &amp; Konservasi Mata Air Indonesia</p>
             <h1 data-i18n="hero.title">Platform peta mata air untuk desa.</h1>
-            <p class="lead" data-i18n="hero.intro">Dokumentasi debit mata air, pemetaan grid 5&nbsp;km, dan parit resapan rorak bersama warga hulu.</p>
+            <p class="lead" data-i18n="hero.intro">Dokumentasi debit mata air, pemetaan grid spasial 5&nbsp;km, dan inisiatif parit resapan rorak tanah di seluruh penjuru Indonesia &mdash; dirintis dari laboratorium hidrologi lereng pegunungan Jawa Tengah.</p>
             <div class="btn-row">
               <a class="btn btn--primary" href="#map" data-i18n="hero.btn_map">Jelajahi peta</a>
               <a class="btn btn--secondary" href="#dashboard" data-i18n="hero.btn_impact">Lihat capaian BelikHub</a>
@@ -1899,7 +1954,7 @@
               <img src="images/galeri-hutan.jpg"
                    srcset="images/galeri-hutan-800.jpg 800w, images/galeri-hutan-1000.jpg 1000w, images/galeri-hutan.jpg 1400w"
                    sizes="(max-width: 639px) 100vw, (max-width: 1023px) 90vw, 48vw"
-                   alt="Hutan tangkapan air di lereng gunung Jawa Tengah"
+                   alt="Hutan tangkapan air pegunungan Indonesia, pilot project Jawa Tengah"
                    width="1400" height="932" loading="eager" fetchpriority="high">
             </figure>
             <div class="ly-float ly-float--tr" aria-label="Ringkasan jaringan mata air" data-i18n-aria-label="hero.float_springs_aria">
@@ -2031,7 +2086,7 @@
             </dl>
 
             <div class="btn-row">
-              <a class="btn btn--primary" href="#pulangkan-air" data-i18n="nav.order_rorak">Pesan rorak mata air</a>
+              <a class="btn btn--primary" href="#pulangkan-air" data-i18n="nav.order_rorak">Aksi Pulangkan Air</a>
             </div>
           </div>
 
@@ -2055,7 +2110,7 @@
               </li>
               <li>
                 <span data-i18n="visi.step3_label">03 · Audit debit tahunan</span>
-                <span class="rows__value" data-i18n="visi.step3_val">Jawa Tengah &amp; DIY</span>
+                <span class="rows__value" data-i18n="visi.step3_val">Seluruh Indonesia (Pilot: Jawa Tengah)</span>
               </li>
             </ul>
           </div>
@@ -2177,7 +2232,7 @@
             </ul>
 
             <div class="btn-row">
-              <a class="btn btn--secondary" href="#pulangkan-air" data-i18n="nav.order_rorak">Pesan rorak mata air</a>
+              <a class="btn btn--secondary" href="#pulangkan-air" data-i18n="nav.order_rorak">Aksi Pulangkan Air</a>
             </div>
           </div>
         </div>
@@ -2279,14 +2334,14 @@
         <div class="grid">
           <div class="span-6">
             <div class="section-head">
-              <p class="label" data-i18n="rorak.section">04 · Aksi nyata</p>
-              <h2 data-i18n="rorak.title">Pulangkan air hujan lewat rorak.</h2>
-              <p class="bh-body" data-i18n="rorak.lead">Rorak memotong limpasan hujan agar meresap ke akuifer mata air. Warga menggali, pemilik lahan memesan, BelikHub mengaudit.</p>
+              <p class="label" data-i18n="rorak.section">04 · Gerakan konservasi</p>
+              <h2 data-i18n="rorak.title">Pulangkan air hujan ke dalam tanah.</h2>
+              <p class="bh-body" data-i18n="rorak.lead">Rorak adalah teknik konservasi tanah dan air: parit resapan penahan limpasan di lereng hulu agar meresap kembali mengisi cadangan akuifer mata air. Diinisiasi gotong royong warga, didukung padat karya tani lokal, dan diverifikasi berbasis data spasial.</p>
             </div>
 
             <ul class="rows rows--spec" aria-label="Spesifikasi standar rorak BelikHub">
               <li>
-                <span data-i18n="rorak.spec1_label">Dimensi lubang</span>
+                <span data-i18n="rorak.spec1_label">Dimensi lubang baku</span>
                 <span class="rows__value">200 x 50 x 50&nbsp;cm</span>
               </li>
               <li>
@@ -2294,8 +2349,8 @@
                 <span class="rows__value" data-i18n="rorak.spec2_val">2.000 L / musim</span>
               </li>
               <li>
-                <span data-i18n="rorak.spec3_label">Biaya galian lokal</span>
-                <span class="rows__value" data-i18n="rorak.spec3_val">Rp20.000 / unit</span>
+                <span data-i18n="rorak.spec3_label">Skema pelaksanaan</span>
+                <span class="rows__value" data-i18n="rorak.spec3_val">Padat karya tani lokal</span>
               </li>
               <li>
                 <span data-i18n="rorak.spec4_label">Tanggul hilir</span>
@@ -2304,8 +2359,8 @@
             </ul>
 
             <div class="btn-row">
-              <button type="button" id="order-rorak-btn" class="btn btn--primary" data-i18n="rorak.btn_order">Pesan rorak mata air</button>
-              <button type="button" id="join-maker-btn" class="btn btn--secondary" data-i18n="rorak.btn_maker">Gabung pembuat BelikHub</button>
+              <button type="button" id="order-rorak-btn" class="btn btn--primary" data-i18n="rorak.btn_order">Inisiasi Rorak di Lahan</button>
+              <button type="button" id="join-maker-btn" class="btn btn--secondary" data-i18n="rorak.btn_maker">Gabung Satgas Konservasi</button>
             </div>
           </div>
 
@@ -2329,9 +2384,9 @@
             </figure>
 
             <div class="bh-project-box">
-              <p class="label c-accent" data-i18n="rorak.project_label">Proyek Komunitas Berjalan · Terbuka</p>
-              <h3 data-i18n="rorak.project_title">100 Rorak Konservasi Mata Air Belik Soka</h3>
-              <p class="bh-body" data-i18n="rorak.project_desc">Benteng resapan air hujan berkapasitas 200.000 liter di bukit kapur Belik Soka.</p>
+              <p class="label c-accent" data-i18n="rorak.project_label">Aksi Komunitas Berjalan · Terbuka</p>
+              <h3 data-i18n="rorak.project_title">100 Rorak untuk Konservasi Belik Soka</h3>
+              <p class="bh-body" data-i18n="rorak.project_desc">Sabuk resapan air hujan di perbukitan tangkapan air untuk memulihkan kontinuitas aliran mata air Belik Soka.</p>
               <svg class="bh-svg-panel" viewBox="0 0 480 86" fill="none" stroke="#1f3038" stroke-width="1.5" role="img" aria-label="Progres galian 64 dari 100 unit rorak Belik Soka">
                 <rect x="12" y="8" width="456" height="70" rx="8" fill="#ffffff" stroke="#5d6b72"/>
                 <text x="28" y="32" fill="#1f3038" stroke="none" font-size="12" font-family="JetBrains Mono, monospace" font-weight="500">Progres Galian: 64 / 100 Unit Rorak (128.000 L)</text>
@@ -2339,7 +2394,7 @@
                 <rect x="28" y="45" width="271" height="16" rx="8" fill="#0d7480" stroke="none"/>
               </svg>
               <div>
-                <button type="button" id="order-rorak-support-btn" class="btn btn--secondary" data-i18n="rorak.btn_support">Dukung mata air Soka</button>
+                <button type="button" id="order-rorak-support-btn" class="btn btn--secondary" data-i18n="rorak.btn_support">Dukung Aksi Belik Soka</button>
               </div>
             </div>
           </div>
@@ -2365,41 +2420,36 @@
 
         <div id="courses" class="bh-tab-grid" role="tabpanel" aria-labelledby="tab-courses">
           <article class="bh-module-card">
-            <svg class="bh-course-svg" viewBox="0 0 320 148" fill="none" stroke="#1f3038" stroke-width="1.5" role="img" aria-label="Skema kontur springshed dan titik uji debit mata air">
-              <ellipse cx="160" cy="68" rx="116" ry="42" stroke="#9ea7ab" stroke-dasharray="4 4"/>
-              <ellipse cx="160" cy="68" rx="76" ry="27" stroke="#5d6b72"/>
-              <ellipse cx="160" cy="68" rx="40" ry="14" stroke="#0d7480"/>
-              <circle cx="160" cy="68" r="10" fill="#0d7480" stroke="#ffffff" stroke-width="2"/>
-              <text x="160" y="132" text-anchor="middle" fill="#1f3038" stroke="none" font-size="11" font-family="JetBrains Mono, monospace">Zona Springshed 5 km</text>
-            </svg>
+            <figure class="bh-course-figure">
+              <img src="images/modul-springshed.jpg"
+                   alt="Ekosistem mata air alami yang mengalir di batuan berlumut hulu hutan lindung"
+                   width="640" height="360" loading="lazy">
+            </figure>
             <h3 data-i18n="learn.c1_title">Ekosistem Mata Air &amp; Springshed</h3>
             <p data-i18n="learn.c1_desc">Uji debit volumetrik, kejernihan air, dan tata cara adat survei di hulu.</p>
-            <button type="button" class="btn btn--secondary" data-course="spring" data-i18n="learn.btn_open">Buka modul mata air</button>
+            <button type="button" class="btn btn--secondary" data-course="spring" data-i18n="learn.btn_open_spring">Buka modul springshed</button>
           </article>
 
           <article class="bh-module-card">
-            <svg class="bh-course-svg" viewBox="0 0 320 148" fill="none" stroke="#1f3038" stroke-width="1.5" role="img" aria-label="Skema perakaran dalam beringin dan bambu pengikat air tanah">
-              <line x1="28" y1="84" x2="292" y2="84" stroke="#5d6b72"/>
-              <path d="M160 24 L160 84" stroke="#1f3038" stroke-width="2.5"/>
-              <circle cx="160" cy="40" r="24" fill="rgba(21, 128, 61, 0.18)" stroke="#15803d"/>
-              <path d="M160 84 Q134 104 102 114 M160 84 Q160 108 160 120 M160 84 Q186 104 218 114" stroke="#0d7480"/>
-              <text x="160" y="136" text-anchor="middle" fill="#1f3038" stroke="none" font-size="11" font-family="JetBrains Mono, monospace">Akar Dalam Pengikat Air</text>
-            </svg>
+            <figure class="bh-course-figure">
+              <img src="images/modul-pohon.jpg"
+                   alt="Pohon beringin dan bambu berakar dalam pengikat air tanah di lereng bukit berkabut"
+                   width="640" height="360" loading="lazy">
+            </figure>
             <h3 data-i18n="learn.c2_title">Tanam Pohon Endemik Hulu</h3>
             <p data-i18n="learn.c2_desc">Pemilihan spesies akar dalam beringin, aren, dan bambu di zona imbuhan.</p>
-            <button type="button" class="btn btn--secondary" data-course="trees" data-i18n="learn.btn_open">Buka modul mata air</button>
+            <button type="button" class="btn btn--secondary" data-course="trees" data-i18n="learn.btn_open_trees">Buka modul pohon endemik</button>
           </article>
 
           <article class="bh-module-card">
-            <svg class="bh-course-svg" viewBox="0 0 320 148" fill="none" stroke="#1f3038" stroke-width="1.5" role="img" aria-label="Skema parit rorak kontur berukuran 200 kali 50 sentimeter">
-              <path d="M36 52 L112 52 L112 104 L208 104 L208 52 L284 70" stroke="#1f3038"/>
-              <rect x="114" y="74" width="92" height="28" fill="rgba(13, 116, 128, 0.24)" stroke="none"/>
-              <line x1="114" y1="74" x2="206" y2="74" stroke="#0d7480" stroke-dasharray="4 4"/>
-              <text x="160" y="132" text-anchor="middle" fill="#1f3038" stroke="none" font-size="11" font-family="JetBrains Mono, monospace">Kontur A-Frame · 200x50 cm</text>
-            </svg>
+            <figure class="bh-course-figure">
+              <img src="images/modul-rorak.jpg"
+                   alt="Parit rorak resapan tanah di sepanjang garis kontur lereng terasering agroforestri"
+                   width="640" height="360" loading="lazy">
+            </figure>
             <h3 data-i18n="learn.c3_title">Teknik Rorak Resapan Kontur</h3>
             <p data-i18n="learn.c3_desc">Garis kontur A-frame, penggalian lubang baku, dan perawatan pra-hujan.</p>
-            <button type="button" class="btn btn--secondary" data-course="rorak" data-i18n="learn.btn_open">Buka modul mata air</button>
+            <button type="button" class="btn btn--secondary" data-course="rorak" data-i18n="learn.btn_open_rorak">Buka modul rorak kontur</button>
           </article>
         </div>
 
@@ -2421,7 +2471,7 @@
           <article class="bh-module-card">
             <p class="label muted">Panduan · Hidrologi</p>
             <h3 data-i18n="learn.r3_title">Memulangkan Air Hujan ke Akuifer</h3>
-            <p data-i18n="learn.r3_desc">Rincian teknis mengapa rorak kontur Rp20.000/unit efektif menekan limpasan erosi di lereng.</p>
+            <p data-i18n="learn.r3_desc">Rincian teknis mengapa rorak kontur padat karya efektif menahan erosi dan meresapkan jutaan liter air ke tanah.</p>
             <button type="button" class="btn btn--secondary story-read-btn" data-story="rorak" data-i18n="stories.btn_guide">Baca panduan BelikHub</button>
           </article>
 
@@ -2512,8 +2562,8 @@
                 <p data-i18n="faq.a2">Survei 100 poin, tanam 100 poin, rorak 500 poin, restorasi 1.000 poin. Raih 20.000 poin untuk pengajuan restorasi desa.</p>
               </div>
               <div class="faq__item">
-                <h3 data-i18n="faq.q3">Apakah biaya pembuatan rorak BelikHub disalurkan langsung ke warga?</h3>
-                <p data-i18n="faq.a3">Ya. Kontribusi Rp20.000 per unit disalurkan kepada kelompok penggali lokal bersama pemilik lahan.</p>
+                <h3 data-i18n="faq.q3">Apakah BelikHub menjual rorak sebagai produk komersial?</h3>
+                <p data-i18n="faq.a3">Tidak. BelikHub adalah platform teknologi komunitas. Rorak adalah gerakan konservasi tanah dan air yang dikerjakan gotong royong serta padat karya warga lokal. Dukungan dana 100% disalurkan sebagai upah kerja tenaga penggali desa bersama pendampingan teknis kontur.</p>
               </div>
               <div class="faq__item">
                 <h3 data-i18n="faq.q4">Bagaimana PDAM atau BUMDes mengakses data mata air BelikHub?</h3>
@@ -2533,15 +2583,13 @@
             <div class="section-head" style="margin-bottom:10px">
               <p class="label" data-i18n="partner.section">06 · Kolaborasi institusi</p>
               <h2 data-i18n="partner.title">Bermitra memulihkan mata air.</h2>
-              <p class="bh-body" data-i18n="partner.lead">Kolaborasi Pemda, BUMDes, PDAM, kampus, dan program CSR untuk audit springshed dan padat karya rorak desa.</p>
+              <p class="bh-body" data-i18n="partner.lead">Bekerja sama dengan pemerintah daerah, BUMDes, PDAM, perguruan tinggi, dan korporasi untuk program CSR pemulihan mata air di berbagai DAS Indonesia.</p>
             </div>
 
             <figure class="bh-photo-frame bh-photo-frame--topo">
-              <img src="images/topo-light.webp"
-                   srcset="images/topo-light-800.webp 800w, images/topo-light.webp 2400w"
-                   sizes="(max-width: 639px) 100vw, 600px"
-                   alt="Peta garis kontur elevasi wilayah tangkapan air BelikHub"
-                   width="2400" height="1792" loading="lazy">
+              <img src="images/kemitraan-kolaborasi.jpg"
+                   alt="Kolaborasi multipihak ahli hidrologi bersama warga memetakan dan merestorasi mata air di Jawa Tengah"
+                   width="1600" height="900" loading="lazy">
             </figure>
           </div>
 
@@ -2651,8 +2699,8 @@
           <div class="span-2 start-8 footer__col">
             <h3 class="footer__heading" data-i18n="footer.community_actions">Aksi Komunitas</h3>
             <ul class="footer__list">
-              <li><a href="#pulangkan-air" id="footer-order-rorak" data-i18n="footer.order_rorak">Pemesanan Rorak Tanah</a></li>
-              <li><a href="#pulangkan-air" id="footer-join-maker" data-i18n="footer.join_maker">Pendaftaran Tukang Rorak</a></li>
+              <li><a href="#pulangkan-air" id="footer-order-rorak" data-i18n="footer.order_rorak">Inisiasi Rorak Resapan</a></li>
+              <li><a href="#pulangkan-air" id="footer-join-maker" data-i18n="footer.join_maker">Satgas Konservasi Desa</a></li>
               <li><a href="#kemitraan" data-i18n="footer.csr">Program Kemitraan CSR</a></li>
             </ul>
           </div>
@@ -2669,14 +2717,14 @@
 
         <div class="footer__legal">
           <span data-i18n="footer.copyright">© 2026 BelikHub Indonesia.</span>
-          <span data-i18n="footer.photo_credit">Foto lapangan oleh tim relawan BelikHub, Jawa Tengah dan DIY.</span>
+          <span data-i18n="footer.photo_credit">Foto lapangan oleh tim relawan BelikHub Indonesia. Pilot project &amp; riset hidrologi berbasis di Jawa Tengah.</span>
         </div>
       </div>
     </div>
   </footer>
 
   <nav class="actionbar" aria-label="Aksi cepat" data-i18n-aria-label="actionbar.aria">
-    <a class="btn btn--secondary" href="#pulangkan-air" data-i18n="actionbar.order">Pesan rorak</a>
+    <a class="btn btn--secondary" href="#pulangkan-air" data-i18n="actionbar.order">Aksi resapan</a>
     <a class="btn btn--primary" href="#map" data-i18n="hero.btn_map">Jelajahi peta</a>
   </nav>
 
