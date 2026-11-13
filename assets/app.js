@@ -95,7 +95,7 @@ export const translations = {
     // Hero
     'hero.tag': 'Platform Peta & Konservasi Mata Air Indonesia',
     'hero.title': 'Platform peta mata air untuk desa.',
-    'hero.intro': 'Dokumentasi debit mata air, pemetaan grid spasial 5 km, dan inisiatif parit resapan rorak tanah di seluruh penjuru Indonesia — dirintis dari laboratorium hidrologi lereng pegunungan Jawa Tengah.',
+    'hero.intro': 'Dokumentasi debit mata air, pemetaan grid spasial 5 km, dan inisiatif parit resapan rorak tanah di seluruh penjuru Indonesia, dirintis dari laboratorium hidrologi lereng pegunungan Jawa Tengah.',
     'hero.btn_map': 'Jelajahi peta',
     'hero.btn_impact': 'Lihat capaian BelikHub',
     'hero.btn_action': 'Aksi pulangkan air',
@@ -389,7 +389,7 @@ export const translations = {
     // Hero
     'hero.tag': 'National Spring Mapping & Conservation · Indonesia',
     'hero.title': 'Village spring map tool.',
-    'hero.intro': 'Participatory spring flow documentation, 5 km spatial grid mapping, and community rorak infiltration initiatives across Indonesia — pioneered from Central Java mountain hydrology pilots.',
+    'hero.intro': 'Participatory spring flow documentation, 5 km spatial grid mapping, and community rorak infiltration initiatives across Indonesia, pioneered from Central Java mountain hydrology pilots.',
     'hero.btn_map': 'Explore map',
     'hero.btn_impact': 'View Verified Impact',
     'hero.btn_action': 'Return Water Action',
@@ -1688,16 +1688,19 @@ $('#points-btn')?.addEventListener('click', () => {
     <div class="bh-modal-stack">
       <p class="bh-modal-note">${isEn ? 'Every contribution is awarded measurable points upon verification by field coordinators:' : 'Setiap kontribusi Anda diapresiasi dengan poin terukur setelah diverifikasi tim lapangan:'}</p>
       <div>
-        <div class="log-line"><span>${isEn ? 'Initial Spring Survey' : 'Survei Mata Air Awal'}</span><b class="label c-accent">+100 pts</b></div>
-        <div class="log-line"><span>${isEn ? 'Spring Cleaning / Restoration' : 'Pembersihan / Restorasi Mata Air'}</span><b class="label c-accent">+1.000 pts</b></div>
-        <div class="log-line"><span>${isEn ? 'Rorak Infiltration Trench Digging' : 'Pembangunan Rorak Resapan Air'}</span><b class="label c-accent">+500 pts</b></div>
-        <div class="log-line"><span>${isEn ? 'Native Tree Planting' : 'Penanaman Bibit Pohon Endemik'}</span><b class="label c-accent">+100 pts</b></div>
+        <div class="log-line"><span style="display:inline-flex;align-items:center;gap:10px;"><img src="images/icon-clay-survey.webp" width="24" height="24" alt="" style="object-fit:contain;flex:none;"> ${isEn ? 'Initial Spring Survey' : 'Survei Mata Air Awal'}</span><b class="label c-accent">+100 pts</b></div>
+        <div class="log-line"><span style="display:inline-flex;align-items:center;gap:10px;"><img src="images/icon-clay-restoration.webp" width="24" height="24" alt="" style="object-fit:contain;flex:none;"> ${isEn ? 'Spring Cleaning / Restoration' : 'Pembersihan / Restorasi Mata Air'}</span><b class="label c-accent">+1.000 pts</b></div>
+        <div class="log-line"><span style="display:inline-flex;align-items:center;gap:10px;"><img src="images/icon-clay-rorak.webp" width="24" height="24" alt="" style="object-fit:contain;flex:none;"> ${isEn ? 'Rorak Infiltration Trench Digging' : 'Pembangunan Rorak Resapan Air'}</span><b class="label c-accent">+500 pts</b></div>
+        <div class="log-line"><span style="display:inline-flex;align-items:center;gap:10px;"><img src="images/icon-clay-tree.webp" width="24" height="24" alt="" style="object-fit:contain;flex:none;"> ${isEn ? 'Native Tree Planting' : 'Penanaman Bibit Pohon Endemik'}</span><b class="label c-accent">+100 pts</b></div>
       </div>
-      <div class="bh-modal-box bh-modal-box--tint">
-        <p class="label c-accent">${isEn ? 'Points Benefit' : 'Manfaat Poin Relawan'}</p>
-        <p class="bh-modal-note">
-          ${isEn ? 'Volunteers accumulating ≥ 20,000 points may sponsor and propose an independent village spring recovery project directly funded via BelikHub community partnerships.' : 'Relawan dengan akumulasi ≥ 20.000 poin dapat mengajukan inisiatif pemulihan belik desa secara mandiri untuk didanai melalui program kemitraan komunitas BelikHub.'}
-        </p>
+      <div class="bh-modal-box bh-modal-box--tint" style="display:flex;align-items:flex-start;gap:14px;">
+        <img src="images/icon-clay-milestone-mandiri.webp" width="44" height="44" alt="" style="object-fit:contain;flex:none;">
+        <div>
+          <p class="label c-accent">${isEn ? 'Points Benefit (20,000 pts Milestone)' : 'Manfaat Poin Relawan (Puncak 20.000 pts)'}</p>
+          <p class="bh-modal-note">
+            ${isEn ? 'Volunteers accumulating ≥ 20,000 points may sponsor and propose an independent village spring recovery project directly funded via BelikHub community partnerships.' : 'Relawan dengan akumulasi ≥ 20.000 poin dapat mengajukan inisiatif pemulihan belik desa secara mandiri untuk didanai melalui program kemitraan komunitas BelikHub.'}
+          </p>
+        </div>
       </div>
     </div>
     `
