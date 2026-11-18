@@ -285,6 +285,7 @@ export function createReportsHandler(deps = {}) {
         const ref = await db.collection('reports').add(data);
         // Respons ke pelapor sendiri: jangan kirim balik email
         const resPayload = {
+          success: true,
           id: ref.id,
           reportType: data.reportType,
           location: data.location,

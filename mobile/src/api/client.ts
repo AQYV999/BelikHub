@@ -321,17 +321,19 @@ export function createApiClient(getToken: () => Promise<string | null>, baseUrl 
     },
 
     async createReport(data): Promise<{ success: boolean; id: string; points?: number }> {
-      return request('/api/reports', {
+      const res = await request<any>('/api/reports', {
         method: 'POST',
         body: JSON.stringify(data)
       });
+      return { success: true, ...res };
     },
 
     async updateReportStatus(id: string, status: 'approved' | 'rejected'): Promise<{ success: boolean; status: string }> {
-      return request(`/api/admin/reports/${encodeURIComponent(id)}/status`, {
+      const res = await request<any>(`/api/admin/reports/${encodeURIComponent(id)}/status`, {
         method: 'PATCH',
         body: JSON.stringify({ status })
       });
+      return { success: true, ...res };
     },
 
     async listAdminUsers(): Promise<{ success: boolean; users: AdminUser[] }> {

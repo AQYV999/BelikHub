@@ -9,12 +9,14 @@ import {
   resolveSignedReadUrl
 } from '../../lib/v1/uploads.js';
 import { createReportsHandler } from '../../api/reports.js';
+import { createAdminReportStatusHandler } from '../../api/admin/reports/[id]/status.js';
 import {
   createMockDb,
   createMockAuth,
   createMockStorage,
   createMockReq,
-  createMockRes
+  createMockRes,
+  FieldValue
 } from './helpers/mock-firebase.js';
 
 describe('Task 2: Server-Proxied Image Uploads & Reports Extensions', () => {
@@ -538,6 +540,7 @@ describe('Task 2: Server-Proxied Image Uploads & Reports Extensions', () => {
       await handler(reqPost, resPost);
 
       assert.equal(resPost.statusCode, 201);
+      assert.equal(resPost.body.success, true);
       const createdId = resPost.body.id;
       assert.ok(createdId);
       assert.equal(resPost.body.status, 'pending');
@@ -744,6 +747,67 @@ describe('Task 2: Server-Proxied Image Uploads & Reports Extensions', () => {
 
       assert.equal(res.statusCode, 429);
       assert.match(res.body.error, /Batas 10 laporan per 24 jam tercapai/i);
+    });
+  });
+
+  describe('PATCH /api/admin/reports/:id/status', () => {
+    it('returns success: true alongside id, status, and pointsAwarded upon approval', async () => {
+      const mockDb = createMockDb({
+        reports: {
+          rep_target: {
+            id: 'rep_target',
+            userId: 'relawan_user',
+            reportType: 'Restorasi Mata Air',
+            location: 'Sumber Bismo',
+            status: 'pending',
+            points: 1000
+          }
+        },
+        users: {
+          relawan_user: {
+            uid: 'relawan_user',
+            points: 200,
+            approvedReports: 1
+          }
+        }
+      });
+
+      const mockAuth = createMockAuth({
+        admin_user: { uid: 'admin_user', customClaims: { roles: ['admin'] } }
+      });
+
+      const handler = createAdminReportStatusHandler({
+        getAdminDb: () => mockDb,
+        verifyIdToken: (t) => mockAuth.verifyIdToken(t),
+        FieldValue
+      });
+
+      const req = createMockReq({
+        method: 'PATCH',
+        query: { id: 'rep_target' },
+        headers: { authorization: 'Bearer admin_user' },
+        body: { status: 'approved' }
+      });
+      const res = createMockRes();
+
+      await handler(req, res);
+
+      assert.equal(res.statusCode, 200);
+      assert.equal(res.body.success, true, 'Response must include success: true');
+      assert.equal(res.body.id, 'rep_target');
+      assert.equal(res.body.status, 'approved');
+      assert.equal(res.body.pointsAwarded, 1000);
+
+      // Verify report in DB was updated
+      const updatedReport = await mockDb.collection('reports').doc('rep_target').get();
+      assert.equal(updatedReport.data().status, 'approved');
+      assert.equal(updatedReport.data().pointsAwarded, true);
+      assert.equal(updatedReport.data().reviewedBy, 'admin_user');
+
+      // Verify user points incremented
+      const updatedUser = await mockDb.collection('users').doc('relawan_user').get();
+      assert.equal(updatedUser.data().points, 1200);
+      assert.equal(updatedUser.data().approvedReports, 2);
     });
   });
 });
