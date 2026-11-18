@@ -229,4 +229,42 @@ describe('Demo Mode Store & Role Navigation', () => {
       assert.equal(uniqueNames.size, 4, `Tab names must be unique for role ${r}`);
     }
   });
+
+  test('demoStore.findUserByEmail finds matching demo users across roles and returns undefined for unknown emails', () => {
+    // 1. Existing demo users across roles
+    const wargaUser = demoStore.findUserByEmail('warga.bismo@belikhub.id');
+    assert.ok(wargaUser, 'Must find warga user by email');
+    assert.equal(wargaUser.uid, 'demo-warga-uid');
+    assert.ok(wargaUser.roles.includes('warga'));
+
+    const pengelolaUser = demoStore.findUserByEmail('denny.pengelola@belikhub.id');
+    assert.ok(pengelolaUser, 'Must find pengelola user by email');
+    assert.equal(pengelolaUser.uid, 'demo-pengelola-uid');
+    assert.ok(pengelolaUser.roles.includes('pengelola'));
+
+    const relawanUser = demoStore.findUserByEmail('rina.relawan@belikhub.id');
+    assert.ok(relawanUser, 'Must find relawan user by email');
+    assert.equal(relawanUser.uid, 'demo-relawan-uid');
+
+    const donaturUser = demoStore.findUserByEmail('donatur.batang@belikhub.id');
+    assert.ok(donaturUser, 'Must find donatur user by email');
+    assert.equal(donaturUser.uid, 'demo-donatur-uid');
+
+    const adminUser = demoStore.findUserByEmail('admin@belikhub.id');
+    assert.ok(adminUser, 'Must find admin user by email');
+    assert.equal(adminUser.uid, 'demo-admin-uid');
+    assert.ok(adminUser.roles.includes('admin'));
+
+    // Case-insensitivity check
+    const caseInsensitive = demoStore.findUserByEmail('ADMIN@BELIKHUB.ID');
+    assert.ok(caseInsensitive, 'Must match case-insensitively');
+    assert.equal(caseInsensitive.uid, 'demo-admin-uid');
+
+    // 2. Unknown emails return undefined
+    const unknownUser = demoStore.findUserByEmail('nonexistent@example.com');
+    assert.equal(unknownUser, undefined, 'Unknown email must return undefined');
+
+    const emptyUser = demoStore.findUserByEmail('');
+    assert.equal(emptyUser, undefined, 'Empty email must return undefined');
+  });
 });

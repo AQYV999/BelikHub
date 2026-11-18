@@ -521,6 +521,12 @@ export class DemoStore {
     return this.getDemoUser(this.activeRole);
   }
 
+  public findUserByEmail(email: string): UserProfile | undefined {
+    if (!email) return undefined;
+    const cleanEmail = email.trim().toLowerCase();
+    return this.users.find((u) => u.email?.toLowerCase() === cleanEmail);
+  }
+
   // BelikHubClient implementation
   public async getMe(): Promise<UserProfile> {
     return this.getActiveDemoUser();

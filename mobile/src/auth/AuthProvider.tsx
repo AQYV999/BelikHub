@@ -141,14 +141,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
 
   const signIn = async (email: string, pass: string) => {
     if (isDemoMode) {
-      const match = Object.values(demoStore.getDemoUser('admin')).find(
-        (u: any) => u.email === email
-      );
+      const match = demoStore.findUserByEmail(email);
       if (match) {
         setUser(match);
+        if (match.roles && match.roles.length > 0) {
+          setActiveRoleState(match.roles[0]);
+          demoStore.setActiveDemoRole(match.roles[0]);
+        }
         return;
       }
-      return;
+      throw new Error(`Pengguna demo dengan email ${email} tidak ditemukan`);
     }
     const auth = getFirebaseAuth();
     if (!auth) throw new Error('Firebase Auth is not configured');
