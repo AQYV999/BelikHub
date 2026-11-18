@@ -174,6 +174,51 @@ describe('Task 3: Onboarding, Profile, Springs CRUD & Per-Spring Settings', () =
       assert.ok(userData.roles.includes('warga'));
     });
 
+    it('POST /api/v1/onboarding with warga + valid linkCode without passing springId populates user.springId from claimed resident', async () => {
+      const mockDb = createMockDb({
+        residents: [
+          {
+            id: 'res_nospring',
+            springId: 'SPR-004',
+            name: 'Warga Tanpa SpringId',
+            userId: null,
+            linkCode: 'NOSP01',
+            linkCodeExpiresAt: new Date(Date.now() + 86400000).toISOString(),
+            active: true
+          }
+        ]
+      });
+      const mockAuth = createMockAuth({
+        warga_nospring: { uid: 'warga_nospring', email: 'nospring@example.com' }
+      });
+      const deps = {
+        getAdminDb: () => mockDb,
+        getAdminAuth: () => mockAuth,
+        verifyIdToken: (t) => mockAuth.verifyIdToken(t)
+      };
+
+      const req = createMockReq({
+        method: 'POST',
+        headers: { authorization: 'Bearer warga_nospring' },
+        body: {
+          role: 'warga',
+          linkCode: 'NOSP01'
+        }
+      });
+      const res = createMockRes();
+      await handleOnboarding(req, res, deps);
+
+      assert.equal(res.statusCode, 200);
+      assert.equal(res.body.success, true);
+      assert.equal(res.body.user.residentId, 'res_nospring');
+      assert.equal(res.body.user.residentLinkStatus, 'linked');
+      assert.equal(res.body.user.springId, 'SPR-004');
+
+      const userDoc = await mockDb.collection('users').doc('warga_nospring').get();
+      assert.equal(userDoc.data().springId, 'SPR-004');
+      assert.equal(userDoc.data().residentId, 'res_nospring');
+    });
+
     it('POST /api/v1/onboarding rejects already-redeemed or expired linkCode with 409/400 without overwriting existing resident.userId', async () => {
       const mockDb = createMockDb({
         residents: [
@@ -391,6 +436,58 @@ describe('Task 3: Onboarding, Profile, Springs CRUD & Per-Spring Settings', () =
       const resDoc = await mockDb.collection('residents').doc('res_patch_1').get();
       assert.equal(resDoc.data().userId, 'warga_patch');
       assert.equal(resDoc.data().linkCode, null);
+    });
+
+    it('PATCH /api/v1/profile redeems valid linkCode without passing springId and adopts springId from claimed resident', async () => {
+      const mockDb = createMockDb({
+        users: [
+          {
+            id: 'warga_patch_nospring',
+            roles: ['warga'],
+            residentLinkStatus: 'pending',
+            springId: null
+          }
+        ],
+        residents: [
+          {
+            id: 'res_patch_2',
+            springId: 'SPR-002',
+            name: 'Warga Patch No Spring',
+            userId: null,
+            linkCode: 'PTCH02',
+            linkCodeExpiresAt: new Date(Date.now() + 86400000).toISOString(),
+            active: true
+          }
+        ]
+      });
+      const mockAuth = createMockAuth({
+        warga_patch_nospring: { uid: 'warga_patch_nospring', customClaims: { roles: ['warga'] } }
+      });
+      const deps = {
+        getAdminDb: () => mockDb,
+        getAdminAuth: () => mockAuth,
+        verifyIdToken: (t) => mockAuth.verifyIdToken(t)
+      };
+
+      const req = createMockReq({
+        method: 'PATCH',
+        headers: { authorization: 'Bearer warga_patch_nospring' },
+        body: {
+          linkCode: 'PTCH02'
+        }
+      });
+      const res = createMockRes();
+      await handleUpdateProfile(req, res, deps);
+
+      assert.equal(res.statusCode, 200);
+      assert.equal(res.body.success, true);
+      assert.equal(res.body.user.residentId, 'res_patch_2');
+      assert.equal(res.body.user.residentLinkStatus, 'linked');
+      assert.equal(res.body.user.springId, 'SPR-002');
+
+      const userDoc = await mockDb.collection('users').doc('warga_patch_nospring').get();
+      assert.equal(userDoc.data().springId, 'SPR-002');
+      assert.equal(userDoc.data().residentId, 'res_patch_2');
     });
 
     it('PATCH /api/v1/profile rejects invalid donorType with 400', async () => {
