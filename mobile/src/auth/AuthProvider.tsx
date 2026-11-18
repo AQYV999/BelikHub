@@ -42,18 +42,16 @@ export interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({
   children,
-  initialDemoMode
+  initialDemoMode = false
 }) => {
-  const defaultDemo = initialDemoMode ?? (
-    process.env.EXPO_PUBLIC_ENABLE_DEMO_MODE === 'true' || !isFirebaseConfigured()
-  );
+  const defaultDemo = initialDemoMode;
 
   const [isDemoMode, setIsDemoMode] = useState<boolean>(defaultDemo);
   const [activeRole, setActiveRoleState] = useState<Role>('warga');
   const [user, setUser] = useState<UserProfile | null>(() => {
     return defaultDemo ? demoStore.getActiveDemoUser() : null;
   });
-  const [loading, setLoading] = useState<boolean>(!defaultDemo);
+  const [loading, setLoading] = useState<boolean>(false);
 
   // Initialize demo API client
   const demoApiClient = useMemo(() => createDemoApiClient(demoStore), []);

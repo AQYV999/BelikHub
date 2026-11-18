@@ -42,14 +42,14 @@ export function getTabsForRole(role: Role): TabConfig[] {
     case 'pengelola':
       return [
         {
+          name: 'beranda',
+          title: 'Beranda',
+          icon: 'home-outline'
+        },
+        {
           name: 'retribusi',
           title: 'Retribusi',
           icon: 'cash-outline'
-        },
-        {
-          name: 'warga',
-          title: 'Warga',
-          icon: 'people-outline'
         },
         {
           name: 'revitalisasi',
@@ -92,9 +92,9 @@ export function getTabsForRole(role: Role): TabConfig[] {
           icon: 'gift-outline'
         },
         {
-          name: 'dampak',
-          title: 'Dampak',
-          icon: 'analytics-outline'
+          name: 'detail',
+          title: 'Detail',
+          icon: 'information-circle-outline'
         },
         profileTab
       ];
@@ -112,8 +112,8 @@ export function getTabsForRole(role: Role): TabConfig[] {
           icon: 'checkmark-circle-outline'
         },
         {
-          name: 'pengguna',
-          title: 'Pengguna',
+          name: 'kelola',
+          title: 'Kelola',
           icon: 'shield-outline'
         },
         profileTab

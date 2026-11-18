@@ -1,11 +1,14 @@
 // mobile/app/(tabs)/secondary.tsx
-// Second tab dynamically routed by activeRole: Warga Mata Air, Relawan Lapor, or Placeholder
+// Second tab dynamically routed by activeRole: Warga Mata Air, Relawan Lapor, Pengelola Retribusi, Donatur Riwayat, or Admin Verifikasi
 
 import React from 'react';
 import { useAuth } from '../../src/auth/AuthProvider';
 import { getTabsForRole } from '../../src/navigation/roleTabs';
 import { WargaSpringScreen } from '../../src/features/warga/WargaSpringScreen';
 import { RelawanReportScreen } from '../../src/features/relawan/RelawanReportScreen';
+import { PengelolaRetributionScreen } from '../../src/features/pengelola/PengelolaRetributionScreen';
+import { DonaturHistoryScreen } from '../../src/features/donatur/DonaturHistoryScreen';
+import { AdminVerificationScreen } from '../../src/features/admin/AdminVerificationScreen';
 import { PlaceholderTabScreen } from '../../src/features/shared/PlaceholderTabScreen';
 
 export default function SecondaryTabScreen() {
@@ -19,6 +22,18 @@ export default function SecondaryTabScreen() {
 
   if (activeRole === 'relawan') {
     return <RelawanReportScreen />;
+  }
+
+  if (activeRole === 'pengelola') {
+    return <PengelolaRetributionScreen />;
+  }
+
+  if (activeRole === 'donatur') {
+    return <DonaturHistoryScreen />;
+  }
+
+  if (activeRole === 'admin') {
+    return <AdminVerificationScreen />;
   }
 
   return (

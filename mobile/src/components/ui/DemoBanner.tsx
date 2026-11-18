@@ -22,7 +22,10 @@ export const DemoBanner: React.FC = () => {
   const allRoles: Role[] = ['warga', 'pengelola', 'relawan', 'donatur', 'admin'];
 
   return (
-    <View style={[styles.container, { backgroundColor: isDark ? '#451a03' : '#fffbeb', borderColor: '#f59e0b' }]}>
+    <View
+      testID="demo-banner"
+      style={[styles.container, { backgroundColor: isDark ? '#451a03' : '#fffbeb', borderColor: '#f59e0b' }]}
+    >
       <View style={styles.topRow}>
         <View style={styles.badgeLabel}>
           <Text style={styles.badgeText}>MODE DEMO</Text>
@@ -44,6 +47,7 @@ export const DemoBanner: React.FC = () => {
           Ganti Peran:
         </Text>
         <RoleSwitcher
+          testID="role-switcher"
           roles={allRoles}
           activeRole={activeRole}
           onSelectRole={setActiveRole}

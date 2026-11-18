@@ -1,11 +1,14 @@
 // mobile/app/(tabs)/tertiary.tsx
-// Third tab dynamically routed by activeRole: Warga Laporan/Community, Relawan Riwayat, or Placeholder
+// Third tab dynamically routed by activeRole: Warga Laporan/Community, Relawan Riwayat, Pengelola Revitalisasi, Donatur Detail, or Admin Kelola
 
 import React from 'react';
 import { useAuth } from '../../src/auth/AuthProvider';
 import { getTabsForRole } from '../../src/navigation/roleTabs';
 import { WargaHomeScreen } from '../../src/features/warga/WargaHomeScreen';
 import { RelawanHistoryScreen } from '../../src/features/relawan/RelawanHistoryScreen';
+import { PengelolaRevitalizationScreen } from '../../src/features/pengelola/PengelolaRevitalizationScreen';
+import { DonaturCampaignDetailScreen } from '../../src/features/donatur/DonaturCampaignDetailScreen';
+import { AdminManageScreen } from '../../src/features/admin/AdminManageScreen';
 import { PlaceholderTabScreen } from '../../src/features/shared/PlaceholderTabScreen';
 
 export default function TertiaryTabScreen() {
@@ -19,6 +22,18 @@ export default function TertiaryTabScreen() {
 
   if (activeRole === 'relawan') {
     return <RelawanHistoryScreen />;
+  }
+
+  if (activeRole === 'pengelola') {
+    return <PengelolaRevitalizationScreen />;
+  }
+
+  if (activeRole === 'donatur') {
+    return <DonaturCampaignDetailScreen />;
+  }
+
+  if (activeRole === 'admin') {
+    return <AdminManageScreen />;
   }
 
   return (

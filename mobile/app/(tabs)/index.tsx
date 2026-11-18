@@ -1,11 +1,14 @@
 // mobile/app/(tabs)/index.tsx
-// First tab dynamically routed by activeRole: Warga Retribusi, Relawan Home, or Placeholder
+// First tab dynamically routed by activeRole: Warga Retribusi, Relawan Home, Pengelola Home, Donatur Explore, or Admin Home
 
 import React from 'react';
 import { useAuth } from '../../src/auth/AuthProvider';
 import { getTabsForRole } from '../../src/navigation/roleTabs';
 import { WargaRetributionScreen } from '../../src/features/warga/WargaRetributionScreen';
 import { RelawanHomeScreen } from '../../src/features/relawan/RelawanHomeScreen';
+import { PengelolaHomeScreen } from '../../src/features/pengelola/PengelolaHomeScreen';
+import { DonaturExploreScreen } from '../../src/features/donatur/DonaturExploreScreen';
+import { AdminHomeScreen } from '../../src/features/admin/AdminHomeScreen';
 import { PlaceholderTabScreen } from '../../src/features/shared/PlaceholderTabScreen';
 
 export default function IndexTabScreen() {
@@ -19,6 +22,18 @@ export default function IndexTabScreen() {
 
   if (activeRole === 'relawan') {
     return <RelawanHomeScreen />;
+  }
+
+  if (activeRole === 'pengelola') {
+    return <PengelolaHomeScreen />;
+  }
+
+  if (activeRole === 'donatur') {
+    return <DonaturExploreScreen />;
+  }
+
+  if (activeRole === 'admin') {
+    return <AdminHomeScreen />;
   }
 
   return (

@@ -18,6 +18,7 @@ export interface CardProps {
   style?: StyleProp<ViewStyle>;
   variant?: 'elevated' | 'outlined' | 'flat';
   padding?: 'none' | 'sm' | 'md' | 'lg';
+  testID?: string;
 }
 
 export const Card: React.FC<CardProps> = ({
@@ -25,7 +26,8 @@ export const Card: React.FC<CardProps> = ({
   onPress,
   style,
   variant = 'outlined',
-  padding = 'md'
+  padding = 'md',
+  testID
 }) => {
   const isDark = useColorScheme() === 'dark';
   const theme = isDark ? colors.dark : colors.light;
@@ -47,6 +49,7 @@ export const Card: React.FC<CardProps> = ({
   if (onPress) {
     return (
       <TouchableOpacity
+        testID={testID}
         activeOpacity={0.7}
         onPress={onPress}
         style={[styles.base, variantStyle, paddingStyle, style]}
@@ -57,7 +60,7 @@ export const Card: React.FC<CardProps> = ({
   }
 
   return (
-    <View style={[styles.base, variantStyle, paddingStyle, style]}>
+    <View testID={testID} style={[styles.base, variantStyle, paddingStyle, style]}>
       {children}
     </View>
   );
