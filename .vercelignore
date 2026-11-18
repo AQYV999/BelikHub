@@ -9,3 +9,7 @@ test-results/
 .vscode/
 .env
 .env.local
+mobile/
+docs/
+tests/
+

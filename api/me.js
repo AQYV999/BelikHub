@@ -1,52 +1,72 @@
 // api/me.js
 // GET /api/me - Profil user saat ini (wajib login)
 
-import { getAdminDb, getAdminAuth } from '../lib/firebase-admin.js';
-import { requireAuth, json } from '../lib/auth.js';
+import { getAdminDb as defaultGetAdminDb, getAdminAuth as defaultGetAdminAuth } from '../lib/firebase-admin.js';
+import { requireAuth, extractRoles, json } from '../lib/auth.js';
+import { setCors } from '../lib/v1/http.js';
 
-export default async function handler(request, response) {
-  response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+/**
+ * Factory for GET /api/me handler supporting dependency injection for testing
+ * @param {object} [deps={}]
+ * @returns {Function}
+ */
+export function createMeHandler(deps = {}) {
+  const getAdminDb = deps.getAdminDb || defaultGetAdminDb;
+  const getAdminAuth = deps.getAdminAuth || defaultGetAdminAuth;
 
-  if (request.method === 'OPTIONS') {
-    return response.status(200).end();
-  }
+  return async function handler(request, response) {
+    setCors(response, 'GET, OPTIONS');
 
-  if (request.method !== 'GET') {
-    return json(response, 405, { error: 'Method not allowed' });
-  }
-
-  try {
-    const authResult = await requireAuth(request, response);
-    if (!authResult.success) {
-      return json(response, authResult.status, { error: authResult.error });
+    if (request.method === 'OPTIONS') {
+      return response.status(200).end();
     }
 
-    const auth = getAdminAuth();
-    const userRecord = await auth.getUser(authResult.user.uid);
+    if (request.method !== 'GET') {
+      return json(response, 405, { error: 'Method not allowed' });
+    }
 
-    const db = getAdminDb();
-    const userDoc = await db.collection('users').doc(authResult.user.uid).get();
-    const userData = userDoc.exists ? userDoc.data() : {};
+    try {
+      const authResult = await requireAuth(request, response, deps);
+      if (!authResult.success) {
+        return json(response, authResult.status, { error: authResult.error });
+      }
 
-    // Hanya field yang di-whitelist dari dokumen Firestore.
-    // role SELALU berasal dari custom claim token, tidak bisa ditimpa data user.
-    const points = Number(userData.points) || 0;
-    const profileName = typeof userData.name === 'string' ? userData.name : null;
+      const auth = getAdminAuth();
+      const userRecord = await auth.getUser(authResult.user.uid);
 
-    return json(response, 200, {
-      uid: userRecord.uid,
-      email: userRecord.email,
-      name: userRecord.displayName || profileName || userRecord.email?.split('@')[0],
-      emailVerified: userRecord.emailVerified,
-      createdAt: userRecord.metadata.creationTime,
-      lastLoginAt: userRecord.metadata.lastSignInTime,
-      role: authResult.user.admin ? 'admin' : 'user',
-      points
-    });
-  } catch (error) {
-    console.error('GET /api/me error:', error);
-    return json(response, 500, { error: 'Failed to fetch user profile' });
-  }
+      const db = getAdminDb();
+      const userDoc = await db.collection('users').doc(authResult.user.uid).get();
+      const userData = userDoc.exists ? userDoc.data() : {};
+
+      const points = Number(userData.points) || 0;
+      const profileName = typeof userData.name === 'string' ? userData.name : null;
+      const roles = extractRoles(authResult.user);
+      const isAdmin = Boolean(authResult.user.admin || roles.includes('admin'));
+
+      return json(response, 200, {
+        uid: userRecord.uid,
+        email: userRecord.email,
+        name: userRecord.displayName || profileName || userRecord.email?.split('@')[0],
+        emailVerified: userRecord.emailVerified,
+        createdAt: userRecord.metadata?.creationTime || null,
+        lastLoginAt: userRecord.metadata?.lastSignInTime || null,
+        role: isAdmin ? 'admin' : 'user',
+        points,
+        roles,
+        managedSpringIds: Array.isArray(userData.managedSpringIds) ? userData.managedSpringIds : [],
+        springId: typeof userData.springId === 'string' ? userData.springId : null,
+        residentId: typeof userData.residentId === 'string' ? userData.residentId : null,
+        residentLinkStatus: typeof userData.residentLinkStatus === 'string' ? userData.residentLinkStatus : null,
+        donorType: typeof userData.donorType === 'string' ? userData.donorType : null,
+        phone: typeof userData.phone === 'string' ? userData.phone : userRecord.phoneNumber || null,
+        organizationName: typeof userData.organizationName === 'string' ? userData.organizationName : null
+      });
+    } catch (error) {
+      console.error('GET /api/me error:', error);
+      return json(response, 500, { error: 'Failed to fetch user profile' });
+    }
+  };
 }
+
+const defaultHandler = createMeHandler();
+export default defaultHandler;
