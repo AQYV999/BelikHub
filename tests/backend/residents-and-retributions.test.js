@@ -1082,6 +1082,48 @@ describe('Task 4: Residents Management & Retribution Billing Engine', () => {
       assert.match(res.body.error, /sudah ditautkan/i);
     });
 
+    it('handleApproveLink guards against race condition when two requests try to approve link to same resident concurrently', async () => {
+      const { deps } = setupTestDeps(
+        {
+          users: {
+            admin_user: { roles: ['admin'] },
+            warga_user_a: { roles: ['warga'], springId: 'SPR-001', residentId: null },
+            warga_user_b: { roles: ['warga'], springId: 'SPR-001', residentId: null }
+          },
+          residents: {
+            res_target: { id: 'res_target', springId: 'SPR-001', name: 'Target Warga', userId: null }
+          }
+        },
+        {
+          admin_user: { uid: 'admin_user', customClaims: { admin: true, roles: ['admin'] } },
+          warga_user_a: { uid: 'warga_user_a', customClaims: { roles: ['warga'] } },
+          warga_user_b: { uid: 'warga_user_b', customClaims: { roles: ['warga'] } }
+        }
+      );
+
+      const reqA = createMockReq({
+        method: 'POST',
+        headers: { authorization: 'Bearer admin_user' },
+        body: { userUid: 'warga_user_a', residentId: 'res_target' }
+      });
+      const resA = createMockRes();
+
+      const reqB = createMockReq({
+        method: 'POST',
+        headers: { authorization: 'Bearer admin_user' },
+        body: { userUid: 'warga_user_b', residentId: 'res_target' }
+      });
+      const resB = createMockRes();
+
+      // Run both
+      await handleApproveLink(reqA, resA, deps);
+      await handleApproveLink(reqB, resB, deps);
+
+      assert.equal(resA.statusCode, 200);
+      assert.equal(resB.statusCode, 409);
+      assert.match(resB.body.error, /sudah ditautkan/i);
+    });
+
     it('handleUpdateRetribution validates invalid action, record_cash on paid, and approve on unpaid', async () => {
       const { deps } = setupTestDeps(
         {
