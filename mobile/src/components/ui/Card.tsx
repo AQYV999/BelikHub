@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ViewStyle,
+  StyleProp,
   useColorScheme
 } from 'react-native';
 import { colors, radius, shadows, spacing } from '../../theme/tokens';
@@ -14,7 +15,7 @@ import { colors, radius, shadows, spacing } from '../../theme/tokens';
 export interface CardProps {
   children: ReactNode;
   onPress?: () => void;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   variant?: 'elevated' | 'outlined' | 'flat';
   padding?: 'none' | 'sm' | 'md' | 'lg';
 }

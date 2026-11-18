@@ -26,6 +26,7 @@ export interface ButtonProps {
   style?: ViewStyle;
   textStyle?: TextStyle;
   icon?: React.ReactNode;
+  testID?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -38,7 +39,8 @@ export const Button: React.FC<ButtonProps> = ({
   fullWidth = false,
   style,
   textStyle,
-  icon
+  icon,
+  testID
 }) => {
   const isDark = useColorScheme() === 'dark';
   const theme = isDark ? colors.dark : colors.light;
@@ -122,6 +124,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   return (
     <TouchableOpacity
+      testID={testID}
       activeOpacity={0.75}
       onPress={onPress}
       disabled={isDisabled}

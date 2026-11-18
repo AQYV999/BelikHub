@@ -19,6 +19,7 @@ export interface RoleSwitcherProps {
   activeRole: Role;
   onSelectRole: (role: Role) => void;
   style?: ViewStyle;
+  testID?: string;
 }
 
 const ROLE_LABELS: Record<Role, string> = {
@@ -33,7 +34,8 @@ export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
   roles,
   activeRole,
   onSelectRole,
-  style
+  style,
+  testID
 }) => {
   const isDark = useColorScheme() === 'dark';
   const theme = isDark ? colors.dark : colors.light;
@@ -50,6 +52,7 @@ export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
           return (
             <TouchableOpacity
               key={r}
+              testID={testID ? `${testID}-chip-${r}` : `role-chip-${r}`}
               activeOpacity={0.7}
               onPress={() => onSelectRole(r)}
               style={[
