@@ -76,6 +76,7 @@ function validateReport(data) {
       typeof data.photoPath !== 'string' ||
       data.photoPath.trim().length === 0 ||
       data.photoPath.trim().length > 300 ||
+      data.photoPath.includes('..') ||
       !/^uploads\/report_photo\/[A-Za-z0-9._/-]+$/.test(data.photoPath.trim())
     ) {
       errors.photoPath = 'photoPath tidak valid';
@@ -208,9 +209,6 @@ export function createReportsHandler(deps = {}) {
                 status: r.status,
                 createdAt: iso(r.createdAt)
               };
-              if (r.photoPath) {
-                base.photoPath = r.photoPath;
-              }
               if (hasCoord) {
                 base.lat = wantAll ? r.lat : fuzz(r.lat, r.id, 'lat');
                 base.lng = wantAll ? r.lng : fuzz(r.lng, r.id, 'lng');
@@ -219,6 +217,9 @@ export function createReportsHandler(deps = {}) {
                 base.authorName = r.authorName;
                 base.authorEmail = r.authorEmail;
                 base.points = r.points !== undefined ? r.points : calculatePoints(r.reportType);
+                if (r.photoPath) {
+                  base.photoPath = r.photoPath;
+                }
               }
               return base;
             })

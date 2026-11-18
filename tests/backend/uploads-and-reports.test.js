@@ -305,11 +305,13 @@ describe('Task 2: Server-Proxied Image Uploads & Reports Extensions', () => {
       assert.match(res.body.error, /purpose/i);
     });
 
-    it('resolveSignedReadUrl returns null for empty or invalid paths', async () => {
+    it('resolveSignedReadUrl returns null for empty or invalid paths and rejects path traversal', async () => {
       assert.equal(await resolveSignedReadUrl(null), null);
       assert.equal(await resolveSignedReadUrl(''), null);
       assert.equal(await resolveSignedReadUrl(undefined), null);
       assert.equal(await resolveSignedReadUrl('   '), null);
+      assert.equal(await resolveSignedReadUrl('uploads/report_photo/../../secrets/file.jpg'), null);
+      assert.equal(await resolveSignedReadUrl('uploads/../etc/passwd'), null);
     });
   });
 
@@ -415,7 +417,7 @@ describe('Task 2: Server-Proxied Image Uploads & Reports Extensions', () => {
       assert.equal(resAuth.body.reports.some((r) => r.id === 'rep_other'), false);
     });
 
-    it('GET /api/reports (public/warga/donatur) returns only approved reports with grid-fuzzed coords and no authorEmail', async () => {
+    it('GET /api/reports (public/warga/donatur) returns only approved reports with grid-fuzzed coords, resolved photoUrl, and no authorEmail or photoPath', async () => {
       const mockDb = createMockDb({
         reports: {
           rep_approved: {
@@ -426,6 +428,7 @@ describe('Task 2: Server-Proxied Image Uploads & Reports Extensions', () => {
             reportType: 'Restorasi Mata Air',
             location: 'Mata Air Belik',
             notes: 'Pembersihan area sumber',
+            photoPath: 'uploads/report_photo/user_1/1731930000000-abcd-1234.jpg',
             status: 'approved',
             lat: -7.12345,
             lng: 110.45678,
@@ -455,7 +458,8 @@ describe('Task 2: Server-Proxied Image Uploads & Reports Extensions', () => {
 
       const handler = createReportsHandler({
         getAdminDb: () => mockDb,
-        verifyIdToken: (t) => mockAuth.verifyIdToken(t)
+        verifyIdToken: (t) => mockAuth.verifyIdToken(t),
+        resolveSignedReadUrl: async (path) => `https://storage.googleapis.com/mock-bucket/${path}?signed=1`
       });
 
       // Public call without token
@@ -468,8 +472,13 @@ describe('Task 2: Server-Proxied Image Uploads & Reports Extensions', () => {
       const publicRep = resPublic.body.reports[0];
       assert.equal(publicRep.id, 'rep_approved');
       assert.equal(publicRep.status, 'approved');
-      // No authorEmail in public response
+      // No authorEmail or photoPath (UID leak prevention) in public response
       assert.equal(publicRep.authorEmail, undefined);
+      assert.equal(publicRep.photoPath, undefined);
+      assert.equal(
+        publicRep.photoUrl,
+        'https://storage.googleapis.com/mock-bucket/uploads/report_photo/user_1/1731930000000-abcd-1234.jpg?signed=1'
+      );
       // Grid-fuzzed coords (not exact -7.12345)
       assert.notEqual(publicRep.lat, -7.12345);
       assert.equal(publicRep.lat, -7.1); // round(-7.12345 / 0.05) * 0.05 = -7.1000
@@ -487,6 +496,7 @@ describe('Task 2: Server-Proxied Image Uploads & Reports Extensions', () => {
       assert.equal(resWarga.statusCode, 200);
       assert.equal(resWarga.body.reports.length, 1);
       assert.equal(resWarga.body.reports[0].authorEmail, undefined);
+      assert.equal(resWarga.body.reports[0].photoPath, undefined);
       assert.notEqual(resWarga.body.reports[0].lat, -7.12345);
     });
 
@@ -560,7 +570,7 @@ describe('Task 2: Server-Proxied Image Uploads & Reports Extensions', () => {
       );
     });
 
-    it('POST /api/reports rejects invalid photoPath format with 400', async () => {
+    it('POST /api/reports rejects invalid photoPath format and path traversal with 400', async () => {
       const mockDb = createMockDb();
       const mockAuth = createMockAuth({
         plain_user: { uid: 'plain_user' }
@@ -571,26 +581,35 @@ describe('Task 2: Server-Proxied Image Uploads & Reports Extensions', () => {
         verifyIdToken: (t) => mockAuth.verifyIdToken(t)
       });
 
-      const reqPost = createMockReq({
-        method: 'POST',
-        headers: { authorization: 'Bearer plain_user' },
-        body: {
-          reportType: 'Survei Mata Air',
-          location: 'Sumber Sendang Mulyo',
-          notes: 'Debit air normal',
-          photoPath: 'malicious/path/../../etc/passwd'
-        }
-      });
-      const resPost = createMockRes();
+      const invalidPaths = [
+        'malicious/path/../../etc/passwd',
+        'uploads/report_photo/../../secrets/file.jpg',
+        'uploads/report_photo/plain_user/../passwd.jpg',
+        'uploads/report_photo/..',
+        'uploads/other_purpose/plain_user/photo.jpg'
+      ];
 
-      await handler(reqPost, resPost);
+      for (const photoPath of invalidPaths) {
+        const reqPost = createMockReq({
+          method: 'POST',
+          headers: { authorization: 'Bearer plain_user' },
+          body: {
+            reportType: 'Survei Mata Air',
+            location: 'Sumber Sendang Mulyo',
+            notes: 'Debit air normal',
+            photoPath
+          }
+        });
+        const resPost = createMockRes();
+        await handler(reqPost, resPost);
 
-      assert.equal(resPost.statusCode, 400);
-      assert.match(resPost.body.error, /validation failed/i);
-      assert.ok(resPost.body.details?.photoPath);
+        assert.equal(resPost.statusCode, 400, `Expected 400 for path: ${photoPath}`);
+        assert.match(resPost.body.error, /validation failed/i);
+        assert.ok(resPost.body.details?.photoPath);
+      }
     });
 
-    it('GET /api/reports?scope=all with admin custom claims returns all reports with exact coords and author email', async () => {
+    it('GET /api/reports?scope=all with admin custom claims returns all reports with exact coords, author email, and photoPath', async () => {
       const mockDb = createMockDb({
         reports: {
           rep_app: {
@@ -601,6 +620,7 @@ describe('Task 2: Server-Proxied Image Uploads & Reports Extensions', () => {
             reportType: 'Restorasi Mata Air',
             location: 'Sumber Gede',
             notes: 'Notes 1',
+            photoPath: 'uploads/report_photo/user_1/1731930000000-abcd-1234.jpg',
             status: 'approved',
             lat: -7.12345,
             lng: 110.45678,
@@ -630,7 +650,8 @@ describe('Task 2: Server-Proxied Image Uploads & Reports Extensions', () => {
 
       const handler = createReportsHandler({
         getAdminDb: () => mockDb,
-        verifyIdToken: (t) => mockAuth.verifyIdToken(t)
+        verifyIdToken: (t) => mockAuth.verifyIdToken(t),
+        resolveSignedReadUrl: async (path) => `https://storage.googleapis.com/mock-bucket/${path}?signed=1`
       });
 
       const req = createMockReq({
@@ -649,6 +670,7 @@ describe('Task 2: Server-Proxied Image Uploads & Reports Extensions', () => {
       assert.equal(repApp.authorEmail, 'siti@example.com');
       assert.equal(repApp.lat, -7.12345);
       assert.equal(repApp.lng, 110.45678);
+      assert.equal(repApp.photoPath, 'uploads/report_photo/user_1/1731930000000-abcd-1234.jpg');
 
       const repPen = res.body.reports.find((r) => r.id === 'rep_pen');
       assert.equal(repPen.status, 'pending');
