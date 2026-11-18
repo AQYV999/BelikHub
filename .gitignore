@@ -13,6 +13,7 @@ yarn-error.log
 
 .vercel
 .env*
+!mobile/.env.example
 
 *.sqlite
 *.sqlite-shm
@@ -26,3 +27,8 @@ playwright-report/
 test-results/
 *.bak
 *.bak.*
+
+mobile/node_modules/
+mobile/.expo/
+mobile/dist/
+

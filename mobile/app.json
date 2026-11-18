@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "BelikHub",
+    "slug": "belikhub",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "belikhub",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "backgroundColor": "#0d7480"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "id.belikhub.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0d7480"
+      },
+      "package": "id.belikhub.mobile"
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
