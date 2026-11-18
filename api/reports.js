@@ -1,11 +1,19 @@
 // api/reports.js
 // GET  /api/reports  - daftar laporan PUBLIK (hanya yang approved, tanpa data pribadi)
+//                      ?mine=1 untuk laporan pelapor sendiri (semua status + koordinat asli)
 //                      admin boleh ?scope=all untuk semua status + koordinat asli
-// POST /api/reports  - buat laporan (wajib login)
+// POST /api/reports  - buat laporan (wajib login, menerima photoUrl atau photoPath)
 
 import crypto from 'crypto';
-import { getAdminDb } from '../lib/firebase-admin.js';
-import { requireAuth, optionalAuth, json } from '../lib/auth.js';
+import { getAdminDb as defaultGetAdminDb } from '../lib/firebase-admin.js';
+import {
+  requireAuth as defaultRequireAuth,
+  optionalAuth as defaultOptionalAuth,
+  extractRoles,
+  json
+} from '../lib/auth.js';
+import { parseJsonBody } from '../lib/v1/http.js';
+import { resolveSignedReadUrl as defaultResolveSignedReadUrl } from '../lib/v1/uploads.js';
 
 const MAX_PER_DAY = 10;
 const VALID_REPORT_TYPES = [
@@ -62,6 +70,18 @@ function validateReport(data) {
       errors.photoUrl = 'photoUrl harus berasal dari Firebase Storage';
     }
   }
+
+  if (data.photoPath !== undefined && data.photoPath !== null) {
+    if (
+      typeof data.photoPath !== 'string' ||
+      data.photoPath.trim().length === 0 ||
+      data.photoPath.trim().length > 300 ||
+      !/^uploads\/report_photo\/[A-Za-z0-9._/-]+$/.test(data.photoPath.trim())
+    ) {
+      errors.photoPath = 'photoPath tidak valid';
+    }
+  }
+
   return Object.keys(errors).length ? errors : null;
 }
 
@@ -76,129 +96,213 @@ function fuzz(n, id = '', axis = 'lat') {
 }
 
 function iso(v) {
-  return v?.toDate?.()?.toISOString() || v || null;
+  return v?.toDate?.()?.toISOString() || (v instanceof Date ? v.toISOString() : v) || null;
 }
 
-export default async function handler(request, response) {
-  response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+export function createReportsHandler(deps = {}) {
+  const getAdminDb = deps.getAdminDb || defaultGetAdminDb;
+  const requireAuth = deps.requireAuth || defaultRequireAuth;
+  const optionalAuth = deps.optionalAuth || defaultOptionalAuth;
+  const resolveSignedReadUrl = deps.resolveSignedReadUrl || defaultResolveSignedReadUrl;
 
-  if (request.method === 'OPTIONS') return response.status(200).end();
+  return async function handler(request, response) {
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  // ---------- GET ----------
-  if (request.method === 'GET') {
-    try {
-      const auth = await optionalAuth(request, response);
-      const isAdmin = !!auth.user?.admin;
-      const scopeAllRequested = request.query?.scope === 'all';
-      const wantAll = isAdmin && scopeAllRequested;
-      const parsedLimit = parseInt(request.query?.limit, 10);
-      const limit = Math.min(Math.max(Number.isNaN(parsedLimit) ? 50 : parsedLimit, 1), 100);
+    if (request.method === 'OPTIONS') return response.status(200).end();
 
-      const statusFilter = request.query?.status;
-      if (wantAll && statusFilter && (typeof statusFilter !== 'string' || !VALID_STATUSES.includes(statusFilter))) {
-        return json(response, 400, { error: 'Invalid status filter' });
-      }
+    // ---------- GET ----------
+    if (request.method === 'GET') {
+      try {
+        const isMine = request.query?.mine === '1' || request.query?.mine === 'true';
 
-      const db = getAdminDb();
-      let q = db.collection('reports');
-      if (!wantAll) q = q.where('status', '==', 'approved');
-      else if (statusFilter) q = q.where('status', '==', statusFilter);
-
-      const snap = await q.orderBy('createdAt', 'desc').limit(limit).get();
-      const rows = snap.docs
-        .map((d) => ({ id: d.id, ...d.data() }))
-        .map((r) => {
-          const hasCoord = typeof r.lat === 'number' && typeof r.lng === 'number';
-          const base = {
-            id: r.id,
-            reportType: r.reportType,
-            location: r.location,
-            notes: r.notes,
-            photoUrl: r.photoUrl || null,
-            status: r.status,
-            createdAt: iso(r.createdAt)
-          };
-          if (hasCoord) {
-            base.lat = wantAll ? r.lat : fuzz(r.lat, r.id, 'lat');
-            base.lng = wantAll ? r.lng : fuzz(r.lng, r.id, 'lng');
+        // Support ?mine=1: authenticated user's own reports (all statuses, exact coords)
+        if (isMine) {
+          const auth = await requireAuth(request, response, deps);
+          if (!auth.success) {
+            return json(response, auth.status || 401, { error: auth.error || 'Unauthorized' });
           }
-          if (wantAll) {
-            base.authorName = r.authorName;
-            base.authorEmail = r.authorEmail;
-            base.points = r.points;
-          }
-          return base;
-        });
 
-      response.setHeader('Cache-Control', scopeAllRequested || wantAll ? 'private, no-store' : 'public, s-maxage=60');
-      return json(response, 200, { reports: rows, total: rows.length });
-    } catch (error) {
-      console.error('GET /api/reports error:', error);
-      return json(response, 500, { error: 'Failed to fetch reports' });
-    }
-  }
+          const parsedLimit = parseInt(request.query?.limit, 10);
+          const limit = Math.min(Math.max(Number.isNaN(parsedLimit) ? 50 : parsedLimit, 1), 100);
 
-  // ---------- POST ----------
-  if (request.method === 'POST') {
-    try {
-      const auth = await requireAuth(request, response);
-      if (!auth.success) return json(response, auth.status, { error: auth.error });
+          const db = getAdminDb();
+          const snap = await db
+            .collection('reports')
+            .where('userId', '==', auth.user.uid)
+            .orderBy('createdAt', 'desc')
+            .limit(limit)
+            .get();
 
-      const body = request.body;
-      const errors = validateReport(body);
-      if (errors) return json(response, 400, { error: 'Validation failed', details: errors });
+          const rows = await Promise.all(
+            snap.docs
+              .map((d) => ({ id: d.id, ...d.data() }))
+              .map(async (r) => {
+                const hasCoord = typeof r.lat === 'number' && typeof r.lng === 'number';
+                let photoUrl = r.photoUrl || null;
+                if (r.photoPath) {
+                  const signed = await resolveSignedReadUrl(r.photoPath, deps);
+                  if (signed) photoUrl = signed;
+                }
+                const base = {
+                  id: r.id,
+                  reportType: r.reportType,
+                  location: r.location,
+                  notes: r.notes,
+                  photoUrl,
+                  status: r.status,
+                  points: r.points !== undefined ? r.points : calculatePoints(r.reportType),
+                  createdAt: iso(r.createdAt)
+                };
+                if (r.photoPath) {
+                  base.photoPath = r.photoPath;
+                }
+                if (hasCoord) {
+                  base.lat = r.lat;
+                  base.lng = r.lng;
+                }
+                return base;
+              })
+          );
 
-      const db = getAdminDb();
+          response.setHeader('Cache-Control', 'private, no-store');
+          return json(response, 200, { reports: rows, total: rows.length });
+        }
 
-      // Batas harian per pengguna (urutan terbaru lebih dulu sesuai index userId+createdAt)
-      const since = Date.now() - 24 * 60 * 60 * 1000;
-      const mine = await db
-        .collection('reports')
-        .where('userId', '==', auth.user.uid)
-        .orderBy('createdAt', 'desc')
-        .limit(MAX_PER_DAY + 5)
-        .get();
-      const recent = mine.docs.filter((d) => (d.data().createdAt?.toMillis?.() ?? 0) > since).length;
-      if (recent >= MAX_PER_DAY) {
-        return json(response, 429, { error: `Batas ${MAX_PER_DAY} laporan per 24 jam tercapai` });
+        // Public / non-mine GET
+        const auth = await optionalAuth(request, response, deps);
+        const isAdmin = !!auth.user?.admin || extractRoles(auth.user).includes('admin');
+        const scopeAllRequested = request.query?.scope === 'all';
+        const wantAll = isAdmin && scopeAllRequested;
+        const parsedLimit = parseInt(request.query?.limit, 10);
+        const limit = Math.min(Math.max(Number.isNaN(parsedLimit) ? 50 : parsedLimit, 1), 100);
+
+        const statusFilter = request.query?.status;
+        if (wantAll && statusFilter && (typeof statusFilter !== 'string' || !VALID_STATUSES.includes(statusFilter))) {
+          return json(response, 400, { error: 'Invalid status filter' });
+        }
+
+        const db = getAdminDb();
+        let q = db.collection('reports');
+        if (!wantAll) q = q.where('status', '==', 'approved');
+        else if (statusFilter) q = q.where('status', '==', statusFilter);
+
+        const snap = await q.orderBy('createdAt', 'desc').limit(limit).get();
+        const rows = await Promise.all(
+          snap.docs
+            .map((d) => ({ id: d.id, ...d.data() }))
+            .map(async (r) => {
+              const hasCoord = typeof r.lat === 'number' && typeof r.lng === 'number';
+              let photoUrl = r.photoUrl || null;
+              if (r.photoPath) {
+                const signed = await resolveSignedReadUrl(r.photoPath, deps);
+                if (signed) photoUrl = signed;
+              }
+              const base = {
+                id: r.id,
+                reportType: r.reportType,
+                location: r.location,
+                notes: r.notes,
+                photoUrl,
+                status: r.status,
+                createdAt: iso(r.createdAt)
+              };
+              if (r.photoPath) {
+                base.photoPath = r.photoPath;
+              }
+              if (hasCoord) {
+                base.lat = wantAll ? r.lat : fuzz(r.lat, r.id, 'lat');
+                base.lng = wantAll ? r.lng : fuzz(r.lng, r.id, 'lng');
+              }
+              if (wantAll) {
+                base.authorName = r.authorName;
+                base.authorEmail = r.authorEmail;
+                base.points = r.points !== undefined ? r.points : calculatePoints(r.reportType);
+              }
+              return base;
+            })
+        );
+
+        response.setHeader('Cache-Control', scopeAllRequested || wantAll ? 'private, no-store' : 'public, s-maxage=60');
+        return json(response, 200, { reports: rows, total: rows.length });
+      } catch (error) {
+        console.error('GET /api/reports error:', error);
+        return json(response, 500, { error: 'Failed to fetch reports' });
       }
-
-      const now = new Date();
-      const data = {
-        userId: auth.user.uid,
-        authorName: auth.user.name || auth.user.email?.split('@')[0] || 'Anonim',
-        authorEmail: auth.user.email || null,
-        reportType: body.reportType.trim(),
-        location: body.location.trim(),
-        notes: body.notes.trim(),
-        photoUrl: typeof body.photoUrl === 'string' && body.photoUrl.trim() ? body.photoUrl.trim() : null,
-        points: calculatePoints(body.reportType),
-        status: 'pending',
-        createdAt: now,
-        updatedAt: now
-      };
-      if (body.lat !== undefined && body.lat !== null && body.lat !== '') {
-        data.lat = Number(body.lat);
-        data.lng = Number(body.lng);
-      }
-
-      const ref = await db.collection('reports').add(data);
-      // Respons ke pelapor sendiri: jangan kirim balik email
-      return json(response, 201, {
-        id: ref.id,
-        reportType: data.reportType,
-        location: data.location,
-        status: data.status,
-        points: data.points,
-        createdAt: now.toISOString()
-      });
-    } catch (error) {
-      console.error('POST /api/reports error:', error);
-      return json(response, 500, { error: 'Failed to create report' });
     }
-  }
 
-  return json(response, 405, { error: 'Method not allowed' });
+    // ---------- POST ----------
+    if (request.method === 'POST') {
+      try {
+        const auth = await requireAuth(request, response, deps);
+        if (!auth.success) return json(response, auth.status, { error: auth.error });
+
+        const body = parseJsonBody(request) || (typeof request.body === 'object' ? request.body : null);
+        const errors = validateReport(body);
+        if (errors) return json(response, 400, { error: 'Validation failed', details: errors });
+
+        const db = getAdminDb();
+
+        // Batas harian per pengguna (urutan terbaru lebih dulu sesuai index userId+createdAt)
+        const since = Date.now() - 24 * 60 * 60 * 1000;
+        const mine = await db
+          .collection('reports')
+          .where('userId', '==', auth.user.uid)
+          .orderBy('createdAt', 'desc')
+          .limit(MAX_PER_DAY + 5)
+          .get();
+        const recent = mine.docs.filter((d) => {
+          const cd = d.data().createdAt;
+          const ms = cd?.toMillis?.() ?? (cd instanceof Date ? cd.getTime() : new Date(cd).getTime());
+          return ms > since;
+        }).length;
+        if (recent >= MAX_PER_DAY) {
+          return json(response, 429, { error: `Batas ${MAX_PER_DAY} laporan per 24 jam tercapai` });
+        }
+
+        const now = new Date();
+        const data = {
+          userId: auth.user.uid,
+          authorName: auth.user.name || auth.user.email?.split('@')[0] || 'Anonim',
+          authorEmail: auth.user.email || null,
+          reportType: body.reportType.trim(),
+          location: body.location.trim(),
+          notes: body.notes.trim(),
+          photoUrl: typeof body.photoUrl === 'string' && body.photoUrl.trim() ? body.photoUrl.trim() : null,
+          photoPath: typeof body.photoPath === 'string' && body.photoPath.trim() ? body.photoPath.trim() : null,
+          points: calculatePoints(body.reportType),
+          status: 'pending',
+          createdAt: now,
+          updatedAt: now
+        };
+        if (body.lat !== undefined && body.lat !== null && body.lat !== '') {
+          data.lat = Number(body.lat);
+          data.lng = Number(body.lng);
+        }
+
+        const ref = await db.collection('reports').add(data);
+        // Respons ke pelapor sendiri: jangan kirim balik email
+        const resPayload = {
+          id: ref.id,
+          reportType: data.reportType,
+          location: data.location,
+          status: data.status,
+          points: data.points,
+          createdAt: now.toISOString()
+        };
+        if (data.photoPath) {
+          resPayload.photoPath = data.photoPath;
+        }
+        return json(response, 201, resPayload);
+      } catch (error) {
+        console.error('POST /api/reports error:', error);
+        return json(response, 500, { error: 'Failed to create report' });
+      }
+    }
+
+    return json(response, 405, { error: 'Method not allowed' });
+  };
 }
+
+export default createReportsHandler();
