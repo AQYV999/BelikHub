@@ -402,6 +402,7 @@ export const RelawanReportScreen: React.FC = () => {
           helperText="Ambil foto langsung atau pilih dari galeri. Otomatis dikompresi maks 1280px."
           valueUri={photoUrl}
           onChange={async (base64) => {
+            if (!base64) return;
             setUploadingPhoto(true);
             try {
               const res = await api.uploadImage('report_photo', base64);

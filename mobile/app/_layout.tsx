@@ -9,7 +9,7 @@ import { AuthProvider, useAuth } from '../src/auth/AuthProvider';
 import { colors } from '../src/theme/tokens';
 
 function NavigationGuard({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, loading, isDemoMode } = useAuth();
   const segments = useSegments();
   const router = useRouter();
 
@@ -23,11 +23,18 @@ function NavigationGuard({ children }: { children: React.ReactNode }) {
         router.replace('/login');
       }
     } else {
-      if (currentScreen === 'login') {
-        router.replace('/(tabs)');
+      const hasRoles = isDemoMode || (user.roles && user.roles.length > 0);
+      if (!hasRoles) {
+        if (currentScreen !== 'onboarding') {
+          router.replace('/onboarding');
+        }
+      } else {
+        if (currentScreen === 'login') {
+          router.replace('/(tabs)');
+        }
       }
     }
-  }, [user, loading, segments, router]);
+  }, [user, loading, isDemoMode, segments, router]);
 
   if (loading) {
     return (

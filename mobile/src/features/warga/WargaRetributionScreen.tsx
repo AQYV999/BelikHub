@@ -510,10 +510,12 @@ export const WargaRetributionScreen: React.FC = () => {
 
               {/* Upload Proof */}
               <ImageUploadField
+                key={selectedBill?.id ?? 'none'}
                 label="Unggah Bukti Pembayaran"
                 helperText="Lampirkan tangkapan layar (screenshot) transfer bank atau resi QRIS."
                 valueUri={uploadedProofPath}
                 onChange={async (base64) => {
+                  if (!base64) return;
                   try {
                     const uploadRes = await api.uploadImage('retribution_proof', base64);
                     setUploadedProofPath(uploadRes.objectPath);

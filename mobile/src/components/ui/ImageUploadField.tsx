@@ -3,7 +3,7 @@
 // Max width 1280px, JPEG quality 0.75, base64 output
 // Gracefully operates across Web Preview, Android, and iOS
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -42,6 +42,10 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
   const theme = isDark ? colors.dark : colors.light;
   const [compressing, setCompressing] = useState<boolean>(false);
   const [previewUri, setPreviewUri] = useState<string | null>(valueUri || null);
+
+  useEffect(() => {
+    setPreviewUri(valueUri || null);
+  }, [valueUri]);
 
   const processAndCompressImage = async (uri: string) => {
     setCompressing(true);
