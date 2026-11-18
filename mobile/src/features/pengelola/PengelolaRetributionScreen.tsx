@@ -28,7 +28,8 @@ import {
   RetributionBill,
   Resident,
   PendingUser,
-  SpringSettings
+  SpringSettings,
+  SpringPublic
 } from '../../api/types';
 import { formatRupiah, formatPeriod, getRetributionStatusMeta } from '../warga/wargaUtils';
 import { filterBillsByStatus, validateResidentInput } from './pengelolaUtils';
@@ -47,8 +48,11 @@ export const PengelolaRetributionScreen: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
-  // Managed spring ID
-  const selectedSpringId = (user?.managedSpringIds && user.managedSpringIds[0]) || 'SPR-001';
+  // Managed springs & selected spring ID
+  const [springs, setSprings] = useState<SpringPublic[]>([]);
+  const [selectedSpringId, setSelectedSpringId] = useState<string>(
+    (user?.managedSpringIds && user.managedSpringIds[0]) || 'SPR-001'
+  );
   const currentPeriod = new Date().toISOString().slice(0, 7); // YYYY-MM
 
   // Data states
@@ -78,6 +82,16 @@ export const PengelolaRetributionScreen: React.FC = () => {
   const [addResidentError, setAddResidentError] = useState<string>('');
   const [addResidentLoading, setAddResidentLoading] = useState<boolean>(false);
 
+  // Edit Resident Modal
+  const [editResidentVisible, setEditResidentVisible] = useState<boolean>(false);
+  const [editingResident, setEditingResident] = useState<Resident | null>(null);
+  const [editResidentName, setEditResidentName] = useState<string>('');
+  const [editResidentPhone, setEditResidentPhone] = useState<string>('');
+  const [editResidentFee, setEditResidentFee] = useState<string>('15000');
+  const [editResidentActive, setEditResidentActive] = useState<boolean>(true);
+  const [editResidentError, setEditResidentError] = useState<string>('');
+  const [editResidentLoading, setEditResidentLoading] = useState<boolean>(false);
+
   // Generated Link Code Alert / State
   const [generatedCodeInfo, setGeneratedCodeInfo] = useState<{
     code: string;
@@ -87,12 +101,22 @@ export const PengelolaRetributionScreen: React.FC = () => {
 
   const loadData = useCallback(async () => {
     try {
-      const [retRes, resRes, setRes] = await Promise.all([
+      const [springsRes, retRes, resRes, setRes] = await Promise.all([
+        api.listSprings().catch(() => ({ springs: [] })),
         api.listRetributions({ springId: selectedSpringId, period: currentPeriod }).catch(() => ({ bills: [] })),
         api.listResidents(selectedSpringId).catch(() => ({ residents: [], pendingUsers: [] })),
         api.getSpringSettings(selectedSpringId).catch(() => null)
       ]);
 
+      const managedIds = user?.managedSpringIds && user.managedSpringIds.length > 0
+        ? user.managedSpringIds
+        : ['SPR-001'];
+
+      const filteredSprings = (springsRes.springs || []).filter((s) =>
+        managedIds.includes(s.id)
+      );
+
+      setSprings(filteredSprings.length > 0 ? filteredSprings : springsRes.springs || []);
       if (retRes?.bills) setBills(retRes.bills);
       if (resRes?.residents) setResidents(resRes.residents);
       if (resRes?.pendingUsers) setPendingUsers(resRes.pendingUsers);
@@ -103,7 +127,7 @@ export const PengelolaRetributionScreen: React.FC = () => {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [api, selectedSpringId, currentPeriod]);
+  }, [api, selectedSpringId, user?.managedSpringIds, currentPeriod]);
 
   useEffect(() => {
     loadData();
@@ -215,6 +239,53 @@ export const PengelolaRetributionScreen: React.FC = () => {
     }
   };
 
+  // Handle Open & Save Edit Resident
+  const handleOpenEditResident = (resident: Resident) => {
+    setEditingResident(resident);
+    setEditResidentName(resident.name);
+    setEditResidentPhone(resident.phone || '');
+    setEditResidentFee(String(resident.monthlyFee || 15000));
+    setEditResidentActive(resident.active !== false);
+    setEditResidentError('');
+    setEditResidentVisible(true);
+  };
+
+  const handleSaveEditResident = async () => {
+    if (!editingResident) return;
+    const feeNum = parseInt(editResidentFee.replace(/\D/g, ''), 10) || 0;
+    const validation = validateResidentInput({
+      name: editResidentName,
+      phone: editResidentPhone,
+      monthlyFee: feeNum
+    });
+
+    if (!validation.valid) {
+      setEditResidentError(validation.error || 'Data warga tidak valid.');
+      return;
+    }
+
+    setEditResidentLoading(true);
+    setEditResidentError('');
+    try {
+      const res = await api.updateResident(editingResident.id, {
+        name: editResidentName.trim(),
+        phone: editResidentPhone.trim(),
+        monthlyFee: feeNum,
+        active: editResidentActive
+      });
+
+      if (res.success) {
+        Alert.alert('Sukses', `Data warga ${editResidentName} berhasil diperbarui.`);
+        setEditResidentVisible(false);
+        loadData();
+      }
+    } catch (e: any) {
+      setEditResidentError(e?.message || 'Gagal memperbarui data warga.');
+    } finally {
+      setEditResidentLoading(false);
+    }
+  };
+
   // Handle Generate Link Code
   const handleGenerateLinkCode = async (resident: Resident) => {
     try {
@@ -283,6 +354,52 @@ export const PengelolaRetributionScreen: React.FC = () => {
           </Text>
         </View>
       </View>
+
+      {/* Multi-Spring Selector Chip Bar */}
+      {springs.length > 1 && (
+        <Card variant="outlined" padding="sm" style={styles.springSelectorCard}>
+          <Text style={[styles.springSelectorLabel, { color: theme.muted }]}>
+            Pilih Mata Air Dikelola:
+          </Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.springScroll}>
+            {springs.map((spring) => {
+              const isSelected = spring.id === selectedSpringId;
+              return (
+                <TouchableOpacity
+                  key={spring.id}
+                  testID={`retribution-spring-chip-${spring.id}`}
+                  activeOpacity={0.7}
+                  onPress={() => setSelectedSpringId(spring.id)}
+                  style={[
+                    styles.springChip,
+                    {
+                      backgroundColor: isSelected ? theme.accent : theme.surface,
+                      borderColor: isSelected ? theme.accent : theme.border
+                    }
+                  ]}
+                >
+                  <Ionicons
+                    name="water-outline"
+                    size={16}
+                    color={isSelected ? theme.accentInk : theme.ink}
+                  />
+                  <Text
+                    style={[
+                      styles.springChipText,
+                      {
+                        color: isSelected ? theme.accentInk : theme.ink,
+                        fontWeight: isSelected ? typography.fontWeights.bold : typography.fontWeights.medium
+                      }
+                    ]}
+                  >
+                    {spring.name}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </Card>
+      )}
 
       {/* Sub-Tab Switcher */}
       <View style={[styles.subtabContainer, { backgroundColor: theme.surface, borderColor: theme.border }]}>
@@ -603,6 +720,27 @@ export const PengelolaRetributionScreen: React.FC = () => {
                   </View>
 
                   <View style={styles.residentActionRow}>
+                    <View style={styles.residentBtnGroup}>
+                      <Button
+                        testID={`btn-edit-resident-${r.id}`}
+                        title="Edit Warga"
+                        variant="outline"
+                        size="sm"
+                        icon={<Ionicons name="create-outline" size={14} color={theme.accent} />}
+                        onPress={() => handleOpenEditResident(r)}
+                      />
+                      {!isLinked && (
+                        <Button
+                          testID={`btn-generate-code-${r.id}`}
+                          title="Kode Tautan"
+                          variant="outline"
+                          size="sm"
+                          icon={<Ionicons name="key-outline" size={14} color={theme.ink} />}
+                          onPress={() => handleGenerateLinkCode(r)}
+                        />
+                      )}
+                    </View>
+
                     {r.linkCode ? (
                       <View style={styles.existingCodeRow}>
                         <Text style={[styles.existingCodeLabel, { color: theme.muted }]}>
@@ -612,20 +750,7 @@ export const PengelolaRetributionScreen: React.FC = () => {
                           {r.linkCode}
                         </Text>
                       </View>
-                    ) : (
-                      <View />
-                    )}
-
-                    {!isLinked && (
-                      <Button
-                        testID={`btn-generate-code-${r.id}`}
-                        title="Buat Kode Tautan"
-                        variant="outline"
-                        size="sm"
-                        icon={<Ionicons name="key-outline" size={14} color={theme.accent} />}
-                        onPress={() => handleGenerateLinkCode(r)}
-                      />
-                    )}
+                    ) : null}
                   </View>
                 </Card>
               );
@@ -854,6 +979,127 @@ export const PengelolaRetributionScreen: React.FC = () => {
                 size="md"
                 loading={addResidentLoading}
                 onPress={handleCreateResident}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* MODAL 4: EDIT RESIDENT MODAL */}
+      <Modal
+        visible={editResidentVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setEditResidentVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: theme.surface }]}>
+            <View style={styles.modalHeader}>
+              <Text style={[styles.modalTitle, { color: theme.ink }]}>
+                Edit Data Warga
+              </Text>
+              <TouchableOpacity onPress={() => setEditResidentVisible(false)}>
+                <Ionicons name="close" size={24} color={theme.ink} />
+              </TouchableOpacity>
+            </View>
+
+            {editResidentError ? (
+              <View style={[styles.errorBox, { backgroundColor: theme.errorBg }]}>
+                <Ionicons name="alert-circle" size={16} color={theme.error} />
+                <Text style={[styles.errorText, { color: theme.errorInk }]}>
+                  {editResidentError}
+                </Text>
+              </View>
+            ) : null}
+
+            <Input
+              testID="input-edit-resident-name"
+              label="Nama Lengkap Warga / KK"
+              placeholder="Contoh: Pak Slamet Riyadi"
+              value={editResidentName}
+              onChangeText={setEditResidentName}
+            />
+
+            <Input
+              testID="input-edit-resident-phone"
+              label="Nomor Telepon / WhatsApp"
+              placeholder="Contoh: 081234567890"
+              value={editResidentPhone}
+              onChangeText={setEditResidentPhone}
+              keyboardType="phone-pad"
+            />
+
+            <Input
+              testID="input-edit-resident-fee"
+              label="Iuran Bulanan (Rp)"
+              placeholder="15000"
+              value={editResidentFee}
+              onChangeText={setEditResidentFee}
+              keyboardType="numeric"
+            />
+
+            <View style={styles.activeStatusToggleRow}>
+              <Text style={[styles.activeStatusLabel, { color: theme.ink }]}>
+                Status Warga:
+              </Text>
+              <View style={styles.statusChipsRow}>
+                <TouchableOpacity
+                  testID="btn-resident-status-active"
+                  onPress={() => setEditResidentActive(true)}
+                  style={[
+                    styles.statusChip,
+                    {
+                      backgroundColor: editResidentActive ? theme.accent : theme.surface,
+                      borderColor: editResidentActive ? theme.accent : theme.border
+                    }
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.statusChipText,
+                      { color: editResidentActive ? theme.accentInk : theme.ink }
+                    ]}
+                  >
+                    Aktif
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  testID="btn-resident-status-inactive"
+                  onPress={() => setEditResidentActive(false)}
+                  style={[
+                    styles.statusChip,
+                    {
+                      backgroundColor: !editResidentActive ? theme.error : theme.surface,
+                      borderColor: !editResidentActive ? theme.error : theme.border
+                    }
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.statusChipText,
+                      { color: !editResidentActive ? '#ffffff' : theme.ink }
+                    ]}
+                  >
+                    Non-Aktif
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View style={styles.modalFooterRow}>
+              <Button
+                title="Batal"
+                variant="outline"
+                size="md"
+                onPress={() => setEditResidentVisible(false)}
+              />
+              <Button
+                testID="btn-save-edit-resident"
+                title="Simpan Perubahan"
+                variant="primary"
+                size="md"
+                loading={editResidentLoading}
+                onPress={handleSaveEditResident}
               />
             </View>
           </View>
@@ -1207,5 +1453,60 @@ const styles = StyleSheet.create({
     fontFamily: typography.fontFamilies.text,
     fontSize: typography.fontSizes.xs,
     flex: 1
+  },
+  springSelectorCard: {
+    marginBottom: spacing.md
+  },
+  springSelectorLabel: {
+    fontFamily: typography.fontFamilies.text,
+    fontSize: typography.fontSizes.xs,
+    fontWeight: typography.fontWeights.semibold,
+    marginBottom: spacing.xs
+  },
+  springScroll: {
+    flexDirection: 'row'
+  },
+  springChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: radius.full,
+    borderWidth: 1,
+    marginRight: 8
+  },
+  springChipText: {
+    fontFamily: typography.fontFamilies.text,
+    fontSize: typography.fontSizes.sm
+  },
+  residentBtnGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8
+  },
+  activeStatusToggleRow: {
+    marginVertical: spacing.sm
+  },
+  activeStatusLabel: {
+    fontFamily: typography.fontFamilies.text,
+    fontSize: typography.fontSizes.xs,
+    fontWeight: typography.fontWeights.medium,
+    marginBottom: 6
+  },
+  statusChipsRow: {
+    flexDirection: 'row',
+    gap: 8
+  },
+  statusChip: {
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: radius.full,
+    borderWidth: 1
+  },
+  statusChipText: {
+    fontFamily: typography.fontFamilies.text,
+    fontSize: typography.fontSizes.xs,
+    fontWeight: typography.fontWeights.semibold
   }
 });

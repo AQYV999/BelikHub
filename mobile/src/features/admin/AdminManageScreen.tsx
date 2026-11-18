@@ -86,6 +86,29 @@ export const AdminManageScreen: React.FC = () => {
   const [userManagedSprings, setUserManagedSprings] = useState<string[]>([]);
   const [savingUserRoles, setSavingUserRoles] = useState<boolean>(false);
 
+  // Modal 5: Edit Spring
+  const [editSpringVisible, setEditSpringVisible] = useState<boolean>(false);
+  const [editingSpring, setEditingSpring] = useState<SpringPublic | null>(null);
+  const [editSpringName, setEditSpringName] = useState<string>('');
+  const [editSpringVillage, setEditSpringVillage] = useState<string>('');
+  const [editSpringDistrict, setEditSpringDistrict] = useState<string>('Kecamatan Blado');
+  const [editSpringDischarge, setEditSpringDischarge] = useState<string>('25');
+  const [editSpringBeneficiaries, setEditSpringBeneficiaries] = useState<string>('300');
+  const [editSpringStatus, setEditSpringStatus] = useState<'active' | 'rehabilitation'>('active');
+  const [editSpringError, setEditSpringError] = useState<string>('');
+  const [savingEditSpring, setSavingEditSpring] = useState<boolean>(false);
+
+  // Modal 6: Edit Campaign
+  const [editCampaignVisible, setEditCampaignVisible] = useState<boolean>(false);
+  const [editingCampaign, setEditingCampaign] = useState<RevitalizationCampaign | null>(null);
+  const [editCampaignTitle, setEditCampaignTitle] = useState<string>('');
+  const [editCampaignDesc, setEditCampaignDesc] = useState<string>('');
+  const [editCampaignTarget, setEditCampaignTarget] = useState<string>('');
+  const [editCampaignStatus, setEditCampaignStatus] = useState<'active' | 'completed'>('active');
+  const [editCampaignInstructions, setEditCampaignInstructions] = useState<string>('');
+  const [editCampaignError, setEditCampaignError] = useState<string>('');
+  const [savingEditCampaign, setSavingEditCampaign] = useState<boolean>(false);
+
   const loadData = useCallback(async () => {
     try {
       const [sprRes, campRes, usrRes] = await Promise.all([
@@ -296,6 +319,110 @@ export const AdminManageScreen: React.FC = () => {
     }
   };
 
+  // Handle Open & Save Edit Spring
+  const handleOpenEditSpring = (spr: SpringPublic) => {
+    setEditingSpring(spr);
+    setEditSpringName(spr.name);
+    setEditSpringVillage(spr.village);
+    setEditSpringDistrict(spr.district || 'Kecamatan Blado');
+    setEditSpringDischarge(String(spr.baseline_discharge_lps ?? 25));
+    setEditSpringBeneficiaries(String(spr.beneficiaries_kk ?? 300));
+    setEditSpringStatus(spr.status === 'rehabilitation' ? 'rehabilitation' : 'active');
+    setEditSpringError('');
+    setEditSpringVisible(true);
+  };
+
+  const handleSaveEditSpring = async () => {
+    if (!editingSpring) return;
+    const dischargeNum = parseFloat(editSpringDischarge) || 0;
+    const kkNum = parseInt(editSpringBeneficiaries, 10) || 0;
+
+    const validation = validateSpringInput({
+      name: editSpringName,
+      village: editSpringVillage,
+      baseline_discharge_lps: dischargeNum
+    });
+
+    if (!validation.valid) {
+      setEditSpringError(validation.error || 'Data mata air tidak valid.');
+      return;
+    }
+
+    setSavingEditSpring(true);
+    setEditSpringError('');
+    try {
+      const res = await api.updateSpring(editingSpring.id, {
+        name: editSpringName.trim(),
+        village: editSpringVillage.trim(),
+        district: editSpringDistrict.trim(),
+        baseline_discharge_lps: dischargeNum,
+        beneficiaries_kk: kkNum,
+        status: editSpringStatus
+      });
+
+      if (res.success) {
+        Alert.alert('Sukses', `Mata Air ${editSpringName} berhasil diperbarui.`);
+        setEditSpringVisible(false);
+        loadData();
+      }
+    } catch (e: any) {
+      setEditSpringError(e?.message || 'Gagal memperbarui mata air.');
+    } finally {
+      setSavingEditSpring(false);
+    }
+  };
+
+  // Handle Open & Save Edit Campaign
+  const handleOpenEditCampaign = (camp: RevitalizationCampaign) => {
+    setEditingCampaign(camp);
+    setEditCampaignTitle(camp.title);
+    setEditCampaignDesc(camp.description || '');
+    setEditCampaignTarget(String(camp.targetAmount || ''));
+    setEditCampaignStatus(camp.status === 'completed' ? 'completed' : 'active');
+    setEditCampaignInstructions(camp.paymentInstructions || '');
+    setEditCampaignError('');
+    setEditCampaignVisible(true);
+  };
+
+  const handleSaveEditCampaign = async () => {
+    if (!editingCampaign) return;
+    const targetNum = parseInt(editCampaignTarget.replace(/\D/g, ''), 10) || 0;
+
+    const validation = validateCampaignInput({
+      springId: editingCampaign.springId || 'SPR-001',
+      title: editCampaignTitle,
+      targetAmount: targetNum,
+      paymentInstructions: editCampaignInstructions
+    });
+
+    if (!validation.valid) {
+      setEditCampaignError(validation.error || 'Data program tidak valid.');
+      return;
+    }
+
+    setSavingEditCampaign(true);
+    setEditCampaignError('');
+    try {
+      const res = await api.updateCampaign(editingCampaign.id, {
+        title: editCampaignTitle.trim(),
+        description: editCampaignDesc.trim() || undefined,
+        targetAmount: targetNum,
+        status: editCampaignStatus,
+        paymentInstructions: editCampaignInstructions.trim()
+      });
+
+      if (res.success) {
+        Alert.alert('Sukses', `Program ${editCampaignTitle} berhasil diperbarui.`);
+        setEditCampaignVisible(false);
+        loadData();
+      }
+    } catch (e: any) {
+      setEditCampaignError(e?.message || 'Gagal memperbarui program.');
+    } finally {
+      setSavingEditCampaign(false);
+    }
+  };
+
   return (
     <Screen
       scrollable
@@ -438,16 +565,25 @@ export const AdminManageScreen: React.FC = () => {
                 </Text>
               </View>
 
-              {/* Edit Per-Spring Settings Button */}
-              <Button
-                testID={`btn-edit-spring-settings-${spr.id}`}
-                title="Atur Rekening & QRIS"
-                variant="outline"
-                size="sm"
-                icon={<Ionicons name="card-outline" size={14} color={theme.accent} />}
-                onPress={() => handleOpenSettings(spr)}
-                style={styles.editSettingsBtn}
-              />
+              {/* Spring Actions: Edit Spring & Edit Settings */}
+              <View style={styles.springActionsRow}>
+                <Button
+                  testID={`btn-edit-spring-${spr.id}`}
+                  title="Edit Mata Air"
+                  variant="outline"
+                  size="sm"
+                  icon={<Ionicons name="create-outline" size={14} color={theme.accent} />}
+                  onPress={() => handleOpenEditSpring(spr)}
+                />
+                <Button
+                  testID={`btn-edit-spring-settings-${spr.id}`}
+                  title="Atur Rekening & QRIS"
+                  variant="outline"
+                  size="sm"
+                  icon={<Ionicons name="card-outline" size={14} color={theme.ink} />}
+                  onPress={() => handleOpenSettings(spr)}
+                />
+              </View>
             </Card>
           ))}
         </View>
@@ -491,6 +627,17 @@ export const AdminManageScreen: React.FC = () => {
               <Text style={[styles.campaignProgressLabel, { color: theme.muted }]}>
                 Dana Terkumpul: {formatRupiah(c.collectedAmount)} • Progres Fisik: {c.progressPercent || 0}%
               </Text>
+
+              <View style={styles.campaignBtnRow}>
+                <Button
+                  testID={`btn-edit-campaign-${c.id}`}
+                  title="Edit Program"
+                  variant="outline"
+                  size="sm"
+                  icon={<Ionicons name="create-outline" size={14} color={theme.accent} />}
+                  onPress={() => handleOpenEditCampaign(c)}
+                />
+              </View>
             </Card>
           ))}
         </View>
@@ -918,6 +1065,275 @@ export const AdminManageScreen: React.FC = () => {
           </ScrollView>
         </View>
       </Modal>
+
+      {/* MODAL 5: EDIT SPRING */}
+      <Modal
+        visible={editSpringVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setEditSpringVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <ScrollView contentContainerStyle={[styles.modalScroll, { backgroundColor: theme.surface }]}>
+            <View style={styles.modalHeader}>
+              <Text style={[styles.modalTitle, { color: theme.ink }]}>
+                Edit Data Mata Air
+              </Text>
+              <TouchableOpacity onPress={() => setEditSpringVisible(false)}>
+                <Ionicons name="close" size={24} color={theme.ink} />
+              </TouchableOpacity>
+            </View>
+
+            {editSpringError ? (
+              <View style={[styles.errorBox, { backgroundColor: theme.errorBg }]}>
+                <Ionicons name="alert-circle" size={16} color={theme.error} />
+                <Text style={[styles.errorText, { color: theme.errorInk }]}>
+                  {editSpringError}
+                </Text>
+              </View>
+            ) : null}
+
+            <Input
+              testID="input-edit-spring-name"
+              label="Nama Mata Air"
+              placeholder="Contoh: Belik Tuk Silumut"
+              value={editSpringName}
+              onChangeText={setEditSpringName}
+            />
+
+            <Input
+              testID="input-edit-spring-village"
+              label="Desa / Kelurahan"
+              placeholder="Contoh: Desa Besani"
+              value={editSpringVillage}
+              onChangeText={setEditSpringVillage}
+            />
+
+            <Input
+              testID="input-edit-spring-district"
+              label="Kecamatan"
+              placeholder="Kecamatan Blado"
+              value={editSpringDistrict}
+              onChangeText={setEditSpringDistrict}
+            />
+
+            <Input
+              testID="input-edit-spring-discharge"
+              label="Kapasitas Debit Baseline (L/detik)"
+              placeholder="Contoh: 25.5"
+              value={editSpringDischarge}
+              onChangeText={setEditSpringDischarge}
+              keyboardType="numeric"
+            />
+
+            <Input
+              testID="input-edit-spring-beneficiaries"
+              label="Jumlah KK Penerima Manfaat"
+              placeholder="Contoh: 300"
+              value={editSpringBeneficiaries}
+              onChangeText={setEditSpringBeneficiaries}
+              keyboardType="numeric"
+            />
+
+            <View style={styles.statusToggleRow}>
+              <Text style={[styles.statusLabel, { color: theme.ink }]}>
+                Status Operasional:
+              </Text>
+              <View style={styles.statusChipsRow}>
+                <TouchableOpacity
+                  testID="btn-spring-status-active"
+                  onPress={() => setEditSpringStatus('active')}
+                  style={[
+                    styles.statusChip,
+                    {
+                      backgroundColor: editSpringStatus === 'active' ? theme.accent : theme.surface,
+                      borderColor: editSpringStatus === 'active' ? theme.accent : theme.border
+                    }
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.statusChipText,
+                      { color: editSpringStatus === 'active' ? theme.accentInk : theme.ink }
+                    ]}
+                  >
+                    Aktif
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  testID="btn-spring-status-rehab"
+                  onPress={() => setEditSpringStatus('rehabilitation')}
+                  style={[
+                    styles.statusChip,
+                    {
+                      backgroundColor: editSpringStatus === 'rehabilitation' ? '#f59e0b' : theme.surface,
+                      borderColor: editSpringStatus === 'rehabilitation' ? '#f59e0b' : theme.border
+                    }
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.statusChipText,
+                      { color: editSpringStatus === 'rehabilitation' ? '#ffffff' : theme.ink }
+                    ]}
+                  >
+                    Rehabilitasi
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View style={styles.modalFooterRow}>
+              <Button
+                title="Batal"
+                variant="outline"
+                size="md"
+                onPress={() => setEditSpringVisible(false)}
+              />
+              <Button
+                testID="btn-save-edit-spring"
+                title="Simpan Perubahan"
+                variant="primary"
+                size="md"
+                loading={savingEditSpring}
+                onPress={handleSaveEditSpring}
+              />
+            </View>
+          </ScrollView>
+        </View>
+      </Modal>
+
+      {/* MODAL 6: EDIT CAMPAIGN */}
+      <Modal
+        visible={editCampaignVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setEditCampaignVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <ScrollView contentContainerStyle={[styles.modalScroll, { backgroundColor: theme.surface }]}>
+            <View style={styles.modalHeader}>
+              <Text style={[styles.modalTitle, { color: theme.ink }]}>
+                Edit Program Revitalisasi
+              </Text>
+              <TouchableOpacity onPress={() => setEditCampaignVisible(false)}>
+                <Ionicons name="close" size={24} color={theme.ink} />
+              </TouchableOpacity>
+            </View>
+
+            {editCampaignError ? (
+              <View style={[styles.errorBox, { backgroundColor: theme.errorBg }]}>
+                <Ionicons name="alert-circle" size={16} color={theme.error} />
+                <Text style={[styles.errorText, { color: theme.errorInk }]}>
+                  {editCampaignError}
+                </Text>
+              </View>
+            ) : null}
+
+            <Input
+              testID="input-edit-campaign-title"
+              label="Judul Program Revitalisasi"
+              placeholder="Contoh: Reboisasi Hulu Mata Air"
+              value={editCampaignTitle}
+              onChangeText={setEditCampaignTitle}
+            />
+
+            <Input
+              testID="input-edit-campaign-desc"
+              label="Deskripsi / Tujuan Program"
+              placeholder="Jelaskan tujuan konservasi dan rincian fisik..."
+              value={editCampaignDesc}
+              onChangeText={setEditCampaignDesc}
+              multiline
+            />
+
+            <Input
+              testID="input-edit-campaign-target"
+              label="Target Pendanaan (Rp)"
+              placeholder="25000000"
+              value={editCampaignTarget}
+              onChangeText={setEditCampaignTarget}
+              keyboardType="numeric"
+            />
+
+            <View style={styles.statusToggleRow}>
+              <Text style={[styles.statusLabel, { color: theme.ink }]}>
+                Status Program:
+              </Text>
+              <View style={styles.statusChipsRow}>
+                <TouchableOpacity
+                  testID="btn-campaign-status-active"
+                  onPress={() => setEditCampaignStatus('active')}
+                  style={[
+                    styles.statusChip,
+                    {
+                      backgroundColor: editCampaignStatus === 'active' ? theme.accent : theme.surface,
+                      borderColor: editCampaignStatus === 'active' ? theme.accent : theme.border
+                    }
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.statusChipText,
+                      { color: editCampaignStatus === 'active' ? theme.accentInk : theme.ink }
+                    ]}
+                  >
+                    Aktif
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  testID="btn-campaign-status-completed"
+                  onPress={() => setEditCampaignStatus('completed')}
+                  style={[
+                    styles.statusChip,
+                    {
+                      backgroundColor: editCampaignStatus === 'completed' ? '#10b981' : theme.surface,
+                      borderColor: editCampaignStatus === 'completed' ? '#10b981' : theme.border
+                    }
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.statusChipText,
+                      { color: editCampaignStatus === 'completed' ? '#ffffff' : theme.ink }
+                    ]}
+                  >
+                    Selesai
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <Input
+              testID="input-edit-campaign-instructions"
+              label="Instruksi Pembayaran Donasi"
+              placeholder="Contoh: Transfer ke Rekening Kas Paguyuban..."
+              value={editCampaignInstructions}
+              onChangeText={setEditCampaignInstructions}
+              multiline
+            />
+
+            <View style={styles.modalFooterRow}>
+              <Button
+                title="Batal"
+                variant="outline"
+                size="md"
+                onPress={() => setEditCampaignVisible(false)}
+              />
+              <Button
+                testID="btn-save-edit-campaign"
+                title="Simpan Perubahan"
+                variant="primary"
+                size="md"
+                loading={savingEditCampaign}
+                onPress={handleSaveEditCampaign}
+              />
+            </View>
+          </ScrollView>
+        </View>
+      </Modal>
     </Screen>
   );
 };
@@ -1128,5 +1544,46 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     gap: spacing.sm,
     marginTop: spacing.md
+  },
+  campaignBtnRow: {
+    marginTop: spacing.sm,
+    alignItems: 'flex-start'
+  },
+  statusToggleRow: {
+    marginVertical: spacing.sm
+  },
+  statusLabel: {
+    fontFamily: typography.fontFamilies.text,
+    fontSize: typography.fontSizes.xs,
+    fontWeight: typography.fontWeights.medium,
+    marginBottom: 6
+  },
+  statusChipsRow: {
+    flexDirection: 'row',
+    gap: 8
+  },
+  statusChip: {
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: radius.full,
+    borderWidth: 1
+  },
+  statusChipText: {
+    fontFamily: typography.fontFamilies.text,
+    fontSize: typography.fontSizes.xs,
+    fontWeight: typography.fontWeights.semibold
+  },
+  errorBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    padding: spacing.sm,
+    borderRadius: radius.md,
+    marginBottom: spacing.md
+  },
+  errorText: {
+    fontFamily: typography.fontFamilies.text,
+    fontSize: typography.fontSizes.xs,
+    flex: 1
   }
 });

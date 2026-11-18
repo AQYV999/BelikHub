@@ -26,7 +26,7 @@ import {
 } from '../../components/ui';
 import { colors, typography, spacing, radius } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
-import { RevitalizationCampaign, RevitalizationUpdate } from '../../api/types';
+import { RevitalizationCampaign, RevitalizationUpdate, SpringPublic } from '../../api/types';
 import { formatRupiah } from '../warga/wargaUtils';
 import { validateCampaignUpdateInput } from './pengelolaUtils';
 
@@ -36,6 +36,10 @@ export const PengelolaRevitalizationScreen: React.FC = () => {
   const { user } = useAuth();
   const api = useApi();
 
+  const [springs, setSprings] = useState<SpringPublic[]>([]);
+  const [selectedSpringId, setSelectedSpringId] = useState<string>(
+    (user?.managedSpringIds && user.managedSpringIds[0]) || 'SPR-001'
+  );
   const [campaigns, setCampaigns] = useState<RevitalizationCampaign[]>([]);
   const [selectedCampaign, setSelectedCampaign] = useState<RevitalizationCampaign | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -52,17 +56,31 @@ export const PengelolaRevitalizationScreen: React.FC = () => {
   const [submittingUpdate, setSubmittingUpdate] = useState<boolean>(false);
   const [updateError, setUpdateError] = useState<string>('');
 
-  const selectedSpringId = (user?.managedSpringIds && user.managedSpringIds[0]) || 'SPR-001';
-
   const loadCampaigns = useCallback(async () => {
     try {
-      const res = await api.listCampaigns({ springId: selectedSpringId });
-      if (res.campaigns) {
-        setCampaigns(res.campaigns);
-        if (res.campaigns.length > 0) {
+      const [springsRes, campRes] = await Promise.all([
+        api.listSprings().catch(() => ({ springs: [] })),
+        api.listCampaigns({ springId: selectedSpringId }).catch(() => ({ campaigns: [] }))
+      ]);
+
+      const managedIds = user?.managedSpringIds && user.managedSpringIds.length > 0
+        ? user.managedSpringIds
+        : ['SPR-001'];
+
+      const filteredSprings = (springsRes.springs || []).filter((s) =>
+        managedIds.includes(s.id)
+      );
+
+      setSprings(filteredSprings.length > 0 ? filteredSprings : springsRes.springs || []);
+
+      if (campRes.campaigns) {
+        setCampaigns(campRes.campaigns);
+        if (campRes.campaigns.length > 0) {
           // Fetch full campaign details with updates for the first campaign
-          const first = await api.getCampaign(res.campaigns[0].id).catch(() => null);
-          setSelectedCampaign(first?.campaign || res.campaigns[0]);
+          const first = await api.getCampaign(campRes.campaigns[0].id).catch(() => null);
+          setSelectedCampaign(first?.campaign || campRes.campaigns[0]);
+        } else {
+          setSelectedCampaign(null);
         }
       }
     } catch (err) {
@@ -71,7 +89,7 @@ export const PengelolaRevitalizationScreen: React.FC = () => {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [api, selectedSpringId]);
+  }, [api, selectedSpringId, user?.managedSpringIds]);
 
   useEffect(() => {
     loadCampaigns();
@@ -160,6 +178,52 @@ export const PengelolaRevitalizationScreen: React.FC = () => {
           </Text>
         </View>
       </View>
+
+      {/* Multi-Spring Selector Chip Bar */}
+      {springs.length > 1 && (
+        <Card variant="outlined" padding="sm" style={styles.springSelectorCard}>
+          <Text style={[styles.springSelectorLabel, { color: theme.muted }]}>
+            Pilih Mata Air Dikelola:
+          </Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.springScroll}>
+            {springs.map((spring) => {
+              const isSelected = spring.id === selectedSpringId;
+              return (
+                <TouchableOpacity
+                  key={spring.id}
+                  testID={`revital-spring-chip-${spring.id}`}
+                  activeOpacity={0.7}
+                  onPress={() => setSelectedSpringId(spring.id)}
+                  style={[
+                    styles.springChip,
+                    {
+                      backgroundColor: isSelected ? theme.accent : theme.surface,
+                      borderColor: isSelected ? theme.accent : theme.border
+                    }
+                  ]}
+                >
+                  <Ionicons
+                    name="water-outline"
+                    size={16}
+                    color={isSelected ? theme.accentInk : theme.ink}
+                  />
+                  <Text
+                    style={[
+                      styles.springChipText,
+                      {
+                        color: isSelected ? theme.accentInk : theme.ink,
+                        fontWeight: isSelected ? typography.fontWeights.bold : typography.fontWeights.medium
+                      }
+                    ]}
+                  >
+                    {spring.name}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </Card>
+      )}
 
       {/* Campaigns Selector Chips if >1 */}
       {campaigns.length > 1 && (
@@ -621,5 +685,31 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     gap: spacing.sm,
     marginTop: spacing.md
+  },
+  springSelectorCard: {
+    marginBottom: spacing.md
+  },
+  springSelectorLabel: {
+    fontFamily: typography.fontFamilies.text,
+    fontSize: typography.fontSizes.xs,
+    fontWeight: typography.fontWeights.semibold,
+    marginBottom: spacing.xs
+  },
+  springScroll: {
+    flexDirection: 'row'
+  },
+  springChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: radius.full,
+    borderWidth: 1,
+    marginRight: 8
+  },
+  springChipText: {
+    fontFamily: typography.fontFamilies.text,
+    fontSize: typography.fontSizes.sm
   }
 });
