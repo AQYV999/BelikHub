@@ -32,6 +32,7 @@ mobile/node_modules/
 mobile/.expo/
 mobile/dist/
 cloudflared.exe
+*.apk
 preview.mjs
 tunnel.mjs
 

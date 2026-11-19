@@ -10,7 +10,9 @@
     }
   },
   "rewrites": [
-    { "source": "/((?!api/|icons/|images/|videos/|assets/|share\\.jpg).*)", "destination": "/index.html" }
+    { "source": "/app", "destination": "/app/index.html" },
+    { "source": "/app/(.*)", "destination": "/app/index.html" },
+    { "source": "/((?!api/|icons/|images/|videos/|assets/|app|_expo/|share\\.jpg).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
@@ -34,9 +36,9 @@
       ]
     },
     {
-      "source": "/assets/(.*)",
+      "source": "/(assets|_expo)/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     }
   ]

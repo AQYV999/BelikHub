@@ -8,6 +8,7 @@
     "build": "echo \"static site, no build step\"",
     "start": "vercel dev",
     "deploy": "vercel --prod",
+    "export:mobile-web": "node scripts/sync-mobile-web.mjs",
     "lint": "eslint api lib",
     "test:backend": "node --test tests/backend/*.test.js"
   },
