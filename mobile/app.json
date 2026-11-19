@@ -29,6 +29,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "a4ecb5c0-1433-4b4e-9f16-3bb5eb978ccc"
+      }
+    },
+    "owner": "faweezx"
   }
 }
