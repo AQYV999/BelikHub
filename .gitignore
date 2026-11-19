@@ -31,4 +31,7 @@ test-results/
 mobile/node_modules/
 mobile/.expo/
 mobile/dist/
+cloudflared.exe
+preview.mjs
+tunnel.mjs
 
