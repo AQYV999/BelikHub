@@ -6,23 +6,14 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
-  Alert,
   ActivityIndicator,
   useColorScheme
 } from 'react-native';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
-import {
-  Screen,
-  Card,
-  Badge,
-  Button,
-  Input,
-  ImageUploadField
-} from '../../components/ui';
-import { colors, typography, spacing, radius } from '../../theme/tokens';
+import { Screen, Card, Badge, Button, Input, ImageUploadField, PressableScale, useToast } from '../../components/ui';
+import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { ReportType } from '../../api/types';
 import {
@@ -31,6 +22,7 @@ import {
 } from './relawanUtils';
 
 export const RelawanReportScreen: React.FC = () => {
+  const toast = useToast();
   const isDark = useColorScheme() === 'dark';
   const theme = isDark ? colors.dark : colors.light;
   const { user, refreshProfile } = useAuth();
@@ -231,11 +223,10 @@ export const RelawanReportScreen: React.FC = () => {
           {REPORT_TYPES.map((type) => {
             const isSelected = type === reportType;
             return (
-              <TouchableOpacity
+              <PressableScale
                 key={type}
                 testID={`chip-report-type-${type}`}
                 onPress={() => setReportType(type)}
-                activeOpacity={0.7}
                 style={[
                   styles.typeChip,
                   {
@@ -268,7 +259,7 @@ export const RelawanReportScreen: React.FC = () => {
                 >
                   {type}
                 </Text>
-              </TouchableOpacity>
+              </PressableScale>
             );
           })}
         </View>
@@ -297,9 +288,9 @@ export const RelawanReportScreen: React.FC = () => {
               Koordinat GPS:
             </Text>
             {lat !== undefined && lng !== undefined && (
-              <TouchableOpacity onPress={handleClearGps}>
+              <PressableScale onPress={handleClearGps}>
                 <Text style={[styles.clearGpsText, { color: theme.error }]}>Hapus GPS</Text>
-              </TouchableOpacity>
+              </PressableScale>
             )}
           </View>
 
@@ -409,7 +400,7 @@ export const RelawanReportScreen: React.FC = () => {
               setPhotoPath(res.objectPath);
               setPhotoUrl(res.readUrl);
             } catch (e: any) {
-              Alert.alert('Gagal Unggah', e?.message || 'Gagal memproses gambar foto.');
+              toast.error(e?.message || 'Gagal memproses gambar foto.', 'Gagal Unggah');
             } finally {
               setUploadingPhoto(false);
             }
@@ -519,8 +510,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   gpsLabel: {
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold
+    ...textStyles.label,
   },
   clearGpsText: {
     fontSize: typography.fontSizes.xs,
@@ -552,8 +542,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.xs
   },
   manualGpsTitle: {
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold,
+    ...textStyles.label,
     marginBottom: spacing.xs
   },
   manualGpsInputs: {

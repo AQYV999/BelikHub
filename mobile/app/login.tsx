@@ -6,14 +6,13 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   useColorScheme
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Screen, Card, Badge, Button, Input } from '../src/components/ui';
+import { Screen, Card, Badge, Button, Input, PressableScale } from '../src/components/ui';
 import { colors, typography, spacing, radius } from '../src/theme/tokens';
 import { useAuth } from '../src/auth/AuthProvider';
 
@@ -62,7 +61,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <Screen scrollable showDemoBanner={false} contentContainerStyle={styles.container}>
+    <Screen safeBottom scrollable showDemoBanner={false} contentContainerStyle={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.keyboardWrap}
@@ -134,7 +133,7 @@ export default function LoginScreen() {
             <Text style={[styles.toggleText, { color: theme.muted }]}>
               {isRegister ? 'Sudah memiliki akun?' : 'Belum memiliki akun?'}
             </Text>
-            <TouchableOpacity
+            <PressableScale
               onPress={() => {
                 setIsRegister(!isRegister);
                 setErrorMessage('');
@@ -144,7 +143,7 @@ export default function LoginScreen() {
               <Text style={[styles.toggleAction, { color: theme.accent }]}>
                 {isRegister ? 'Masuk di sini' : 'Daftar sekarang'}
               </Text>
-            </TouchableOpacity>
+            </PressableScale>
           </View>
         </Card>
 
@@ -174,14 +173,14 @@ export default function LoginScreen() {
         )}
 
         {/* Quick link to Onboarding */}
-        <TouchableOpacity
+        <PressableScale
           onPress={() => router.push('/onboarding')}
           style={styles.onboardingLink}
         >
           <Text style={[styles.onboardingLinkText, { color: theme.muted }]}>
             Pilih Peran Baru di Layar Onboarding →
           </Text>
-        </TouchableOpacity>
+        </PressableScale>
       </KeyboardAvoidingView>
     </Screen>
   );

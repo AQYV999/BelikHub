@@ -6,23 +6,14 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   Modal,
   Image,
-  Alert,
   useColorScheme
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import {
-  Screen,
-  Card,
-  Badge,
-  Button,
-  Input,
-  EmptyState
-} from '../../components/ui';
-import { colors, typography, spacing, radius } from '../../theme/tokens';
+import { Screen, Card, Badge, Button, Input, EmptyState, PressableScale, useToast } from '../../components/ui';
+import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { Donation, FieldReport } from '../../api/types';
 import { formatRupiah } from '../warga/wargaUtils';
@@ -31,6 +22,7 @@ import { getDonationStatusMeta } from '../donatur/donaturUtils';
 type VerificationTab = 'donations' | 'reports';
 
 export const AdminVerificationScreen: React.FC = () => {
+  const toast = useToast();
   const isDark = useColorScheme() === 'dark';
   const theme = isDark ? colors.dark : colors.light;
   const { user } = useAuth();
@@ -77,18 +69,18 @@ export const AdminVerificationScreen: React.FC = () => {
     try {
       const res = await api.verifyDonation(donationId, 'approve');
       if (res.success) {
-        Alert.alert('Sukses', 'Donasi berhasil disetujui dan ditambahkan ke saldo kampanye!');
+        toast.success('Donasi berhasil disetujui dan ditambahkan ke saldo kampanye!');
         loadData();
       }
     } catch (e: any) {
-      Alert.alert('Gagal Menyetujui', e?.message || 'Gagal menyetujui donasi.');
+      toast.error(e?.message || 'Gagal menyetujui donasi.');
     }
   };
 
   // Handle Reject Donation
   const handleRejectDonation = async () => {
     if (!rejectionReason.trim()) {
-      Alert.alert('Perhatian', 'Mohon tuliskan alasan penolakan.');
+      toast.warning('Mohon tuliskan alasan penolakan.');
       return;
     }
 
@@ -96,13 +88,13 @@ export const AdminVerificationScreen: React.FC = () => {
     try {
       const res = await api.verifyDonation(rejectDonationId, 'reject', rejectionReason.trim());
       if (res.success) {
-        Alert.alert('Selesai', 'Donasi ditolak.');
+        toast.success('Donasi ditolak.');
         setRejectModalVisible(false);
         setRejectionReason('');
         loadData();
       }
     } catch (e: any) {
-      Alert.alert('Gagal', e?.message || 'Gagal menolak donasi.');
+      toast.error(e?.message || 'Gagal menolak donasi.');
     } finally {
       setRejectLoading(false);
     }
@@ -113,11 +105,11 @@ export const AdminVerificationScreen: React.FC = () => {
     try {
       const res = await api.updateReportStatus(reportId, 'approved');
       if (res.success) {
-        Alert.alert('Sukses', 'Laporan lapangan disetujui dan poin telah ditambahkan ke relawan!');
+        toast.success('Laporan lapangan disetujui dan poin telah ditambahkan ke relawan!');
         loadData();
       }
     } catch (e: any) {
-      Alert.alert('Gagal', e?.message || 'Gagal menyetujui laporan.');
+      toast.error(e?.message || 'Gagal menyetujui laporan.');
     }
   };
 
@@ -126,11 +118,11 @@ export const AdminVerificationScreen: React.FC = () => {
     try {
       const res = await api.updateReportStatus(reportId, 'rejected');
       if (res.success) {
-        Alert.alert('Selesai', 'Laporan lapangan ditolak.');
+        toast.success('Laporan lapangan ditolak.');
         loadData();
       }
     } catch (e: any) {
-      Alert.alert('Gagal', e?.message || 'Gagal menolak laporan.');
+      toast.error(e?.message || 'Gagal menolak laporan.');
     }
   };
 
@@ -138,6 +130,7 @@ export const AdminVerificationScreen: React.FC = () => {
 
   return (
     <Screen
+      loading={loading}
       scrollable
       refreshing={refreshing}
       onRefresh={() => {
@@ -160,7 +153,7 @@ export const AdminVerificationScreen: React.FC = () => {
 
       {/* Subtab Buttons */}
       <View style={[styles.subtabContainer, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-        <TouchableOpacity
+        <PressableScale
           testID="subtab-verify-donations"
           onPress={() => setActiveTab('donations')}
           style={[
@@ -181,9 +174,9 @@ export const AdminVerificationScreen: React.FC = () => {
           >
             Verifikasi Donasi ({pendingDonations.length})
           </Text>
-        </TouchableOpacity>
+        </PressableScale>
 
-        <TouchableOpacity
+        <PressableScale
           testID="subtab-verify-reports"
           onPress={() => setActiveTab('reports')}
           style={[
@@ -204,7 +197,7 @@ export const AdminVerificationScreen: React.FC = () => {
           >
             Laporan Relawan ({reports.length})
           </Text>
-        </TouchableOpacity>
+        </PressableScale>
       </View>
 
       {/* SUB-TAB 1: VERIFIKASI DONASI */}
@@ -248,7 +241,7 @@ export const AdminVerificationScreen: React.FC = () => {
                     </View>
 
                     {don.proofUrl && (
-                      <TouchableOpacity
+                      <PressableScale
                         onPress={() => setPreviewImage(don.proofUrl || null)}
                         style={styles.thumbnailBtn}
                       >
@@ -256,7 +249,7 @@ export const AdminVerificationScreen: React.FC = () => {
                         <Text style={[styles.viewProofText, { color: theme.accent }]}>
                           Lihat Bukti
                         </Text>
-                      </TouchableOpacity>
+                      </PressableScale>
                     )}
                   </View>
 
@@ -372,9 +365,9 @@ export const AdminVerificationScreen: React.FC = () => {
               <Text style={[styles.modalTitle, { color: theme.ink }]}>
                 Alasan Penolakan Donasi
               </Text>
-              <TouchableOpacity onPress={() => setRejectModalVisible(false)}>
+              <PressableScale onPress={() => setRejectModalVisible(false)}>
                 <Ionicons name="close" size={24} color={theme.ink} />
-              </TouchableOpacity>
+              </PressableScale>
             </View>
 
             <Input
@@ -420,9 +413,9 @@ export const AdminVerificationScreen: React.FC = () => {
               <Text style={[styles.modalTitle, { color: theme.ink }]}>
                 Bukti Transfer Donasi
               </Text>
-              <TouchableOpacity onPress={() => setPreviewImage(null)}>
+              <PressableScale onPress={() => setPreviewImage(null)}>
                 <Ionicons name="close" size={24} color={theme.ink} />
-              </TouchableOpacity>
+              </PressableScale>
             </View>
 
             {previewImage && (
@@ -481,13 +474,14 @@ const styles = StyleSheet.create({
     borderRadius: radius.sm
   },
   subtabBtnActive: {
-    shadowOpacity: 0.1,
-    shadowRadius: 2
+    shadowColor: '#1f3038',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 1
   },
   subtabText: {
-    fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold
+    ...textStyles.label,
   },
   tabContent: {
     marginBottom: spacing.xxl

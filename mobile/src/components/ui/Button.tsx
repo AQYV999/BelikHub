@@ -3,7 +3,6 @@
 
 import React from 'react';
 import {
-  TouchableOpacity,
   Text,
   ActivityIndicator,
   StyleSheet,
@@ -11,7 +10,8 @@ import {
   TextStyle,
   useColorScheme
 } from 'react-native';
-import { colors, radius, typography, spacing } from '../../theme/tokens';
+import { colors, radius, typography, spacing, getShadow } from '../../theme/tokens';
+import { PressableScale } from './PressableScale';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
 
@@ -46,9 +46,9 @@ export const Button: React.FC<ButtonProps> = ({
   const theme = isDark ? colors.dark : colors.light;
 
   const sizeStyle: ViewStyle = {
-    sm: { paddingVertical: 8, paddingHorizontal: 12, minHeight: 36 },
-    md: { paddingVertical: 12, paddingHorizontal: 18, minHeight: 46 },
-    lg: { paddingVertical: 14, paddingHorizontal: 24, minHeight: 52 }
+    sm: { paddingVertical: 8, paddingHorizontal: 14, minHeight: 40 },
+    md: { paddingVertical: 12, paddingHorizontal: 20, minHeight: 48 },
+    lg: { paddingVertical: 14, paddingHorizontal: 24, minHeight: 54 }
   }[size];
 
   const fontSize = {
@@ -123,17 +123,19 @@ export const Button: React.FC<ButtonProps> = ({
   const isDisabled = disabled || loading;
 
   return (
-    <TouchableOpacity
+    <PressableScale
       testID={testID}
-      activeOpacity={0.75}
+      haptic={variant === 'danger' ? 'medium' : 'light'}
+      accessibilityLabel={title}
+      accessibilityState={{ disabled: isDisabled, busy: loading }}
       onPress={onPress}
       disabled={isDisabled}
       style={[
         styles.button,
         sizeStyle,
         vStyle.container,
+        variant === 'primary' && !isDisabled && getShadow('sm', isDark),
         fullWidth && styles.fullWidth,
-        isDisabled && styles.disabled,
         style
       ]}
     >
@@ -155,7 +157,7 @@ export const Button: React.FC<ButtonProps> = ({
           </Text>
         </>
       )}
-    </TouchableOpacity>
+    </PressableScale>
   );
 };
 
@@ -169,12 +171,10 @@ const styles = StyleSheet.create({
   fullWidth: {
     width: '100%'
   },
-  disabled: {
-    opacity: 0.5
-  },
   text: {
     fontFamily: typography.fontFamilies.text,
     fontWeight: typography.fontWeights.semibold,
-    textAlign: 'center'
+    textAlign: 'center',
+    letterSpacing: 0.1
   }
 });

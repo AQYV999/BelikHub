@@ -5,14 +5,16 @@ import React from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
   ScrollView,
   StyleSheet,
+  LayoutAnimation,
   ViewStyle,
   useColorScheme
 } from 'react-native';
 import { Role } from '../../api/types';
 import { colors, radius, typography, spacing } from '../../theme/tokens';
+import { PressableScale } from './PressableScale';
+import { triggerHaptic } from '../../utils/haptics';
 
 export interface RoleSwitcherProps {
   roles: Role[];
@@ -50,11 +52,19 @@ export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
         {roles.map((r) => {
           const isActive = r === activeRole;
           return (
-            <TouchableOpacity
+            <PressableScale
               key={r}
+              haptic="none"
+              accessibilityRole="tab"
+              accessibilityState={{ selected: isActive }}
               testID={testID ? `${testID}-chip-${r}` : `role-chip-${r}`}
-              activeOpacity={0.7}
-              onPress={() => onSelectRole(r)}
+              onPress={() => {
+                if (!isActive) {
+                  triggerHaptic('selection');
+                  LayoutAnimation.configureNext(LayoutAnimation.create(180, 'easeInEaseOut', 'opacity'));
+                }
+                onSelectRole(r);
+              }}
               style={[
                 styles.chip,
                 {
@@ -76,7 +86,7 @@ export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
               >
                 {ROLE_LABELS[r] || r}
               </Text>
-            </TouchableOpacity>
+            </PressableScale>
           );
         })}
       </ScrollView>
@@ -95,15 +105,16 @@ const styles = StyleSheet.create({
     paddingVertical: 4
   },
   chip: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
     borderRadius: radius.full,
-    borderWidth: 1.5,
+    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center'
   },
   chipText: {
     fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs
+    fontSize: typography.fontSizes.xs,
+    letterSpacing: 0.2
   }
 });

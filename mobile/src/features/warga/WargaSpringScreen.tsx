@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button, ProgressBar } from '../../components/ui';
-import { colors, typography, spacing, radius } from '../../theme/tokens';
+import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { SpringPublic, SpringSettings } from '../../api/types';
 import { formatRupiah } from './wargaUtils';
@@ -76,6 +76,7 @@ export const WargaSpringScreen: React.FC = () => {
 
   return (
     <Screen
+      loading={loading}
       scrollable
       refreshing={refreshing}
       onRefresh={handleRefresh}
@@ -305,9 +306,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm
   },
   springName: {
-    fontSize: typography.fontSizes.lg,
-    fontWeight: typography.fontWeights.bold,
-    fontFamily: typography.fontFamilies.display
+    ...textStyles.heading,
   },
   springIdText: {
     fontSize: typography.fontSizes.xs,
@@ -356,8 +355,7 @@ const styles = StyleSheet.create({
     fontSize: typography.fontSizes.xs
   },
   detailValue: {
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold
+    ...textStyles.label,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
@@ -400,8 +398,7 @@ const styles = StyleSheet.create({
     fontFamily: typography.fontFamilies.mono
   },
   instructionHead: {
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold,
+    ...textStyles.label,
     marginTop: spacing.xs,
     marginBottom: spacing.xxs
   },

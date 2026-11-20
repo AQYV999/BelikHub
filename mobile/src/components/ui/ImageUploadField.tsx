@@ -8,16 +8,16 @@ import {
   View,
   Text,
   Image,
-  TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
-  Alert,
   Platform,
   ViewStyle,
   useColorScheme
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
+import { PressableScale } from './PressableScale';
+import { useToast } from './Toast';
 import { colors, radius, typography, spacing } from '../../theme/tokens';
 import { Button } from './Button';
 
@@ -38,6 +38,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
   onClear,
   containerStyle
 }) => {
+  const toast = useToast();
   const isDark = useColorScheme() === 'dark';
   const theme = isDark ? colors.dark : colors.light;
   const [compressing, setCompressing] = useState<boolean>(false);
@@ -78,7 +79,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
     try {
       const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!permission.granted && Platform.OS !== 'web') {
-        Alert.alert('Izin Galeri', 'Aplikasi memerlukan izin untuk mengakses galeri foto.');
+        toast.warning('Aplikasi memerlukan izin untuk mengakses galeri foto.', 'Izin Galeri');
         return;
       }
 
@@ -95,7 +96,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
       }
     } catch (error: any) {
       console.error('ImagePicker library error:', error);
-      Alert.alert('Gagal Membuka Galeri', error.message || 'Terjadi kesalahan.');
+      toast.error(error.message || 'Terjadi kesalahan.', 'Gagal Membuka Galeri');
     }
   };
 
@@ -103,7 +104,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
     try {
       const permission = await ImagePicker.requestCameraPermissionsAsync();
       if (!permission.granted && Platform.OS !== 'web') {
-        Alert.alert('Izin Kamera', 'Aplikasi memerlukan izin untuk mengakses kamera.');
+        toast.warning('Aplikasi memerlukan izin untuk mengakses kamera.', 'Izin Kamera');
         return;
       }
 
@@ -119,7 +120,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
       }
     } catch (error: any) {
       console.error('ImagePicker camera error:', error);
-      Alert.alert('Gagal Membuka Kamera', error.message || 'Terjadi kesalahan.');
+      toast.error(error.message || 'Terjadi kesalahan.', 'Gagal Membuka Kamera');
     }
   };
 

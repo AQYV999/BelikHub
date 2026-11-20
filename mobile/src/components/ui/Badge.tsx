@@ -67,7 +67,7 @@ export const Badge: React.FC<BadgeProps> = ({
   const currentColors = colorMap[variant];
 
   const sizeStyle: ViewStyle = size === 'sm'
-    ? { paddingHorizontal: 6, paddingVertical: 2 }
+    ? { paddingHorizontal: 8, paddingVertical: 2 }
     : { paddingHorizontal: 10, paddingVertical: 4 };
 
   const fontSizeStyle: TextStyle = size === 'sm'
@@ -76,6 +76,7 @@ export const Badge: React.FC<BadgeProps> = ({
 
   return (
     <View
+      accessibilityRole="text"
       style={[
         styles.badge,
         sizeStyle,
@@ -110,6 +111,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: typography.fontFamilies.text,
-    fontWeight: typography.fontWeights.medium
+    fontWeight: typography.fontWeights.semibold,
+    letterSpacing: 0.2
   }
 });

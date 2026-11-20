@@ -6,13 +6,12 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   Image,
   useColorScheme
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Screen, Card, Badge, Button, EmptyState } from '../../components/ui';
+import { Screen, Card, Badge, Button, EmptyState, PressableScale } from '../../components/ui';
 import { colors, typography, spacing, radius } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { FieldReport, ReportStatus } from '../../api/types';
@@ -61,6 +60,7 @@ export const RelawanHistoryScreen: React.FC = () => {
 
   return (
     <Screen
+      loading={loading}
       scrollable
       refreshing={refreshing}
       onRefresh={handleRefresh}
@@ -97,10 +97,9 @@ export const RelawanHistoryScreen: React.FC = () => {
         ).map((tab) => {
           const isActive = selectedFilter === tab.key;
           return (
-            <TouchableOpacity
+            <PressableScale
               key={tab.key}
               onPress={() => setSelectedFilter(tab.key)}
-              activeOpacity={0.7}
               style={[
                 styles.filterChip,
                 {
@@ -120,7 +119,7 @@ export const RelawanHistoryScreen: React.FC = () => {
               >
                 {tab.label}
               </Text>
-            </TouchableOpacity>
+            </PressableScale>
           );
         })}
       </ScrollView>

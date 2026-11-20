@@ -8,19 +8,11 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
-  TouchableOpacity,
   useColorScheme
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import {
-  Screen,
-  Card,
-  Badge,
-  Button,
-  Input,
-  RoleSwitcher
-} from '../../components/ui';
-import { colors, typography, spacing, radius } from '../../theme/tokens';
+import { Screen, Card, Badge, Button, Input, RoleSwitcher, PressableScale, useToast } from '../../components/ui';
+import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { Role, DonorType } from '../../api/types';
 import { demoStore } from '../../demo/demoStore';
@@ -28,6 +20,7 @@ import { demoStore } from '../../demo/demoStore';
 const ALL_ROLES: Role[] = ['warga', 'pengelola', 'relawan', 'donatur', 'admin'];
 
 export const ProfileScreen: React.FC = () => {
+  const toast = useToast();
   const isDark = useColorScheme() === 'dark';
   const theme = isDark ? colors.dark : colors.light;
   const {
@@ -105,7 +98,7 @@ export const ProfileScreen: React.FC = () => {
           onPress: async () => {
             demoStore.reset();
             await refreshProfile();
-            Alert.alert('Selesai', 'Data demo telah direset ke baseline.');
+            toast.success('Data demo telah direset ke baseline.');
           }
         }
       ]
@@ -225,7 +218,7 @@ export const ProfileScreen: React.FC = () => {
           <View style={styles.donaturFields}>
             <Text style={[styles.fieldLabel, { color: theme.ink }]}>Tipe Donatur:</Text>
             <View style={styles.donorTypeRow}>
-              <TouchableOpacity
+              <PressableScale
                 onPress={() => setDonorType('individual')}
                 style={[
                   styles.donorTypeChip,
@@ -243,9 +236,9 @@ export const ProfileScreen: React.FC = () => {
                 >
                   Individu
                 </Text>
-              </TouchableOpacity>
+              </PressableScale>
 
-              <TouchableOpacity
+              <PressableScale
                 onPress={() => setDonorType('organization')}
                 style={[
                   styles.donorTypeChip,
@@ -263,7 +256,7 @@ export const ProfileScreen: React.FC = () => {
                 >
                   Organisasi (CSR)
                 </Text>
-              </TouchableOpacity>
+              </PressableScale>
             </View>
 
             {donorType === 'organization' && (
@@ -377,9 +370,7 @@ const styles = StyleSheet.create({
     gap: 4
   },
   profileName: {
-    fontSize: typography.fontSizes.lg,
-    fontWeight: typography.fontWeights.bold,
-    fontFamily: typography.fontFamilies.display
+    ...textStyles.heading,
   },
   profileEmail: {
     fontSize: typography.fontSizes.xs,
@@ -422,8 +413,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   fieldLabel: {
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold,
+    ...textStyles.label,
     marginBottom: spacing.xxs
   },
   donaturFields: {
@@ -442,8 +432,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   donorTypeChipText: {
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold
+    ...textStyles.label,
   },
   saveBtn: {
     marginTop: spacing.sm

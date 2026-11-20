@@ -6,19 +6,12 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   useColorScheme
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import {
-  Screen,
-  Card,
-  Badge,
-  Button,
-  ProgressBar
-} from '../../components/ui';
-import { colors, typography, spacing, radius } from '../../theme/tokens';
+import { Screen, Card, Badge, Button, ProgressBar, PressableScale } from '../../components/ui';
+import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { SpringPublic, RoleSummary } from '../../api/types';
 import { formatRupiah } from '../warga/wargaUtils';
@@ -74,6 +67,7 @@ export const AdminHomeScreen: React.FC = () => {
 
   return (
     <Screen
+      loading={loading}
       scrollable
       refreshing={refreshing}
       onRefresh={() => {
@@ -360,14 +354,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   kpiMainNumber: {
-    fontFamily: typography.fontFamilies.display,
-    fontSize: typography.fontSizes.lg,
-    fontWeight: typography.fontWeights.bold
+    ...textStyles.heading,
   },
   kpiCardTitle: {
-    fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold
+    ...textStyles.label,
   },
   kpiCardSub: {
     fontFamily: typography.fontFamilies.text,

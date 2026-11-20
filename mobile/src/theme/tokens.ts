@@ -13,7 +13,7 @@ export const colors = {
     surfaceHighlight: '#ffffff',
     card: '#ffffff',
     ink: '#1f3038',
-    muted: '#5d6b72',
+    muted: '#52626a',
     accent: '#0d7480',
     accentInk: '#ffffff',
     accentMuted: '#e0f2f1',
@@ -42,11 +42,11 @@ export const colors = {
     surfaceHighlight: '#1d2a36',
     card: '#141f28',
     ink: '#f1f6f8',
-    muted: '#94a7b0',
+    muted: '#a3b4bc',
     accent: '#2dd4bf',
     accentInk: '#042f2e',
     accentMuted: 'rgba(45, 212, 191, 0.15)',
-    border: 'rgba(241, 246, 248, 0.12)',
+    border: 'rgba(241, 246, 248, 0.16)',
     borderStrong: 'rgba(241, 246, 248, 0.22)',
     line: 'rgba(241, 246, 248, 0.12)',
     lineStrong: 'rgba(241, 246, 248, 0.22)',
@@ -151,36 +151,88 @@ export const spacing = {
   huge: 48
 } as const;
 
+// Uniform corner scale: 16px for controls (buttons, inputs, chips), 20px for cards/sheets.
 export const radius = {
-  xs: 4,
-  sm: 6,
-  md: 10,
-  lg: 16,
+  xs: 6,
+  sm: 12,
+  md: 16,
+  lg: 20,
   xl: 24,
   full: 9999
 } as const;
 
+// Soft, diffused shadows tinted with the brand ink colour (never pure black).
+// Light theme only: on dark surfaces depth comes from borders / surface tone instead.
 export const shadows = {
   sm: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowColor: '#1f3038',
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
-    shadowRadius: 2,
+    shadowRadius: 8,
     elevation: 1
   },
   md: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
+    shadowColor: '#1f3038',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.07,
+    shadowRadius: 16,
     elevation: 2
   },
   lg: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
+    shadowColor: '#1f3038',
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.1,
+    shadowRadius: 28,
     elevation: 4
+  }
+} as const;
+
+export function getShadow(level: keyof typeof shadows, isDark: boolean) {
+  if (isDark) {
+    return { shadowColor: '#000', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0, shadowRadius: 0, elevation: 0 };
+  }
+  return shadows[level];
+}
+
+// Shared motion constants so every interaction feels the same.
+export const motion = {
+  press: { scale: 0.97, opacity: 0.88 },
+  fast: 140,
+  base: 220,
+  slow: 360
+} as const;
+
+// Text hierarchy: use these presets instead of ad-hoc font sizes.
+export const textStyles = {
+  title: {
+    fontFamily: typography.fontFamilies.display,
+    fontSize: typography.fontSizes.xxl,
+    fontWeight: typography.fontWeights.bold,
+    letterSpacing: -0.4
+  },
+  heading: {
+    fontFamily: typography.fontFamilies.display,
+    fontSize: typography.fontSizes.lg,
+    fontWeight: typography.fontWeights.semibold,
+    letterSpacing: -0.2
+  },
+  body: {
+    fontFamily: typography.fontFamilies.text,
+    fontSize: typography.fontSizes.md,
+    fontWeight: typography.fontWeights.regular,
+    lineHeight: 22
+  },
+  subtitle: {
+    fontFamily: typography.fontFamilies.text,
+    fontSize: typography.fontSizes.sm,
+    fontWeight: typography.fontWeights.regular,
+    lineHeight: 20
+  },
+  label: {
+    fontFamily: typography.fontFamilies.text,
+    fontSize: typography.fontSizes.xs,
+    fontWeight: typography.fontWeights.semibold,
+    letterSpacing: 0.3
   }
 } as const;
 

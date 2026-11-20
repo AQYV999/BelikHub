@@ -4,13 +4,13 @@
 import React, { ReactNode } from 'react';
 import {
   View,
-  TouchableOpacity,
   StyleSheet,
   ViewStyle,
   StyleProp,
   useColorScheme
 } from 'react-native';
-import { colors, radius, shadows, spacing } from '../../theme/tokens';
+import { colors, radius, getShadow, spacing } from '../../theme/tokens';
+import { PressableScale } from './PressableScale';
 
 export interface CardProps {
   children: ReactNode;
@@ -43,19 +43,19 @@ export const Card: React.FC<CardProps> = ({
     backgroundColor: variant === 'flat' ? theme.surface : theme.card,
     borderWidth: variant === 'outlined' ? 1 : 0,
     borderColor: theme.border,
-    ...(variant === 'elevated' ? (isDark ? {} : shadows.sm) : {})
+    ...(variant === 'elevated' ? getShadow('md', isDark) : {})
   };
 
   if (onPress) {
     return (
-      <TouchableOpacity
+      <PressableScale
         testID={testID}
-        activeOpacity={0.7}
+        scaleTo={0.985}
         onPress={onPress}
         style={[styles.base, variantStyle, paddingStyle, style]}
       >
         {children}
-      </TouchableOpacity>
+      </PressableScale>
     );
   }
 
@@ -69,7 +69,6 @@ export const Card: React.FC<CardProps> = ({
 const styles = StyleSheet.create({
   base: {
     borderRadius: radius.lg,
-    marginVertical: 6,
-    overflow: 'hidden'
+    marginVertical: 6
   }
 });

@@ -6,11 +6,10 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   useColorScheme
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Screen, Card, Badge, Button, ProgressBar } from '../../components/ui';
+import { Screen, Card, Badge, Button, ProgressBar, PressableScale } from '../../components/ui';
 import { colors, typography, spacing, radius } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { RoleSummary, SpringPublic, RevitalizationCampaign } from '../../api/types';
@@ -74,6 +73,7 @@ export const WargaHomeScreen: React.FC = () => {
 
   return (
     <Screen
+      loading={loading}
       scrollable
       refreshing={refreshing}
       onRefresh={handleRefresh}

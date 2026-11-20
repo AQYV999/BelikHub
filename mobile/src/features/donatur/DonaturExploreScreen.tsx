@@ -6,19 +6,11 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   useColorScheme
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import {
-  Screen,
-  Card,
-  Badge,
-  Button,
-  ProgressBar,
-  EmptyState
-} from '../../components/ui';
+import { Screen, Card, Badge, Button, ProgressBar, EmptyState, PressableScale } from '../../components/ui';
 import { colors, typography, spacing, radius } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { RevitalizationCampaign } from '../../api/types';
@@ -75,6 +67,7 @@ export const DonaturExploreScreen: React.FC = () => {
 
   return (
     <Screen
+      loading={loading}
       scrollable
       refreshing={refreshing}
       onRefresh={() => {
@@ -108,7 +101,7 @@ export const DonaturExploreScreen: React.FC = () => {
         ].map((f) => {
           const isSelected = filter === f.id;
           return (
-            <TouchableOpacity
+            <PressableScale
               key={f.id}
               testID={`filter-campaign-${f.id}`}
               onPress={() => setFilter(f.id as CampaignFilter)}
@@ -131,7 +124,7 @@ export const DonaturExploreScreen: React.FC = () => {
               >
                 {f.label}
               </Text>
-            </TouchableOpacity>
+            </PressableScale>
           );
         })}
       </View>

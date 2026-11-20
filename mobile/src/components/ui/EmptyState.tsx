@@ -3,11 +3,12 @@
 
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle, useColorScheme } from 'react-native';
-import { colors, typography, spacing } from '../../theme/tokens';
+import { Ionicons } from '@expo/vector-icons';
+import { colors, typography, spacing, radius } from '../../theme/tokens';
 import { Button } from './Button';
 
 export interface EmptyStateProps {
-  icon?: React.ReactNode;
+  icon?: React.ReactNode | string;
   title: string;
   description?: string;
   actionTitle?: string;
@@ -28,7 +29,11 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 
   return (
     <View style={[styles.container, style]}>
-      {icon ? <View style={styles.iconWrapper}>{icon}</View> : null}
+      {icon ? (
+        <View style={[styles.iconWrapper, { backgroundColor: theme.tint }]}>
+          {typeof icon === 'string' ? <Ionicons name={icon as any} size={28} color={theme.accent} /> : icon}
+        </View>
+      ) : null}
       <Text style={[styles.title, { color: theme.ink }]}>{title}</Text>
       {description ? (
         <Text style={[styles.description, { color: theme.muted }]}>
@@ -56,7 +61,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   iconWrapper: {
-    marginBottom: spacing.md
+    width: 64,
+    height: 64,
+    borderRadius: radius.lg,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.lg
   },
   title: {
     fontFamily: typography.fontFamilies.display,
@@ -69,8 +79,8 @@ const styles = StyleSheet.create({
     fontFamily: typography.fontFamilies.text,
     fontSize: typography.fontSizes.sm,
     textAlign: 'center',
-    maxWidth: 280,
-    lineHeight: 20
+    maxWidth: 300,
+    lineHeight: 21
   },
   actionBtn: {
     marginTop: spacing.lg

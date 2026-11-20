@@ -17,7 +17,7 @@ import {
   Badge,
   EmptyState
 } from '../../components/ui';
-import { colors, typography, spacing, radius } from '../../theme/tokens';
+import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { Donation, RevitalizationUpdate } from '../../api/types';
 import { formatRupiah } from '../warga/wargaUtils';
@@ -81,6 +81,7 @@ export const DonaturHistoryScreen: React.FC = () => {
 
   return (
     <Screen
+      loading={loading}
       scrollable
       refreshing={refreshing}
       onRefresh={() => {
@@ -275,9 +276,7 @@ const styles = StyleSheet.create({
     fontSize: typography.fontSizes.xs
   },
   summaryValue: {
-    fontFamily: typography.fontFamilies.display,
-    fontSize: typography.fontSizes.xxl,
-    fontWeight: typography.fontWeights.bold,
+    ...textStyles.title,
     marginTop: 2
   },
   summaryIconCircle: {

@@ -6,25 +6,14 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   Modal,
   Image,
-  Alert,
   useColorScheme
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import {
-  Screen,
-  Card,
-  Badge,
-  Button,
-  Input,
-  ProgressBar,
-  ImageUploadField,
-  EmptyState
-} from '../../components/ui';
-import { colors, typography, spacing, radius } from '../../theme/tokens';
+import { Screen, Card, Badge, Button, Input, ProgressBar, ImageUploadField, EmptyState, PressableScale, useToast } from '../../components/ui';
+import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import {
   RevitalizationCampaign,
@@ -45,6 +34,7 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
   onClose,
   onDonationSuccess
 }) => {
+  const toast = useToast();
   const isDark = useColorScheme() === 'dark';
   const theme = isDark ? colors.dark : colors.light;
   const { user, activeRole } = useAuth();
@@ -140,9 +130,9 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
         setDonationSuccessMsg(
           'Donasi berhasil disubmit dengan status Menunggu Verifikasi. Terima kasih atas kepedulian Anda!'
         );
-        Alert.alert(
-          'Donasi Terkirim',
-          'Donasi Anda telah tercatat dengan status Menunggu Verifikasi. Admin akan memverifikasi bukti transfer dalam 1x24 jam.'
+        toast.success(
+          'Donasi Anda tercatat dengan status Menunggu Verifikasi. Admin akan memverifikasi bukti transfer dalam 1x24 jam.',
+          'Donasi Terkirim'
         );
         setDonationModalVisible(false);
         loadCampaign();
@@ -156,15 +146,7 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
   };
 
   if (loading && !campaign) {
-    return (
-      <Screen scrollable={false}>
-        <EmptyState
-          title="Memuat Detail Program..."
-          description="Mengambil data transparansi dan progres fisik dari mata air."
-          icon="hourglass-outline"
-        />
-      </Screen>
-    );
+    return <Screen scrollable loading />;
   }
 
   if (!campaign) {
@@ -196,14 +178,14 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
       {/* Top Bar / Close Button if modal */}
       {onClose && (
         <View style={styles.topBar}>
-          <TouchableOpacity
+          <PressableScale
             testID="btn-close-campaign-detail"
             onPress={onClose}
             style={styles.backButton}
           >
             <Ionicons name="arrow-back" size={22} color={theme.ink} />
             <Text style={[styles.backText, { color: theme.ink }]}>Kembali</Text>
-          </TouchableOpacity>
+          </PressableScale>
         </View>
       )}
 
@@ -379,9 +361,9 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
                   {campaign.title}
                 </Text>
               </View>
-              <TouchableOpacity onPress={() => setDonationModalVisible(false)}>
+              <PressableScale onPress={() => setDonationModalVisible(false)}>
                 <Ionicons name="close" size={24} color={theme.ink} />
-              </TouchableOpacity>
+              </PressableScale>
             </View>
 
             {donationError ? (
@@ -401,7 +383,7 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
               {['50000', '100000', '250000', '500000', '1000000'].map((amt) => {
                 const isSelected = donationAmount === amt;
                 return (
-                  <TouchableOpacity
+                  <PressableScale
                     key={amt}
                     onPress={() => setDonationAmount(amt)}
                     style={[
@@ -420,7 +402,7 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
                     >
                       {formatRupiah(parseInt(amt, 10))}
                     </Text>
-                  </TouchableOpacity>
+                  </PressableScale>
                 );
               })}
             </View>
@@ -440,7 +422,7 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
               Tipe Donatur:
             </Text>
             <View style={styles.typeSelectorRow}>
-              <TouchableOpacity
+              <PressableScale
                 testID="donor-type-individual"
                 onPress={() => setDonorType('individual')}
                 style={[
@@ -464,9 +446,9 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
                 >
                   Individu
                 </Text>
-              </TouchableOpacity>
+              </PressableScale>
 
-              <TouchableOpacity
+              <PressableScale
                 testID="donor-type-organization"
                 onPress={() => setDonorType('organization')}
                 style={[
@@ -490,7 +472,7 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
                 >
                   Organisasi / CSR
                 </Text>
-              </TouchableOpacity>
+              </PressableScale>
             </View>
 
             {/* If Organization: Org Name Input */}
@@ -505,7 +487,7 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
             )}
 
             {/* Anonymous Toggle */}
-            <TouchableOpacity
+            <PressableScale
               testID="toggle-anonymous"
               onPress={() => setIsAnonymous(!isAnonymous)}
               style={styles.anonToggleRow}
@@ -518,14 +500,14 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
               <Text style={[styles.anonToggleText, { color: theme.ink }]}>
                 Sembunyikan nama saya dari publik (Hamba Allah)
               </Text>
-            </TouchableOpacity>
+            </PressableScale>
 
             {/* Payment Method Selector */}
             <Text style={[styles.formLabel, { color: theme.ink, marginTop: spacing.md }]}>
               Metode Pembayaran:
             </Text>
             <View style={styles.methodRow}>
-              <TouchableOpacity
+              <PressableScale
                 onPress={() => setPaymentMethod('transfer')}
                 style={[
                   styles.methodBtn,
@@ -548,9 +530,9 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
                 >
                   Transfer Bank
                 </Text>
-              </TouchableOpacity>
+              </PressableScale>
 
-              <TouchableOpacity
+              <PressableScale
                 onPress={() => setPaymentMethod('qris')}
                 style={[
                   styles.methodBtn,
@@ -573,7 +555,7 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
                 >
                   QRIS Resmi
                 </Text>
-              </TouchableOpacity>
+              </PressableScale>
             </View>
 
             {/* Payment Instructions & QRIS */}
@@ -613,7 +595,7 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
                   setPhotoProofPath(uploadRes.objectPath);
                   setProofReadUrl(uploadRes.readUrl);
                 } catch (e: any) {
-                  Alert.alert('Gagal Unggah', e?.message || 'Gagal memproses bukti donasi.');
+                  toast.error(e?.message || 'Gagal memproses bukti donasi.', 'Gagal Unggah');
                 }
               }}
               onClear={setProofPhotoEmpty}
@@ -698,9 +680,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.full
   },
   impactBadgeText: {
-    fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold
+    ...textStyles.label,
   },
   fundingBox: {
     marginTop: spacing.md,
@@ -715,9 +695,7 @@ const styles = StyleSheet.create({
     marginBottom: 6
   },
   collectedAmount: {
-    fontFamily: typography.fontFamilies.display,
-    fontSize: typography.fontSizes.lg,
-    fontWeight: typography.fontWeights.bold
+    ...textStyles.heading,
   },
   fundingPercent: {
     fontFamily: typography.fontFamilies.display,
@@ -853,9 +831,7 @@ const styles = StyleSheet.create({
     maxWidth: 240
   },
   formLabel: {
-    fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold,
+    ...textStyles.label,
     marginBottom: 6
   },
   presetChipsRow: {
@@ -890,9 +866,7 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   typeBtnText: {
-    fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold
+    ...textStyles.label,
   },
   anonToggleRow: {
     flexDirection: 'row',
@@ -920,9 +894,7 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   methodBtnText: {
-    fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold
+    ...textStyles.label,
   },
   paymentInstructionCard: {
     borderWidth: 1,
@@ -931,9 +903,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md
   },
   instructionTitle: {
-    fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold,
+    ...textStyles.label,
     marginBottom: 4
   },
   instructionBody: {

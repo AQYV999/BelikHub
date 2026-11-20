@@ -5,7 +5,6 @@ import React from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
   StyleSheet,
   useColorScheme
 } from 'react-native';
@@ -13,6 +12,7 @@ import { useAuth } from '../../auth/AuthProvider';
 import { Role } from '../../api/types';
 import { colors, radius, typography, spacing } from '../../theme/tokens';
 import { RoleSwitcher } from './RoleSwitcher';
+import { PressableScale } from './PressableScale';
 
 export const DemoBanner: React.FC = () => {
   const isDark = useColorScheme() === 'dark';
@@ -33,13 +33,9 @@ export const DemoBanner: React.FC = () => {
         <Text style={[styles.title, { color: isDark ? '#fef3c7' : '#92400e' }]}>
           Data lokal terisolasi
         </Text>
-        <TouchableOpacity
-          onPress={exitDemoMode}
-          activeOpacity={0.7}
-          style={styles.exitBtn}
-        >
+        <PressableScale onPress={exitDemoMode} haptic="medium" hitSlop={8} style={styles.exitBtn}>
           <Text style={styles.exitText}>Keluar</Text>
-        </TouchableOpacity>
+        </PressableScale>
       </View>
 
       <View style={styles.switcherRow}>
@@ -59,9 +55,9 @@ export const DemoBanner: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderBottomWidth: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     zIndex: 100
   },
   topRow: {
@@ -89,8 +85,8 @@ const styles = StyleSheet.create({
     marginLeft: spacing.sm
   },
   exitBtn: {
-    paddingHorizontal: 8,
-    paddingVertical: 2
+    paddingHorizontal: 10,
+    paddingVertical: 4
   },
   exitText: {
     fontFamily: typography.fontFamilies.text,

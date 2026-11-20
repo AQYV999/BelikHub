@@ -6,26 +6,19 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
-  Alert,
   useColorScheme
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import {
-  Screen,
-  Card,
-  Badge,
-  Button,
-  ProgressBar
-} from '../../components/ui';
-import { colors, typography, spacing, radius } from '../../theme/tokens';
+import { Screen, Card, Badge, Button, ProgressBar, PressableScale, useToast } from '../../components/ui';
+import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { SpringPublic, RetributionBill, RetributionSummary } from '../../api/types';
 import { formatRupiah, formatPeriod } from '../warga/wargaUtils';
 import { calculateRetributionBreakdown } from './pengelolaUtils';
 
 export const PengelolaHomeScreen: React.FC = () => {
+  const toast = useToast();
   const isDark = useColorScheme() === 'dark';
   const theme = isDark ? colors.dark : colors.light;
   const { user } = useAuth();
@@ -103,11 +96,11 @@ export const PengelolaHomeScreen: React.FC = () => {
     try {
       const res = await api.recordCash(billId);
       if (res.success) {
-        Alert.alert('Sukses', 'Pembayaran tunai berhasil dicatat!');
+        toast.success('Pembayaran tunai berhasil dicatat!');
         loadData();
       }
     } catch (e: any) {
-      Alert.alert('Gagal', e?.message || 'Gagal mencatat pembayaran tunai.');
+      toast.error(e?.message || 'Gagal mencatat pembayaran tunai.');
     }
   };
 
@@ -121,6 +114,7 @@ export const PengelolaHomeScreen: React.FC = () => {
 
   return (
     <Screen
+      loading={loading}
       scrollable
       refreshing={refreshing}
       onRefresh={() => {
@@ -151,10 +145,9 @@ export const PengelolaHomeScreen: React.FC = () => {
             {springs.map((spring) => {
               const isSelected = spring.id === selectedSpringId;
               return (
-                <TouchableOpacity
+                <PressableScale
                   key={spring.id}
                   testID={`spring-chip-${spring.id}`}
-                  activeOpacity={0.7}
                   onPress={() => setSelectedSpringId(spring.id)}
                   style={[
                     styles.springChip,
@@ -180,7 +173,7 @@ export const PengelolaHomeScreen: React.FC = () => {
                   >
                     {spring.name}
                   </Text>
-                </TouchableOpacity>
+                </PressableScale>
               );
             })}
           </ScrollView>
@@ -423,9 +416,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md
   },
   sectionTitle: {
-    fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold,
+    ...textStyles.label,
     marginBottom: spacing.xs
   },
   springScroll: {
@@ -513,9 +504,7 @@ const styles = StyleSheet.create({
     fontSize: typography.fontSizes.xs
   },
   overviewValue: {
-    fontFamily: typography.fontFamilies.display,
-    fontSize: typography.fontSizes.lg,
-    fontWeight: typography.fontWeights.bold
+    ...textStyles.heading,
   },
   breakdownBox: {
     marginTop: spacing.sm,
@@ -524,9 +513,7 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   breakdownTitle: {
-    fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold,
+    ...textStyles.label,
     marginBottom: 6
   },
   breakdownRow: {

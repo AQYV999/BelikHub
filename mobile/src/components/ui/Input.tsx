@@ -47,7 +47,7 @@ export const Input: React.FC<InputProps> = ({
         style={[
           styles.inputWrapper,
           {
-            backgroundColor: isDark ? theme.surface : '#ffffff',
+            backgroundColor: isFocused ? (isDark ? theme.surfaceHighlight : '#ffffff') : isDark ? theme.surface : theme.bg,
             borderColor: error
               ? theme.error
               : isFocused
@@ -95,15 +95,16 @@ const styles = StyleSheet.create({
     fontFamily: typography.fontFamilies.text,
     fontSize: typography.fontSizes.sm,
     fontWeight: typography.fontWeights.medium,
-    marginBottom: spacing.xs
+    marginBottom: spacing.xs + 2,
+    letterSpacing: 0.1
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1.5,
     borderRadius: radius.md,
-    paddingHorizontal: spacing.md,
-    minHeight: 48
+    paddingHorizontal: spacing.lg,
+    minHeight: 52
   },
   input: {
     flex: 1,

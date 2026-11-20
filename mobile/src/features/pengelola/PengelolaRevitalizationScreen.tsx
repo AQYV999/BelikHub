@@ -6,31 +6,21 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   Modal,
   Image,
-  Alert,
   useColorScheme
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import {
-  Screen,
-  Card,
-  Badge,
-  Button,
-  Input,
-  ProgressBar,
-  ImageUploadField,
-  EmptyState
-} from '../../components/ui';
-import { colors, typography, spacing, radius } from '../../theme/tokens';
+import { Screen, Card, Badge, Button, Input, ProgressBar, ImageUploadField, EmptyState, PressableScale, useToast } from '../../components/ui';
+import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { RevitalizationCampaign, RevitalizationUpdate, SpringPublic } from '../../api/types';
 import { formatRupiah } from '../warga/wargaUtils';
 import { validateCampaignUpdateInput } from './pengelolaUtils';
 
 export const PengelolaRevitalizationScreen: React.FC = () => {
+  const toast = useToast();
   const isDark = useColorScheme() === 'dark';
   const theme = isDark ? colors.dark : colors.light;
   const { user } = useAuth();
@@ -144,7 +134,7 @@ export const PengelolaRevitalizationScreen: React.FC = () => {
       });
 
       if (res.success) {
-        Alert.alert('Sukses', 'Pembaruan progres berhasil dipublikasikan!');
+        toast.success('Pembaruan progres berhasil dipublikasikan!');
         setModalVisible(false);
         // Refresh campaign
         const updated = await api.getCampaign(selectedCampaign.id);
@@ -160,6 +150,7 @@ export const PengelolaRevitalizationScreen: React.FC = () => {
 
   return (
     <Screen
+      loading={loading}
       scrollable
       refreshing={refreshing}
       onRefresh={() => {
@@ -189,10 +180,9 @@ export const PengelolaRevitalizationScreen: React.FC = () => {
             {springs.map((spring) => {
               const isSelected = spring.id === selectedSpringId;
               return (
-                <TouchableOpacity
+                <PressableScale
                   key={spring.id}
                   testID={`revital-spring-chip-${spring.id}`}
-                  activeOpacity={0.7}
                   onPress={() => setSelectedSpringId(spring.id)}
                   style={[
                     styles.springChip,
@@ -218,7 +208,7 @@ export const PengelolaRevitalizationScreen: React.FC = () => {
                   >
                     {spring.name}
                   </Text>
-                </TouchableOpacity>
+                </PressableScale>
               );
             })}
           </ScrollView>
@@ -231,7 +221,7 @@ export const PengelolaRevitalizationScreen: React.FC = () => {
           {campaigns.map((c) => {
             const isSelected = selectedCampaign?.id === c.id;
             return (
-              <TouchableOpacity
+              <PressableScale
                 key={c.id}
                 onPress={() => selectCampaignDetail(c)}
                 style={[
@@ -251,7 +241,7 @@ export const PengelolaRevitalizationScreen: React.FC = () => {
                 >
                   {c.title}
                 </Text>
-              </TouchableOpacity>
+              </PressableScale>
             );
           })}
         </ScrollView>
@@ -395,9 +385,9 @@ export const PengelolaRevitalizationScreen: React.FC = () => {
               <Text style={[styles.modalTitle, { color: theme.ink }]}>
                 Pembaruan Progres Revitalisasi
               </Text>
-              <TouchableOpacity onPress={() => setModalVisible(false)}>
+              <PressableScale onPress={() => setModalVisible(false)}>
                 <Ionicons name="close" size={24} color={theme.ink} />
-              </TouchableOpacity>
+              </PressableScale>
             </View>
 
             {updateError ? (
@@ -458,7 +448,7 @@ export const PengelolaRevitalizationScreen: React.FC = () => {
                   setPhotoPath(uploadRes.objectPath);
                   setPhotoReadUrl(uploadRes.readUrl);
                 } catch (e: any) {
-                  Alert.alert('Gagal Unggah', e?.message || 'Gagal memproses foto.');
+                  toast.error(e?.message || 'Gagal memproses foto.', 'Gagal Unggah');
                 }
               }}
               onClear={() => {
@@ -690,9 +680,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md
   },
   springSelectorLabel: {
-    fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold,
+    ...textStyles.label,
     marginBottom: spacing.xs
   },
   springScroll: {

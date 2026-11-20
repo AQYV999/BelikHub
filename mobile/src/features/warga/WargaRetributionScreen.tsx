@@ -7,23 +7,13 @@ import {
   Text,
   Modal,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   Image,
-  Alert,
   useColorScheme
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import {
-  Screen,
-  Card,
-  Badge,
-  Button,
-  Input,
-  ImageUploadField,
-  EmptyState
-} from '../../components/ui';
-import { colors, typography, spacing, radius } from '../../theme/tokens';
+import { Screen, Card, Badge, Button, Input, ImageUploadField, EmptyState, PressableScale, useToast } from '../../components/ui';
+import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import {
   RetributionBill,
@@ -38,6 +28,7 @@ import {
 } from './wargaUtils';
 
 export const WargaRetributionScreen: React.FC = () => {
+  const toast = useToast();
   const isDark = useColorScheme() === 'dark';
   const theme = isDark ? colors.dark : colors.light;
   const { user, refreshProfile } = useAuth();
@@ -150,7 +141,7 @@ export const WargaRetributionScreen: React.FC = () => {
   const handleSubmitProof = async () => {
     if (!selectedBill) return;
     if (!uploadedProofPath) {
-      Alert.alert('Perhatian', 'Mohon unggah foto bukti transfer atau resi QRIS terlebih dahulu.');
+      toast.warning('Mohon unggah foto bukti transfer atau resi QRIS terlebih dahulu.');
       return;
     }
 
@@ -164,11 +155,11 @@ export const WargaRetributionScreen: React.FC = () => {
         setPayModalVisible(false);
         setSelectedBill(null);
         setUploadedProofPath(null);
-        Alert.alert('Berhasil', 'Bukti pembayaran berhasil dikirim dan menunggu verifikasi pengelola.');
+        toast.success('Bukti pembayaran berhasil dikirim dan menunggu verifikasi pengelola.');
         await loadRetributions();
       }
     } catch (e: any) {
-      Alert.alert('Gagal', e?.message || 'Terjadi kesalahan saat mengirim bukti pembayaran.');
+      toast.error(e?.message || 'Terjadi kesalahan saat mengirim bukti pembayaran.');
     } finally {
       setSubmittingProof(false);
     }
@@ -182,6 +173,7 @@ export const WargaRetributionScreen: React.FC = () => {
 
   return (
     <Screen
+      loading={loading}
       scrollable
       refreshing={refreshing}
       onRefresh={handleRefresh}
@@ -408,12 +400,12 @@ export const WargaRetributionScreen: React.FC = () => {
                   Periode {selectedBill ? formatPeriod(selectedBill.period) : ''}
                 </Text>
               </View>
-              <TouchableOpacity
+              <PressableScale
                 onPress={() => setPayModalVisible(false)}
                 style={styles.closeBtn}
               >
                 <Ionicons name="close" size={24} color={theme.ink} />
-              </TouchableOpacity>
+              </PressableScale>
             </View>
 
             <ScrollView contentContainerStyle={styles.modalScroll}>
@@ -432,7 +424,7 @@ export const WargaRetributionScreen: React.FC = () => {
                 Pilih Metode Pembayaran:
               </Text>
               <View style={styles.methodChoiceRow}>
-                <TouchableOpacity
+                <PressableScale
                   onPress={() => setPaymentMethod('transfer')}
                   style={[
                     styles.methodChip,
@@ -455,9 +447,9 @@ export const WargaRetributionScreen: React.FC = () => {
                   >
                     Transfer Bank
                   </Text>
-                </TouchableOpacity>
+                </PressableScale>
 
-                <TouchableOpacity
+                <PressableScale
                   onPress={() => setPaymentMethod('qris')}
                   style={[
                     styles.methodChip,
@@ -480,7 +472,7 @@ export const WargaRetributionScreen: React.FC = () => {
                   >
                     QRIS
                   </Text>
-                </TouchableOpacity>
+                </PressableScale>
               </View>
 
               {/* Payment Instructions from SpringSettings */}
@@ -520,7 +512,7 @@ export const WargaRetributionScreen: React.FC = () => {
                     const uploadRes = await api.uploadImage('retribution_proof', base64);
                     setUploadedProofPath(uploadRes.objectPath);
                   } catch (e: any) {
-                    Alert.alert('Gagal Unggah', e?.message || 'Gagal memproses gambar bukti.');
+                    toast.error(e?.message || 'Gagal memproses gambar bukti.', 'Gagal Unggah');
                   }
                 }}
                 onClear={() => setUploadedProofPath(null)}
@@ -713,8 +705,7 @@ const styles = StyleSheet.create({
     marginVertical: spacing.xs
   },
   successNoticeText: {
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold
+    ...textStyles.label,
   },
   redeemBtn: {
     marginTop: spacing.sm
@@ -820,9 +811,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md
   },
   modalTitle: {
-    fontSize: typography.fontSizes.lg,
-    fontWeight: typography.fontWeights.bold,
-    fontFamily: typography.fontFamilies.display
+    ...textStyles.heading,
   },
   modalSubtitle: {
     fontSize: typography.fontSizes.xs,

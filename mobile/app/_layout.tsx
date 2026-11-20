@@ -2,16 +2,20 @@
 // Root layout configuring SafeAreaProvider, AuthProvider, and route protection
 
 import React, { useEffect } from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, StyleSheet, useColorScheme } from 'react-native';
 import { Stack, useRouter, useSegments } from 'expo-router';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AuthProvider, useAuth } from '../src/auth/AuthProvider';
 import { colors } from '../src/theme/tokens';
+import { ToastProvider } from '../src/components/ui/Toast';
+import { ScreenSkeleton } from '../src/components/ui/Skeleton';
 
 function NavigationGuard({ children }: { children: React.ReactNode }) {
   const { user, loading, isDemoMode } = useAuth();
   const segments = useSegments();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const theme = useColorScheme() === 'dark' ? colors.dark : colors.light;
 
   useEffect(() => {
     if (loading) return;
@@ -38,8 +42,8 @@ function NavigationGuard({ children }: { children: React.ReactNode }) {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.light.accent} />
+      <View style={[styles.loadingContainer, { backgroundColor: theme.bg, paddingTop: insets.top }]}>
+        <ScreenSkeleton cards={2} />
       </View>
     );
   }
@@ -51,13 +55,15 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <AuthProvider>
+        <ToastProvider>
         <NavigationGuard>
-          <Stack screenOptions={{ headerShown: false }}>
+          <Stack screenOptions={{ headerShown: false, animation: 'fade' }}>
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="login" />
             <Stack.Screen name="onboarding" />
           </Stack>
         </NavigationGuard>
+        </ToastProvider>
       </AuthProvider>
     </SafeAreaProvider>
   );
@@ -67,7 +73,6 @@ const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.light.bg
+    paddingHorizontal: 20
   }
 });

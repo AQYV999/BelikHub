@@ -6,23 +6,14 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   Modal,
   Image,
-  Alert,
   useColorScheme
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import {
-  Screen,
-  Card,
-  Badge,
-  Button,
-  Input,
-  EmptyState
-} from '../../components/ui';
-import { colors, typography, spacing, radius } from '../../theme/tokens';
+import { Screen, Card, Badge, Button, Input, EmptyState, PressableScale, useToast } from '../../components/ui';
+import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import {
   RetributionBill,
@@ -38,6 +29,7 @@ type SubTab = 'bills' | 'residents' | 'settings';
 type BillFilter = 'all' | 'unpaid' | 'pending_verification' | 'paid';
 
 export const PengelolaRetributionScreen: React.FC = () => {
+  const toast = useToast();
   const isDark = useColorScheme() === 'dark';
   const theme = isDark ? colors.dark : colors.light;
   const { user } = useAuth();
@@ -139,14 +131,14 @@ export const PengelolaRetributionScreen: React.FC = () => {
     try {
       const res = await api.generateBills({ springId: selectedSpringId, period: currentPeriod });
       if (res.success) {
-        Alert.alert(
-          'Tagihan Diterbitkan',
-          `Berhasil menerbitkan ${res.createdCount} tagihan baru. (${res.skippedCount} warga sudah memiliki tagihan periode ini).`
+        toast.success(
+          `Berhasil menerbitkan ${res.createdCount} tagihan baru. (${res.skippedCount} warga sudah memiliki tagihan periode ini).`,
+          'Tagihan Diterbitkan'
         );
         loadData();
       }
     } catch (e: any) {
-      Alert.alert('Gagal Menerbitkan', e?.message || 'Gagal menerbitkan tagihan.');
+      toast.error(e?.message || 'Gagal menerbitkan tagihan.', 'Gagal Menerbitkan');
     } finally {
       setGenerateLoading(false);
     }
@@ -157,11 +149,11 @@ export const PengelolaRetributionScreen: React.FC = () => {
     try {
       const res = await api.recordCash(billId);
       if (res.success) {
-        Alert.alert('Sukses', 'Pembayaran tunai berhasil dicatat!');
+        toast.success('Pembayaran tunai berhasil dicatat!');
         loadData();
       }
     } catch (e: any) {
-      Alert.alert('Gagal', e?.message || 'Gagal mencatat pembayaran tunai.');
+      toast.error(e?.message || 'Gagal mencatat pembayaran tunai.');
     }
   };
 
@@ -170,32 +162,32 @@ export const PengelolaRetributionScreen: React.FC = () => {
     try {
       const res = await api.verifyRetribution(billId, 'approve');
       if (res.success) {
-        Alert.alert('Sukses', 'Bukti transfer disetujui, tagihan dinyatakan lunas!');
+        toast.success('Bukti transfer disetujui, tagihan dinyatakan lunas!');
         setProofModalVisible(false);
         loadData();
       }
     } catch (e: any) {
-      Alert.alert('Gagal', e?.message || 'Gagal menyetujui bukti transfer.');
+      toast.error(e?.message || 'Gagal menyetujui bukti transfer.');
     }
   };
 
   // Handle Reject Retribution Proof
   const handleRejectBill = async () => {
     if (!rejectionReason.trim()) {
-      Alert.alert('Perhatian', 'Mohon tuliskan alasan penolakan.');
+      toast.warning('Mohon tuliskan alasan penolakan.');
       return;
     }
     setRejectLoading(true);
     try {
       const res = await api.verifyRetribution(rejectBillId, 'reject', rejectionReason.trim());
       if (res.success) {
-        Alert.alert('Selesai', 'Bukti transfer ditolak.');
+        toast.success('Bukti transfer ditolak.');
         setRejectModalVisible(false);
         setRejectionReason('');
         loadData();
       }
     } catch (e: any) {
-      Alert.alert('Gagal', e?.message || 'Gagal menolak bukti transfer.');
+      toast.error(e?.message || 'Gagal menolak bukti transfer.');
     } finally {
       setRejectLoading(false);
     }
@@ -226,7 +218,7 @@ export const PengelolaRetributionScreen: React.FC = () => {
       });
 
       if (res.success) {
-        Alert.alert('Sukses', `Data warga ${res.resident.name} berhasil ditambahkan!`);
+        toast.success(`Data warga ${res.resident.name} berhasil ditambahkan!`);
         setAddResidentVisible(false);
         setResidentName('');
         setResidentPhone('');
@@ -275,7 +267,7 @@ export const PengelolaRetributionScreen: React.FC = () => {
       });
 
       if (res.success) {
-        Alert.alert('Sukses', `Data warga ${editResidentName} berhasil diperbarui.`);
+        toast.success(`Data warga ${editResidentName} berhasil diperbarui.`);
         setEditResidentVisible(false);
         loadData();
       }
@@ -299,7 +291,7 @@ export const PengelolaRetributionScreen: React.FC = () => {
         loadData();
       }
     } catch (e: any) {
-      Alert.alert('Gagal', e?.message || 'Gagal membuat kode tautan.');
+      toast.error(e?.message || 'Gagal membuat kode tautan.');
     }
   };
 
@@ -324,11 +316,11 @@ export const PengelolaRetributionScreen: React.FC = () => {
       });
 
       if (res.success) {
-        Alert.alert('Tautan Disetujui', `Akun ${pendingUser.name} kini terhubung dengan data warga.`);
+        toast.success(`Akun ${pendingUser.name} kini terhubung dengan data warga.`, 'Tautan Disetujui');
         loadData();
       }
     } catch (e: any) {
-      Alert.alert('Gagal', e?.message || 'Gagal menyetujui permohonan tautan.');
+      toast.error(e?.message || 'Gagal menyetujui permohonan tautan.');
     }
   };
 
@@ -336,6 +328,7 @@ export const PengelolaRetributionScreen: React.FC = () => {
 
   return (
     <Screen
+      loading={loading}
       scrollable
       refreshing={refreshing}
       onRefresh={() => {
@@ -365,10 +358,9 @@ export const PengelolaRetributionScreen: React.FC = () => {
             {springs.map((spring) => {
               const isSelected = spring.id === selectedSpringId;
               return (
-                <TouchableOpacity
+                <PressableScale
                   key={spring.id}
                   testID={`retribution-spring-chip-${spring.id}`}
-                  activeOpacity={0.7}
                   onPress={() => setSelectedSpringId(spring.id)}
                   style={[
                     styles.springChip,
@@ -394,7 +386,7 @@ export const PengelolaRetributionScreen: React.FC = () => {
                   >
                     {spring.name}
                   </Text>
-                </TouchableOpacity>
+                </PressableScale>
               );
             })}
           </ScrollView>
@@ -403,7 +395,7 @@ export const PengelolaRetributionScreen: React.FC = () => {
 
       {/* Sub-Tab Switcher */}
       <View style={[styles.subtabContainer, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-        <TouchableOpacity
+        <PressableScale
           testID="subtab-tagihan"
           onPress={() => setActiveTab('bills')}
           style={[
@@ -424,9 +416,9 @@ export const PengelolaRetributionScreen: React.FC = () => {
           >
             Tagihan Bulan Ini
           </Text>
-        </TouchableOpacity>
+        </PressableScale>
 
-        <TouchableOpacity
+        <PressableScale
           testID="subtab-warga"
           onPress={() => setActiveTab('residents')}
           style={[
@@ -447,9 +439,9 @@ export const PengelolaRetributionScreen: React.FC = () => {
           >
             Data Warga
           </Text>
-        </TouchableOpacity>
+        </PressableScale>
 
-        <TouchableOpacity
+        <PressableScale
           testID="subtab-settings"
           onPress={() => setActiveTab('settings')}
           style={[
@@ -470,7 +462,7 @@ export const PengelolaRetributionScreen: React.FC = () => {
           >
             Info Rekening/QRIS
           </Text>
-        </TouchableOpacity>
+        </PressableScale>
       </View>
 
       {/* SUB-TAB 1: TAGIHAN BULAN INI */}
@@ -509,7 +501,7 @@ export const PengelolaRetributionScreen: React.FC = () => {
             ].map((f) => {
               const isSelected = billFilter === f.id;
               return (
-                <TouchableOpacity
+                <PressableScale
                   key={f.id}
                   testID={`filter-bill-${f.id}`}
                   onPress={() => setBillFilter(f.id as BillFilter)}
@@ -529,7 +521,7 @@ export const PengelolaRetributionScreen: React.FC = () => {
                   >
                     {f.label}
                   </Text>
-                </TouchableOpacity>
+                </PressableScale>
               );
             })}
           </ScrollView>
@@ -676,9 +668,9 @@ export const PengelolaRetributionScreen: React.FC = () => {
                 <Text style={[styles.codeNoticeTitle, { color: theme.ink }]}>
                   Kode Tautan Berhasil Dibuat
                 </Text>
-                <TouchableOpacity onPress={() => setGeneratedCodeInfo(null)}>
+                <PressableScale onPress={() => setGeneratedCodeInfo(null)}>
                   <Ionicons name="close-circle" size={20} color={theme.muted} />
-                </TouchableOpacity>
+                </PressableScale>
               </View>
               <Text style={[styles.codeNoticeDesc, { color: theme.muted }]}>
                 Berikan kode ini kepada {generatedCodeInfo.residentName} untuk ditautkan di aplikasi:
@@ -832,9 +824,9 @@ export const PengelolaRetributionScreen: React.FC = () => {
               <Text style={[styles.modalTitle, { color: theme.ink }]}>
                 Bukti Transfer Warga
               </Text>
-              <TouchableOpacity onPress={() => setProofModalVisible(false)}>
+              <PressableScale onPress={() => setProofModalVisible(false)}>
                 <Ionicons name="close" size={24} color={theme.ink} />
-              </TouchableOpacity>
+              </PressableScale>
             </View>
 
             {selectedProofBill?.proofUrl && (
@@ -879,9 +871,9 @@ export const PengelolaRetributionScreen: React.FC = () => {
               <Text style={[styles.modalTitle, { color: theme.ink }]}>
                 Alasan Penolakan Bukti
               </Text>
-              <TouchableOpacity onPress={() => setRejectModalVisible(false)}>
+              <PressableScale onPress={() => setRejectModalVisible(false)}>
                 <Ionicons name="close" size={24} color={theme.ink} />
-              </TouchableOpacity>
+              </PressableScale>
             </View>
 
             <Input
@@ -925,9 +917,9 @@ export const PengelolaRetributionScreen: React.FC = () => {
               <Text style={[styles.modalTitle, { color: theme.ink }]}>
                 Tambah Warga Non-Aplikasi
               </Text>
-              <TouchableOpacity onPress={() => setAddResidentVisible(false)}>
+              <PressableScale onPress={() => setAddResidentVisible(false)}>
                 <Ionicons name="close" size={24} color={theme.ink} />
-              </TouchableOpacity>
+              </PressableScale>
             </View>
 
             {addResidentError ? (
@@ -998,9 +990,9 @@ export const PengelolaRetributionScreen: React.FC = () => {
               <Text style={[styles.modalTitle, { color: theme.ink }]}>
                 Edit Data Warga
               </Text>
-              <TouchableOpacity onPress={() => setEditResidentVisible(false)}>
+              <PressableScale onPress={() => setEditResidentVisible(false)}>
                 <Ionicons name="close" size={24} color={theme.ink} />
-              </TouchableOpacity>
+              </PressableScale>
             </View>
 
             {editResidentError ? (
@@ -1043,7 +1035,7 @@ export const PengelolaRetributionScreen: React.FC = () => {
                 Status Warga:
               </Text>
               <View style={styles.statusChipsRow}>
-                <TouchableOpacity
+                <PressableScale
                   testID="btn-resident-status-active"
                   onPress={() => setEditResidentActive(true)}
                   style={[
@@ -1062,8 +1054,8 @@ export const PengelolaRetributionScreen: React.FC = () => {
                   >
                     Aktif
                   </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
+                </PressableScale>
+                <PressableScale
                   testID="btn-resident-status-inactive"
                   onPress={() => setEditResidentActive(false)}
                   style={[
@@ -1082,7 +1074,7 @@ export const PengelolaRetributionScreen: React.FC = () => {
                   >
                     Non-Aktif
                   </Text>
-                </TouchableOpacity>
+                </PressableScale>
               </View>
             </View>
 
@@ -1140,13 +1132,14 @@ const styles = StyleSheet.create({
     borderRadius: radius.sm
   },
   subtabBtnActive: {
-    shadowOpacity: 0.1,
-    shadowRadius: 2
+    shadowColor: '#1f3038',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 1
   },
   subtabText: {
-    fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold
+    ...textStyles.label,
   },
   tabContent: {
     marginBottom: spacing.xl
@@ -1458,9 +1451,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md
   },
   springSelectorLabel: {
-    fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold,
+    ...textStyles.label,
     marginBottom: spacing.xs
   },
   springScroll: {
@@ -1505,8 +1496,6 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   statusChipText: {
-    fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold
+    ...textStyles.label,
   }
 });

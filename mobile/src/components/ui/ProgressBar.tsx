@@ -1,8 +1,8 @@
 // mobile/src/components/ui/ProgressBar.tsx
 // Visual progress bar with BelikHub accent color and percentage display
 
-import React from 'react';
-import { View, Text, StyleSheet, ViewStyle, useColorScheme } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Animated, Easing, View, Text, StyleSheet, ViewStyle, useColorScheme } from 'react-native';
 import { colors, radius, typography, spacing } from '../../theme/tokens';
 
 export interface ProgressBarProps {
@@ -24,6 +24,10 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   const theme = isDark ? colors.dark : colors.light;
 
   const clamped = Math.min(Math.max(progress, 0), 100);
+  const anim = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.timing(anim, { toValue: clamped, duration: 700, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start();
+  }, [clamped, anim]);
 
   return (
     <View style={[styles.container, style]}>
@@ -38,16 +42,16 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           styles.track,
           {
             height,
-            backgroundColor: isDark ? theme.surfaceHighlight : '#e2e8f0',
+            backgroundColor: isDark ? theme.surfaceHighlight : theme.surface,
             borderRadius: radius.full
           }
         ]}
       >
-        <View
+        <Animated.View
           style={[
             styles.fill,
             {
-              width: `${clamped}%`,
+              width: anim.interpolate({ inputRange: [0, 100], outputRange: ['0%', '100%'] }),
               backgroundColor: theme.accent,
               borderRadius: radius.full
             }

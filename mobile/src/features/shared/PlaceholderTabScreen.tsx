@@ -5,7 +5,7 @@ import React from 'react';
 import { View, Text, StyleSheet, useColorScheme } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button } from '../../components/ui';
-import { colors, typography, spacing, radius } from '../../theme/tokens';
+import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
 import { Role } from '../../api/types';
 import { useAuth } from '../../auth/AuthProvider';
 
@@ -103,9 +103,7 @@ const styles = StyleSheet.create({
     gap: spacing.xs
   },
   title: {
-    fontSize: typography.fontSizes.xxl,
-    fontWeight: typography.fontWeights.bold,
-    fontFamily: typography.fontFamilies.display,
+    ...textStyles.title,
     textAlign: 'center'
   },
   description: {

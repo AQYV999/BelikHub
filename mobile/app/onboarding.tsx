@@ -6,16 +6,14 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  Alert,
   useColorScheme
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Screen, Card, Badge, Button, Input } from '../src/components/ui';
+import { Screen, Card, Badge, Button, Input, PressableScale } from '../src/components/ui';
 import { colors, typography, spacing, radius } from '../src/theme/tokens';
 import { useAuth, useApi } from '../src/auth/AuthProvider';
 import { Role, DonorType, SpringPublic } from '../src/api/types';
@@ -116,7 +114,7 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <Screen scrollable showDemoBanner={false} contentContainerStyle={styles.container}>
+    <Screen safeBottom scrollable showDemoBanner={false} contentContainerStyle={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.keyboardWrap}
@@ -142,11 +140,10 @@ export default function OnboardingScreen() {
           {ROLE_OPTIONS.map((opt) => {
             const isSelected = opt.role === selectedRole;
             return (
-              <TouchableOpacity
+              <PressableScale
                 key={opt.role}
                 testID={`role-select-${opt.role}`}
                 onPress={() => setSelectedRole(opt.role)}
-                activeOpacity={0.7}
                 style={[
                   styles.roleCard,
                   {
@@ -188,7 +185,7 @@ export default function OnboardingScreen() {
                   size={20}
                   color={isSelected ? theme.accent : theme.muted}
                 />
-              </TouchableOpacity>
+              </PressableScale>
             );
           })}
         </View>
@@ -226,7 +223,7 @@ export default function OnboardingScreen() {
                 {springs.map((sp) => {
                   const isCur = sp.id === selectedSpringId;
                   return (
-                    <TouchableOpacity
+                    <PressableScale
                       key={sp.id}
                       onPress={() => setSelectedSpringId(sp.id)}
                       style={[
@@ -245,7 +242,7 @@ export default function OnboardingScreen() {
                       >
                         {sp.name}
                       </Text>
-                    </TouchableOpacity>
+                    </PressableScale>
                   );
                 })}
               </ScrollView>
@@ -268,7 +265,7 @@ export default function OnboardingScreen() {
             <View style={styles.specificBox}>
               <Text style={[styles.fieldLabel, { color: theme.ink }]}>Kategori Donatur:</Text>
               <View style={styles.donorTypeRow}>
-                <TouchableOpacity
+                <PressableScale
                   onPress={() => setDonorType('individual')}
                   style={[
                     styles.donorChip,
@@ -286,9 +283,9 @@ export default function OnboardingScreen() {
                   >
                     Individu
                   </Text>
-                </TouchableOpacity>
+                </PressableScale>
 
-                <TouchableOpacity
+                <PressableScale
                   onPress={() => setDonorType('organization')}
                   style={[
                     styles.donorChip,
@@ -306,7 +303,7 @@ export default function OnboardingScreen() {
                   >
                     Organisasi / CSR
                   </Text>
-                </TouchableOpacity>
+                </PressableScale>
               </View>
 
               {donorType === 'organization' && (

@@ -6,24 +6,14 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   Modal,
   Image,
-  Alert,
   useColorScheme
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import {
-  Screen,
-  Card,
-  Badge,
-  Button,
-  Input,
-  ImageUploadField,
-  EmptyState
-} from '../../components/ui';
-import { colors, typography, spacing, radius } from '../../theme/tokens';
+import { Screen, Card, Badge, Button, Input, ImageUploadField, EmptyState, PressableScale, useToast } from '../../components/ui';
+import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import {
   SpringPublic,
@@ -38,6 +28,7 @@ import { validateSpringInput, validateCampaignInput } from './adminUtils';
 type ManageTab = 'springs' | 'campaigns' | 'users';
 
 export const AdminManageScreen: React.FC = () => {
+  const toast = useToast();
   const isDark = useColorScheme() === 'dark';
   const theme = isDark ? colors.dark : colors.light;
   const { user } = useAuth();
@@ -137,11 +128,11 @@ export const AdminManageScreen: React.FC = () => {
     try {
       const res = await api.createSpring({ seedBaseline: true });
       if (res.success) {
-        Alert.alert('Sukses', '4 Mata Air Baseline berhasil dimuat!');
+        toast.success('4 Mata Air Baseline berhasil dimuat!');
         loadData();
       }
     } catch (e: any) {
-      Alert.alert('Gagal', e?.message || 'Gagal memuat mata air baseline.');
+      toast.error(e?.message || 'Gagal memuat mata air baseline.');
     }
   };
 
@@ -157,7 +148,7 @@ export const AdminManageScreen: React.FC = () => {
     });
 
     if (!validation.valid) {
-      Alert.alert('Perhatian', validation.error || 'Form belum lengkap.');
+      toast.warning(validation.error || 'Form belum lengkap.');
       return;
     }
 
@@ -174,14 +165,14 @@ export const AdminManageScreen: React.FC = () => {
       });
 
       if (res.success) {
-        Alert.alert('Sukses', `Mata Air ${springName} berhasil didaftarkan!`);
+        toast.success(`Mata Air ${springName} berhasil didaftarkan!`);
         setAddSpringVisible(false);
         setSpringName('');
         setSpringVillage('');
         loadData();
       }
     } catch (e: any) {
-      Alert.alert('Gagal', e?.message || 'Gagal menambahkan mata air.');
+      toast.error(e?.message || 'Gagal menambahkan mata air.');
     } finally {
       setAddSpringLoading(false);
     }
@@ -219,12 +210,12 @@ export const AdminManageScreen: React.FC = () => {
       });
 
       if (res.success) {
-        Alert.alert('Sukses', 'Instruksi pembayaran mata air berhasil disimpan!');
+        toast.success('Instruksi pembayaran mata air berhasil disimpan!');
         setSettingsModalVisible(false);
         loadData();
       }
     } catch (e: any) {
-      Alert.alert('Gagal', e?.message || 'Gagal menyimpan pengaturan mata air.');
+      toast.error(e?.message || 'Gagal menyimpan pengaturan mata air.');
     } finally {
       setSavingSettings(false);
     }
@@ -241,7 +232,7 @@ export const AdminManageScreen: React.FC = () => {
     });
 
     if (!validation.valid) {
-      Alert.alert('Perhatian', validation.error || 'Form belum lengkap.');
+      toast.warning(validation.error || 'Form belum lengkap.');
       return;
     }
 
@@ -256,14 +247,14 @@ export const AdminManageScreen: React.FC = () => {
       });
 
       if (res.success) {
-        Alert.alert('Sukses', 'Program revitalisasi berhasil dibuat!');
+        toast.success('Program revitalisasi berhasil dibuat!');
         setCreateCampaignVisible(false);
         setCampaignTitle('');
         setCampaignDesc('');
         loadData();
       }
     } catch (e: any) {
-      Alert.alert('Gagal', e?.message || 'Gagal membuat program.');
+      toast.error(e?.message || 'Gagal membuat program.');
     } finally {
       setCreatingCampaign(false);
     }
@@ -288,12 +279,12 @@ export const AdminManageScreen: React.FC = () => {
       });
 
       if (res.success) {
-        Alert.alert('Sukses', `Hak peran pengguna ${selectedUser.name || ''} berhasil diperbarui!`);
+        toast.success(`Hak peran pengguna ${selectedUser.name || ''} berhasil diperbarui!`);
         setUserModalVisible(false);
         loadData();
       }
     } catch (e: any) {
-      Alert.alert('Gagal', e?.message || 'Gagal mengubah peran pengguna.');
+      toast.error(e?.message || 'Gagal mengubah peran pengguna.');
     } finally {
       setSavingUserRoles(false);
     }
@@ -302,7 +293,7 @@ export const AdminManageScreen: React.FC = () => {
   const toggleRole = (r: Role) => {
     if (userRoles.includes(r)) {
       if (userRoles.length === 1) {
-        Alert.alert('Perhatian', 'Pengguna harus memiliki minimal 1 peran.');
+        toast.warning('Pengguna harus memiliki minimal 1 peran.');
         return;
       }
       setUserRoles(userRoles.filter((item) => item !== r));
@@ -361,7 +352,7 @@ export const AdminManageScreen: React.FC = () => {
       });
 
       if (res.success) {
-        Alert.alert('Sukses', `Mata Air ${editSpringName} berhasil diperbarui.`);
+        toast.success(`Mata Air ${editSpringName} berhasil diperbarui.`);
         setEditSpringVisible(false);
         loadData();
       }
@@ -412,7 +403,7 @@ export const AdminManageScreen: React.FC = () => {
       });
 
       if (res.success) {
-        Alert.alert('Sukses', `Program ${editCampaignTitle} berhasil diperbarui.`);
+        toast.success(`Program ${editCampaignTitle} berhasil diperbarui.`);
         setEditCampaignVisible(false);
         loadData();
       }
@@ -425,6 +416,7 @@ export const AdminManageScreen: React.FC = () => {
 
   return (
     <Screen
+      loading={loading}
       scrollable
       refreshing={refreshing}
       onRefresh={() => {
@@ -447,7 +439,7 @@ export const AdminManageScreen: React.FC = () => {
 
       {/* Subtab Navigation */}
       <View style={[styles.subtabContainer, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-        <TouchableOpacity
+        <PressableScale
           testID="subtab-manage-springs"
           onPress={() => setActiveTab('springs')}
           style={[
@@ -468,9 +460,9 @@ export const AdminManageScreen: React.FC = () => {
           >
             Mata Air
           </Text>
-        </TouchableOpacity>
+        </PressableScale>
 
-        <TouchableOpacity
+        <PressableScale
           testID="subtab-manage-campaigns"
           onPress={() => setActiveTab('campaigns')}
           style={[
@@ -491,9 +483,9 @@ export const AdminManageScreen: React.FC = () => {
           >
             Revitalisasi
           </Text>
-        </TouchableOpacity>
+        </PressableScale>
 
-        <TouchableOpacity
+        <PressableScale
           testID="subtab-manage-users"
           onPress={() => setActiveTab('users')}
           style={[
@@ -514,7 +506,7 @@ export const AdminManageScreen: React.FC = () => {
           >
             Pengguna
           </Text>
-        </TouchableOpacity>
+        </PressableScale>
       </View>
 
       {/* SUB-TAB 1: MATA AIR & RETRIBUSI */}
@@ -703,9 +695,9 @@ export const AdminManageScreen: React.FC = () => {
               <Text style={[styles.modalTitle, { color: theme.ink }]}>
                 Daftarkan Mata Air Baru
               </Text>
-              <TouchableOpacity onPress={() => setAddSpringVisible(false)}>
+              <PressableScale onPress={() => setAddSpringVisible(false)}>
                 <Ionicons name="close" size={24} color={theme.ink} />
-              </TouchableOpacity>
+              </PressableScale>
             </View>
 
             <Input
@@ -783,9 +775,9 @@ export const AdminManageScreen: React.FC = () => {
               <Text style={[styles.modalTitle, { color: theme.ink }]}>
                 Pengaturan Rekening & QRIS
               </Text>
-              <TouchableOpacity onPress={() => setSettingsModalVisible(false)}>
+              <PressableScale onPress={() => setSettingsModalVisible(false)}>
                 <Ionicons name="close" size={24} color={theme.ink} />
-              </TouchableOpacity>
+              </PressableScale>
             </View>
 
             <Input
@@ -819,7 +811,7 @@ export const AdminManageScreen: React.FC = () => {
                   setSettingsQrisPath(uploadRes.objectPath);
                   setSettingsQrisReadUrl(uploadRes.readUrl);
                 } catch (e: any) {
-                  Alert.alert('Gagal Unggah', e?.message || 'Gagal memproses QRIS.');
+                  toast.error(e?.message || 'Gagal memproses QRIS.', 'Gagal Unggah');
                 }
               }}
               onClear={() => {
@@ -861,9 +853,9 @@ export const AdminManageScreen: React.FC = () => {
               <Text style={[styles.modalTitle, { color: theme.ink }]}>
                 Buat Program Revitalisasi Baru
               </Text>
-              <TouchableOpacity onPress={() => setCreateCampaignVisible(false)}>
+              <PressableScale onPress={() => setCreateCampaignVisible(false)}>
                 <Ionicons name="close" size={24} color={theme.ink} />
-              </TouchableOpacity>
+              </PressableScale>
             </View>
 
             {/* Spring selection chips */}
@@ -872,7 +864,7 @@ export const AdminManageScreen: React.FC = () => {
               {springs.map((spr) => {
                 const isSelected = spr.id === campaignSpringId;
                 return (
-                  <TouchableOpacity
+                  <PressableScale
                     key={spr.id}
                     onPress={() => setCampaignSpringId(spr.id)}
                     style={[
@@ -891,7 +883,7 @@ export const AdminManageScreen: React.FC = () => {
                     >
                       {spr.name}
                     </Text>
-                  </TouchableOpacity>
+                  </PressableScale>
                 );
               })}
             </ScrollView>
@@ -964,9 +956,9 @@ export const AdminManageScreen: React.FC = () => {
               <Text style={[styles.modalTitle, { color: theme.ink }]}>
                 Kelola Peran & Izin Pengguna
               </Text>
-              <TouchableOpacity onPress={() => setUserModalVisible(false)}>
+              <PressableScale onPress={() => setUserModalVisible(false)}>
                 <Ionicons name="close" size={24} color={theme.ink} />
-              </TouchableOpacity>
+              </PressableScale>
             </View>
 
             <Text style={[styles.userModalSubtitle, { color: theme.muted }]}>
@@ -981,7 +973,7 @@ export const AdminManageScreen: React.FC = () => {
               {(['warga', 'pengelola', 'relawan', 'donatur', 'admin'] as Role[]).map((r) => {
                 const isActive = userRoles.includes(r);
                 return (
-                  <TouchableOpacity
+                  <PressableScale
                     key={r}
                     testID={`role-toggle-${r}`}
                     onPress={() => toggleRole(r)}
@@ -1006,7 +998,7 @@ export const AdminManageScreen: React.FC = () => {
                     >
                       {r.toUpperCase()}
                     </Text>
-                  </TouchableOpacity>
+                  </PressableScale>
                 );
               })}
             </View>
@@ -1020,7 +1012,7 @@ export const AdminManageScreen: React.FC = () => {
                 {springs.map((spr) => {
                   const isManaged = userManagedSprings.includes(spr.id);
                   return (
-                    <TouchableOpacity
+                    <PressableScale
                       key={spr.id}
                       testID={`toggle-managed-spring-${spr.id}`}
                       onPress={() => toggleManagedSpring(spr.id)}
@@ -1040,7 +1032,7 @@ export const AdminManageScreen: React.FC = () => {
                       <Text style={[styles.springSelectName, { color: theme.ink }]}>
                         {spr.name} ({spr.id})
                       </Text>
-                    </TouchableOpacity>
+                    </PressableScale>
                   );
                 })}
               </View>
@@ -1079,9 +1071,9 @@ export const AdminManageScreen: React.FC = () => {
               <Text style={[styles.modalTitle, { color: theme.ink }]}>
                 Edit Data Mata Air
               </Text>
-              <TouchableOpacity onPress={() => setEditSpringVisible(false)}>
+              <PressableScale onPress={() => setEditSpringVisible(false)}>
                 <Ionicons name="close" size={24} color={theme.ink} />
-              </TouchableOpacity>
+              </PressableScale>
             </View>
 
             {editSpringError ? (
@@ -1140,7 +1132,7 @@ export const AdminManageScreen: React.FC = () => {
                 Status Operasional:
               </Text>
               <View style={styles.statusChipsRow}>
-                <TouchableOpacity
+                <PressableScale
                   testID="btn-spring-status-active"
                   onPress={() => setEditSpringStatus('active')}
                   style={[
@@ -1159,9 +1151,9 @@ export const AdminManageScreen: React.FC = () => {
                   >
                     Aktif
                   </Text>
-                </TouchableOpacity>
+                </PressableScale>
 
-                <TouchableOpacity
+                <PressableScale
                   testID="btn-spring-status-rehab"
                   onPress={() => setEditSpringStatus('rehabilitation')}
                   style={[
@@ -1180,7 +1172,7 @@ export const AdminManageScreen: React.FC = () => {
                   >
                     Rehabilitasi
                   </Text>
-                </TouchableOpacity>
+                </PressableScale>
               </View>
             </View>
 
@@ -1217,9 +1209,9 @@ export const AdminManageScreen: React.FC = () => {
               <Text style={[styles.modalTitle, { color: theme.ink }]}>
                 Edit Program Revitalisasi
               </Text>
-              <TouchableOpacity onPress={() => setEditCampaignVisible(false)}>
+              <PressableScale onPress={() => setEditCampaignVisible(false)}>
                 <Ionicons name="close" size={24} color={theme.ink} />
-              </TouchableOpacity>
+              </PressableScale>
             </View>
 
             {editCampaignError ? (
@@ -1262,7 +1254,7 @@ export const AdminManageScreen: React.FC = () => {
                 Status Program:
               </Text>
               <View style={styles.statusChipsRow}>
-                <TouchableOpacity
+                <PressableScale
                   testID="btn-campaign-status-active"
                   onPress={() => setEditCampaignStatus('active')}
                   style={[
@@ -1281,9 +1273,9 @@ export const AdminManageScreen: React.FC = () => {
                   >
                     Aktif
                   </Text>
-                </TouchableOpacity>
+                </PressableScale>
 
-                <TouchableOpacity
+                <PressableScale
                   testID="btn-campaign-status-completed"
                   onPress={() => setEditCampaignStatus('completed')}
                   style={[
@@ -1302,7 +1294,7 @@ export const AdminManageScreen: React.FC = () => {
                   >
                     Selesai
                   </Text>
-                </TouchableOpacity>
+                </PressableScale>
               </View>
             </View>
 
@@ -1372,13 +1364,14 @@ const styles = StyleSheet.create({
     borderRadius: radius.sm
   },
   subtabBtnActive: {
-    shadowOpacity: 0.1,
-    shadowRadius: 2
+    shadowColor: '#1f3038',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 1
   },
   subtabText: {
-    fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold
+    ...textStyles.label,
   },
   tabContent: {
     marginBottom: spacing.xxl
@@ -1483,9 +1476,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm
   },
   formLabel: {
-    fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold,
+    ...textStyles.label,
     marginBottom: 6
   },
   modalChipsScroll: {
@@ -1519,9 +1510,7 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   roleToggleText: {
-    fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold
+    ...textStyles.label,
   },
   managedSpringsSection: {
     marginVertical: spacing.sm
@@ -1569,9 +1558,7 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   statusChipText: {
-    fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.semibold
+    ...textStyles.label,
   },
   errorBox: {
     flexDirection: 'row',
