@@ -125,7 +125,7 @@ export const RelawanHomeScreen: React.FC = () => {
 
       {/* 4 Conservation Program Guide */}
       <Card variant="outlined" padding="md" style={styles.card}>
-        <View style={styles.sectionHeaderRow}>
+        <View style={styles.cardHeaderWithIcon}>
           <Ionicons name="compass-outline" size={18} color={theme.accent} />
           <Text style={[styles.sectionTitle, { color: theme.ink }]}>
             Program Lapangan BelikHub
@@ -199,7 +199,7 @@ export const RelawanHomeScreen: React.FC = () => {
             <View>
               <Text style={[styles.springTitle, { color: theme.ink }]}>{s.name}</Text>
               <Text style={[styles.springLoc, { color: theme.muted }]}>
-                Desa {s.village}, {s.district}
+                {s.village ? (s.village.startsWith('Desa ') ? s.village : `Desa ${s.village}`) : ''}, {s.district}
               </Text>
             </View>
             <Badge
@@ -302,6 +302,12 @@ const styles = StyleSheet.create({
     fontSize: typography.fontSizes.xs,
     marginTop: 2,
     fontFamily: typography.fontFamilies.text
+  },
+  cardHeaderWithIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    marginBottom: spacing.xs
   },
   sectionHeaderRow: {
     flexDirection: 'row',

@@ -2,13 +2,43 @@
 // Root layout configuring SafeAreaProvider, AuthProvider, and route protection
 
 import React, { useEffect } from 'react';
-import { View, StyleSheet, useColorScheme } from 'react-native';
+import { View, StyleSheet, useColorScheme, Platform } from 'react-native';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AuthProvider, useAuth } from '../src/auth/AuthProvider';
 import { colors } from '../src/theme/tokens';
 import { ToastProvider } from '../src/components/ui/Toast';
 import { ScreenSkeleton } from '../src/components/ui/Skeleton';
+
+// Web only: inject Ionicons @font-face so missing-glyph boxes (▯) never appear
+function useWebIconFontFace() {
+  useEffect(() => {
+    if (Platform.OS !== 'web' || typeof document === 'undefined') return;
+    if (document.getElementById('belikhub-icon-fonts')) return;
+    try {
+      const ttf: any = require('@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/Ionicons.ttf');
+      const uri = typeof ttf === 'string' ? ttf : ttf?.uri || ttf?.default;
+      if (!uri) return;
+      const style = document.createElement('style');
+      style.id = 'belikhub-icon-fonts';
+      style.textContent = `@font-face{font-family:"ionicons";src:url("${uri}") format("truetype");font-display:block;}
+html,body,#root{height:100%;margin:0;background:#0b131e;}`;
+      document.head.appendChild(style);
+    } catch {
+      // fallback
+    }
+  }, []);
+}
+
+/** Center smartphone frame on desktop/laptop web browsers */
+const WebFrame: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  if (Platform.OS !== 'web') return <>{children}</>;
+  return (
+    <View style={styles.webBackdrop}>
+      <View style={styles.webFrame}>{children}</View>
+    </View>
+  );
+};
 
 function NavigationGuard({ children }: { children: React.ReactNode }) {
   const { user, loading, isDemoMode } = useAuth();
@@ -52,7 +82,9 @@ function NavigationGuard({ children }: { children: React.ReactNode }) {
 }
 
 export default function RootLayout() {
+  useWebIconFontFace();
   return (
+    <WebFrame>
     <SafeAreaProvider>
       <AuthProvider>
         <ToastProvider>
@@ -66,10 +98,32 @@ export default function RootLayout() {
         </ToastProvider>
       </AuthProvider>
     </SafeAreaProvider>
+    </WebFrame>
   );
 }
 
 const styles = StyleSheet.create({
+  webBackdrop: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+    backgroundColor: '#0f172a',
+    // @ts-ignore web-only
+    minHeight: '100vh'
+  },
+  webFrame: {
+    flex: 1,
+    width: '100%',
+    maxWidth: 440,
+    alignSelf: 'center',
+    marginHorizontal: 'auto' as any,
+    overflow: 'hidden',
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+    // @ts-ignore web-only
+    boxShadow: '0 0 50px rgba(0,0,0,0.4)'
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',

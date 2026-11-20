@@ -83,11 +83,13 @@ export default function LoginScreen() {
             <Text style={[styles.cardTitle, { color: theme.ink }]}>
               {isRegister ? 'Daftar Akun Baru' : 'Masuk ke Akun'}
             </Text>
-            <Badge
-              label={isRegister ? 'Registrasi' : 'Login'}
-              variant="accent"
-              size="sm"
-            />
+            {isRegister && (
+              <Badge
+                label="Registrasi"
+                variant="accent"
+                size="sm"
+              />
+            )}
           </View>
 
           {errorMessage ? (

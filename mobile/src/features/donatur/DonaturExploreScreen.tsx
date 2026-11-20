@@ -181,9 +181,9 @@ export const DonaturExploreScreen: React.FC = () => {
                   </Text>
                 </View>
 
-                <View style={[styles.impactChip, { backgroundColor: '#f0fdf4' }]}>
-                  <Ionicons name="leaf-outline" size={14} color="#16a34a" />
-                  <Text style={[styles.impactChipText, { color: '#15803d' }]}>
+                <View style={[styles.impactChip, { backgroundColor: theme.successBg }]}>
+                  <Ionicons name="leaf-outline" size={14} color={theme.success} />
+                  <Text style={[styles.impactChipText, { color: theme.successInk }]}>
                     Fisik: {camp.progressPercent || 0}%
                   </Text>
                 </View>

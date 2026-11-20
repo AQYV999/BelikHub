@@ -10,7 +10,9 @@ import {
   Animated,
   Easing,
   StyleSheet,
-  useColorScheme
+  useColorScheme,
+  ImageBackground,
+  Image
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -155,8 +157,13 @@ export const WargaHomeScreen: React.FC = () => {
 
       {/* Hero: live telemetry */}
       <View style={[styles.heroShadow, getShadow('lg', isDark)]}>
+        <ImageBackground
+          source={require('../../../assets/bg-hero-telemetry.jpg')}
+          style={styles.heroBg}
+          imageStyle={{ borderRadius: radius.xl, opacity: 0.45 }}
+        >
         <LinearGradient
-          colors={HERO_GRADIENT}
+          colors={['rgba(15,82,87,0.82)', 'rgba(10,58,62,0.90)', 'rgba(6,42,39,0.96)']}
           start={{ x: 0.1, y: 0 }}
           end={{ x: 0.9, y: 1 }}
           style={styles.hero}
@@ -170,13 +177,17 @@ export const WargaHomeScreen: React.FC = () => {
               <LiveDot color={springActive ? LIVE_GREEN : '#fbbf24'} />
               <Text style={styles.liveText}>{springActive ? 'LIVE · ALIRAN NORMAL' : 'LIVE · PEMULIHAN'}</Text>
             </View>
+            <Image
+              source={require('../../../assets/ornament-water-orb.jpg')}
+              style={styles.waterOrb}
+            />
           </View>
 
           <Text style={styles.heroName} numberOfLines={1}>
             {spring?.name || 'Mata Air BelikHub'}
           </Text>
           <Text style={styles.heroLocation} numberOfLines={1}>
-            {spring?.village ? `Desa ${spring.village}, Kec. ${spring.district}` : 'Kabupaten Wonosobo'}
+            {spring?.village ? (spring.village.startsWith('Desa ') ? `${spring.village}, Kec. ${spring.district}` : `Desa ${spring.village}, Kec. ${spring.district}`) : 'Kabupaten Batang'}
           </Text>
 
           <View style={styles.dischargeRow}>
@@ -197,6 +208,7 @@ export const WargaHomeScreen: React.FC = () => {
             </View>
           </View>
         </LinearGradient>
+        </ImageBackground>
       </View>
 
       {/* Quick actions */}
@@ -407,7 +419,8 @@ export const WargaHomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     gap: spacing.xxxl,
-    paddingTop: spacing.sm
+    paddingTop: spacing.sm,
+    paddingBottom: 60
   },
 
   // Greeting
@@ -419,15 +432,17 @@ const styles = StyleSheet.create({
   avatarText: { fontFamily: typography.fontFamilies.display, fontSize: typography.fontSizes.lg, fontWeight: '700' },
 
   // Hero
-  heroShadow: { borderRadius: radius.xl },
+  heroShadow: { borderRadius: radius.xl, overflow: 'hidden' },
+  heroBg: { width: '100%', borderRadius: radius.xl, overflow: 'hidden' },
   hero: { borderRadius: radius.xl, padding: spacing.xl, paddingBottom: spacing.xl, overflow: 'hidden' },
+  waterOrb: { width: 32, height: 32, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)' },
   ring: {
     position: 'absolute',
     borderRadius: radius.full,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.09)'
   },
-  heroTop: { flexDirection: 'row' },
+  heroTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   livePill: {
     flexDirection: 'row',
     alignItems: 'center',

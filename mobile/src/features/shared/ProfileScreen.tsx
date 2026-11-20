@@ -142,7 +142,9 @@ export const ProfileScreen: React.FC = () => {
             </Text>
             <View style={styles.badgeRow}>
               <Badge label={`Peran Aktif: ${activeRole.toUpperCase()}`} variant="accent" size="sm" />
-              <Badge label={`${user?.points ?? 150} Poin`} variant="neutral" size="sm" />
+              {activeRole === 'relawan' && (
+                <Badge label={`${user?.points ?? 150} Poin Kontribusi`} variant="neutral" size="sm" />
+              )}
             </View>
           </View>
         </View>

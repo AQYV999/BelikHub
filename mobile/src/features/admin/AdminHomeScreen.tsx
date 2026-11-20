@@ -204,7 +204,7 @@ export const AdminHomeScreen: React.FC = () => {
               {formatRupiah(totalBilled)}
             </Text>
           </View>
-          <View style={styles.retributionDivider} />
+          <View style={[styles.retributionDivider, { backgroundColor: theme.border }]} />
           <View style={styles.retributionAmountCol}>
             <Text style={[styles.amountLabel, { color: theme.muted }]}>Terkumpul (Lunas)</Text>
             <Text style={[styles.amountValue, { color: theme.success }]}>
@@ -239,7 +239,7 @@ export const AdminHomeScreen: React.FC = () => {
             />
           </View>
 
-          <View style={styles.springStatsRow}>
+          <View style={[styles.springStatsRow, { borderTopColor: theme.border }]}>
             <View style={styles.springStatItem}>
               <Text style={[styles.springStatLabel, { color: theme.muted }]}>Debit Baseline</Text>
               <Text style={[styles.springStatVal, { color: theme.accent }]}>
@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
   retributionDivider: {
     width: 1,
     height: 30,
-    backgroundColor: '#e5e7eb',
+    backgroundColor: 'rgba(150,150,150,0.2)',
     marginHorizontal: spacing.sm
   },
   amountLabel: {
@@ -445,7 +445,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
     paddingTop: spacing.xs,
     borderTopWidth: 1,
-    borderTopColor: '#e5e7eb'
+    borderTopColor: 'rgba(150,150,150,0.2)'
   },
   springStatItem: {
     flex: 1

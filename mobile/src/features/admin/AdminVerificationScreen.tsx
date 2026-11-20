@@ -15,11 +15,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button, Input, EmptyState, PressableScale, useToast } from '../../components/ui';
 import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
-import { Donation, FieldReport } from '../../api/types';
+import { Donation, FieldReport, RetributionBill } from '../../api/types';
 import { formatRupiah } from '../warga/wargaUtils';
 import { getDonationStatusMeta } from '../donatur/donaturUtils';
 
-type VerificationTab = 'donations' | 'reports';
+type VerificationTab = 'donations' | 'reports' | 'retributions';
 
 export const AdminVerificationScreen: React.FC = () => {
   const toast = useToast();
@@ -31,6 +31,7 @@ export const AdminVerificationScreen: React.FC = () => {
   const [activeTab, setActiveTab] = useState<VerificationTab>('donations');
   const [donations, setDonations] = useState<Donation[]>([]);
   const [reports, setReports] = useState<FieldReport[]>([]);
+  const [retributions, setRetributions] = useState<RetributionBill[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
@@ -45,13 +46,15 @@ export const AdminVerificationScreen: React.FC = () => {
 
   const loadData = useCallback(async () => {
     try {
-      const [donRes, repRes] = await Promise.all([
+      const [donRes, repRes, retRes] = await Promise.all([
         api.listDonations().catch(() => ({ donations: [] })),
-        api.listAllReports({ status: 'pending' }).catch(() => ({ reports: [] }))
+        api.listAllReports({ status: 'pending' }).catch(() => ({ reports: [] })),
+        api.listRetributions({ status: 'pending_verification' }).catch(() => ({ bills: [] }))
       ]);
 
       if (donRes?.donations) setDonations(donRes.donations);
       if (repRes?.reports) setReports(repRes.reports);
+      if (retRes?.bills) setRetributions(retRes.bills);
     } catch (err) {
       console.warn('AdminVerificationScreen: loadData error', err);
     } finally {
@@ -126,6 +129,19 @@ export const AdminVerificationScreen: React.FC = () => {
     }
   };
 
+  // Handle Approve Retribution
+  const handleApproveRetribution = async (billId: string) => {
+    try {
+      const res = await api.verifyRetribution(billId, 'approve');
+      if (res.success) {
+        toast.success('Bukti pembayaran retribusi berhasil disetujui!');
+        loadData();
+      }
+    } catch (e: any) {
+      toast.error(e?.message || 'Gagal memverifikasi retribusi.');
+    }
+  };
+
   const pendingDonations = donations.filter((d) => d.status === 'pending_verification');
 
   return (
@@ -195,7 +211,30 @@ export const AdminVerificationScreen: React.FC = () => {
               { color: activeTab === 'reports' ? theme.accentInk : theme.ink }
             ]}
           >
-            Laporan Relawan ({reports.length})
+            Laporan ({reports.length})
+          </Text>
+        </PressableScale>
+
+        <PressableScale
+          testID="subtab-verify-retributions"
+          onPress={() => setActiveTab('retributions')}
+          style={[
+            styles.subtabBtn,
+            activeTab === 'retributions' && [styles.subtabBtnActive, { backgroundColor: theme.accent }]
+          ]}
+        >
+          <Ionicons
+            name="card-outline"
+            size={16}
+            color={activeTab === 'retributions' ? theme.accentInk : theme.muted}
+          />
+          <Text
+            style={[
+              styles.subtabText,
+              { color: activeTab === 'retributions' ? theme.accentInk : theme.ink }
+            ]}
+          >
+            Retribusi ({retributions.length})
           </Text>
         </PressableScale>
       </View>
@@ -344,6 +383,62 @@ export const AdminVerificationScreen: React.FC = () => {
                     variant="danger"
                     size="sm"
                     onPress={() => handleRejectReport(rep.id)}
+                  />
+                </View>
+              </Card>
+            ))
+          )}
+        </View>
+      )}
+
+      {/* SUB-TAB 3: VERIFIKASI RETRIBUSI */}
+      {activeTab === 'retributions' && (
+        <View style={styles.tabContent}>
+          {retributions.length === 0 ? (
+            <EmptyState
+              title="Antrean Retribusi Bersih!"
+              description="Tidak ada bukti pembayaran retribusi yang menunggu verifikasi saat ini."
+              icon="checkmark-done-circle-outline"
+            />
+          ) : (
+            retributions.map((bill) => (
+              <Card key={bill.id} variant="elevated" padding="md" style={styles.itemCard}>
+                <View style={styles.cardTopRow}>
+                  <View style={styles.cardInfoCol}>
+                    <Text style={[styles.donorName, { color: theme.ink }]}>
+                      {bill.residentName || 'Warga'} ({bill.period})
+                    </Text>
+                    <Text style={[styles.campaignSub, { color: theme.muted }]}>
+                      Mata Air: {bill.springId} • Via {bill.paymentMethod ? bill.paymentMethod.toUpperCase() : 'QRIS'}
+                    </Text>
+                  </View>
+                  <Text style={[styles.amountText, { color: theme.accent }]}>
+                    {formatRupiah(bill.amount)}
+                  </Text>
+                </View>
+
+                {bill.proofPath ? (
+                  <View style={styles.amountProofRow}>
+                    <PressableScale
+                      onPress={() => setPreviewImage(bill.proofPath || null)}
+                      style={styles.thumbnailBtn}
+                    >
+                      <Image source={{ uri: bill.proofPath }} style={styles.proofThumb} />
+                      <Text style={[styles.viewProofText, { color: theme.accent }]}>
+                        Lihat Bukti Transfer
+                      </Text>
+                    </PressableScale>
+                  </View>
+                ) : null}
+
+                <View style={styles.actionButtonRow}>
+                  <Button
+                    testID={`btn-approve-bill-${bill.id}`}
+                    title="Verifikasi Lunas"
+                    variant="primary"
+                    size="sm"
+                    icon={<Ionicons name="checkmark" size={16} color={theme.accentInk} />}
+                    onPress={() => handleApproveRetribution(bill.id)}
                   />
                 </View>
               </Card>

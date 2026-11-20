@@ -139,7 +139,7 @@ export const WargaSpringScreen: React.FC = () => {
             <View style={styles.locationRow}>
               <Ionicons name="location-outline" size={16} color={theme.muted} />
               <Text style={[styles.locationText, { color: theme.muted }]}>
-                Desa {s.village}, Kec. {s.district}, Kab. {s.regency}
+                {s.village ? (s.village.startsWith('Desa ') ? s.village : `Desa ${s.village}`) : ''}, Kec. {s.district}, Kab. {s.regency}
               </Text>
             </View>
 

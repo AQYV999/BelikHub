@@ -514,14 +514,16 @@ export const AdminManageScreen: React.FC = () => {
         <View style={styles.tabContent}>
           {/* Top Actions: Seed Baseline + Add Spring */}
           <View style={styles.springActionsRow}>
-            <Button
-              testID="btn-seed-baseline"
-              title="Muat 4 Mata Air Baseline"
-              variant="outline"
-              size="sm"
-              icon={<Ionicons name="refresh" size={14} color={theme.accent} />}
-              onPress={handleSeedBaseline}
-            />
+            {springs.length === 0 && (
+              <Button
+                testID="btn-seed-baseline"
+                title="Muat Data Baseline"
+                variant="outline"
+                size="sm"
+                icon={<Ionicons name="refresh" size={14} color={theme.accent} />}
+                onPress={handleSeedBaseline}
+              />
+            )}
             <Button
               testID="btn-add-spring"
               title="Tambah Mata Air"

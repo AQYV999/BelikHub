@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 20,
     paddingTop: 16,
-    paddingBottom: 40
+    paddingBottom: 64
   },
   staticContent: {
     flex: 1,
