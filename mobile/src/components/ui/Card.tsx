@@ -6,9 +6,9 @@ import {
   View,
   StyleSheet,
   ViewStyle,
-  StyleProp,
-  useColorScheme
+  StyleProp
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { colors, radius, getShadow, spacing } from '../../theme/tokens';
 import { PressableScale } from './PressableScale';
 

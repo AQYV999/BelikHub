@@ -2,7 +2,8 @@
 // Status tag / chip with distinct semantic colors
 
 import React from 'react';
-import { View, Text, StyleSheet, ViewStyle, TextStyle, useColorScheme } from 'react-native';
+import { View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { colors, radius, typography } from '../../theme/tokens';
 
 export type BadgeVariant =
@@ -104,7 +105,7 @@ export const Badge: React.FC<BadgeProps> = ({
 const styles = StyleSheet.create({
   badge: {
     alignSelf: 'flex-start',
-    borderRadius: radius.full,
+    borderRadius: radius.sm,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center'

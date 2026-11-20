@@ -2,14 +2,14 @@
 // Adaptive multirole tab shell setting tab titles and icons dynamically from getTabsForRole(activeRole)
 
 import React from 'react';
-import { Platform, StyleSheet, useColorScheme } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
+import { useColorScheme } from '../../src/theme/useColorScheme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth } from '../../src/auth/AuthProvider';
-import { getTabsForRole } from '../../src/navigation/roleTabs';
-import { colors, typography, shadows } from '../../src/theme/tokens';
+import { useI18n } from '../../src/i18n';
+import { colors, typography } from '../../src/theme/tokens';
 import { PressableScale } from '../../src/components/ui/PressableScale';
 import { triggerHaptic } from '../../src/utils/haptics';
 
@@ -43,80 +43,54 @@ const styles = StyleSheet.create({
 const tabIcon = (name: string, focused: boolean) =>
   (focused ? name.replace(/-outline$/, '') : name) as any;
 
+export const unstable_settings = { initialRouteName: 'showcase' };
+
 export default function TabsLayout() {
   const isDark = useColorScheme() === 'dark';
   const theme = isDark ? colors.dark : colors.light;
   const insets = useSafeAreaInsets();
-  const { activeRole } = useAuth();
+  const { t } = useI18n();
   const bottomInset = Math.max(insets.bottom, Platform.OS === 'ios' ? 8 : 6);
 
-  const roleTabs = getTabsForRole(activeRole);
-  const tab0 = roleTabs[0] || { title: 'Beranda', icon: 'home-outline' };
-  const tab1 = roleTabs[1] || { title: 'Kedua', icon: 'layers-outline' };
-  const tab2 = roleTabs[2] || { title: 'Ketiga', icon: 'grid-outline' };
-  const tab3 = roleTabs[3] || { title: 'Profil', icon: 'person-outline' };
+  const icon = (name: string) => ({ color, size, focused }: { color: string; size: number; focused: boolean }) => (
+    <Ionicons name={tabIcon(name, focused)} size={size || 24} color={color} />
+  );
 
   return (
     <Tabs
+      initialRouteName="showcase"
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: theme.accent,
-        tabBarInactiveTintColor: theme.muted,
         animation: 'fade',
         tabBarButton: (props) => <HapticTabButton {...props} />,
+        tabBarActiveTintColor: theme.accent,
+        tabBarInactiveTintColor: theme.muted,
         tabBarStyle: {
-          backgroundColor: isDark ? theme.surface : '#ffffff',
+          backgroundColor: '#ffffff',
           borderTopColor: theme.border,
-          borderTopWidth: StyleSheet.hairlineWidth,
+          borderTopWidth: 1,
           height: 54 + bottomInset,
           paddingBottom: bottomInset,
-          paddingTop: 8,
-          ...(isDark ? {} : { ...shadows.md, shadowOffset: { width: 0, height: -4 } })
+          paddingTop: 8
         },
         tabBarLabelStyle: {
-          fontSize: typography.fontSizes.xs,
+          fontSize: 11,
           fontFamily: typography.fontFamilies.text,
           fontWeight: typography.fontWeights.semibold,
           letterSpacing: 0.2
         }
       }}
     >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: tab0.title,
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons name={tabIcon(tab0.icon, focused)} size={size || 24} color={color} />
-          )
-        }}
-      />
-      <Tabs.Screen
-        name="secondary"
-        options={{
-          title: tab1.title,
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons name={tabIcon(tab1.icon, focused)} size={size || 24} color={color} />
-          )
-        }}
-      />
-      <Tabs.Screen
-        name="tertiary"
-        options={{
-          title: tab2.title,
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons name={tabIcon(tab2.icon, focused)} size={size || 24} color={color} />
-          )
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: tab3.title,
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons name={tabIcon(tab3.icon, focused)} size={size || 24} color={color} />
-          )
-        }}
-      />
+      <Tabs.Screen name="showcase" options={{ title: t('tab.science'), tabBarIcon: icon('flask-outline') }} />
+      <Tabs.Screen name="telemetry" options={{ title: t('tab.telemetry'), tabBarIcon: icon('pulse-outline') }} />
+      <Tabs.Screen name="tickets" options={{ title: t('tab.tickets'), tabBarIcon: icon('construct-outline') }} />
+      <Tabs.Screen name="audit" options={{ title: t('tab.audit'), tabBarIcon: icon('document-text-outline') }} />
+
+      {/* Legacy role workspaces: still reachable from Account, but not part of the primary navigation. */}
+      <Tabs.Screen name="index" options={{ href: null }} />
+      <Tabs.Screen name="secondary" options={{ href: null }} />
+      <Tabs.Screen name="tertiary" options={{ href: null }} />
+      <Tabs.Screen name="profile" options={{ href: null }} />
     </Tabs>
   );
 }

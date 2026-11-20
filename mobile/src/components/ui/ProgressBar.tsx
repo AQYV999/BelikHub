@@ -2,7 +2,8 @@
 // Visual progress bar with BelikHub accent color and percentage display
 
 import React, { useEffect, useRef } from 'react';
-import { Animated, Easing, View, Text, StyleSheet, ViewStyle, useColorScheme } from 'react-native';
+import { Animated, Easing, View, Text, StyleSheet, ViewStyle } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { colors, radius, typography, spacing } from '../../theme/tokens';
 
 export interface ProgressBarProps {
@@ -43,7 +44,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           {
             height,
             backgroundColor: isDark ? theme.surfaceHighlight : theme.surface,
-            borderRadius: radius.full
+            borderRadius: radius.sm
           }
         ]}
       >
@@ -53,7 +54,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
             {
               width: anim.interpolate({ inputRange: [0, 100], outputRange: ['0%', '100%'] }),
               backgroundColor: theme.accent,
-              borderRadius: radius.full
+              borderRadius: radius.sm
             }
           ]}
         />

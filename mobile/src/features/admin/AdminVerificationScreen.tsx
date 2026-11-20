@@ -8,12 +8,12 @@ import {
   StyleSheet,
   ScrollView,
   Modal,
-  Image,
-  useColorScheme
+  Image
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button, Input, EmptyState, PressableScale, useToast } from '../../components/ui';
-import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
+import { colors, typography, spacing, radius, textStyles, monoText } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { Donation, FieldReport } from '../../api/types';
 import { formatRupiah } from '../warga/wargaUtils';
@@ -105,7 +105,7 @@ export const AdminVerificationScreen: React.FC = () => {
     try {
       const res = await api.updateReportStatus(reportId, 'approved');
       if (res.success) {
-        toast.success('Laporan lapangan disetujui dan poin telah ditambahkan ke relawan!');
+        toast.success('Laporan lapangan disetujui dan masuk ke log audit.');
         loadData();
       }
     } catch (e: any) {
@@ -220,7 +220,7 @@ export const AdminVerificationScreen: React.FC = () => {
                         {don.donorType === 'organization'
                           ? don.organizationName || don.donorName
                           : don.isAnonymous
-                          ? 'Hamba Allah (Anonim)'
+                          ? 'Penyetor Anonim'
                           : don.donorName}
                       </Text>
                       <Text style={[styles.campaignSub, { color: theme.muted }]} numberOfLines={1}>
@@ -232,7 +232,7 @@ export const AdminVerificationScreen: React.FC = () => {
 
                   <View style={styles.amountProofRow}>
                     <View>
-                      <Text style={[styles.amountText, { color: theme.ink }]}>
+                      <Text style={[styles.amountText, { color: theme.ink }, monoText]}>
                         {formatRupiah(don.amount)}
                       </Text>
                       <Text style={[styles.paymentMethodText, { color: theme.muted }]}>
@@ -332,7 +332,7 @@ export const AdminVerificationScreen: React.FC = () => {
                 <View style={styles.actionButtonRow}>
                   <Button
                     testID={`btn-approve-report-${rep.id}`}
-                    title="Setujui Laporan (+Poin)"
+                    title="Setujui Laporan"
                     variant="primary"
                     size="sm"
                     icon={<Ionicons name="checkmark" size={16} color={theme.accentInk} />}

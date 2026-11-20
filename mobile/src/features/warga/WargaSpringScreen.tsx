@@ -1,17 +1,18 @@
 // mobile/src/features/warga/WargaSpringScreen.tsx
 // Detailed water spring transparency and metrics screen for Warga
 
+import { villageLabel } from '../../utils/format';
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
-  useColorScheme
+  ScrollView
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button, ProgressBar } from '../../components/ui';
-import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
+import { colors, typography, spacing, radius, textStyles, monoText } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { SpringPublic, SpringSettings } from '../../api/types';
 import { formatRupiah } from './wargaUtils';
@@ -139,7 +140,7 @@ export const WargaSpringScreen: React.FC = () => {
             <View style={styles.locationRow}>
               <Ionicons name="location-outline" size={16} color={theme.muted} />
               <Text style={[styles.locationText, { color: theme.muted }]}>
-                Desa {s.village}, Kec. {s.district}, Kab. {s.regency}
+                {villageLabel(s.village)}, Kec. {s.district}, Kab. {s.regency}
               </Text>
             </View>
 
@@ -233,7 +234,7 @@ export const WargaSpringScreen: React.FC = () => {
                 <Text style={[styles.feeLabel, { color: theme.muted }]}>
                   Iuran Pemeliharaan Bulanan:
                 </Text>
-                <Text style={[styles.feeAmount, { color: theme.accent }]}>
+                <Text style={[styles.feeAmount, { color: theme.accent }, monoText]}>
                   {formatRupiah(springSettings.defaultMonthlyFee)} / KK
                 </Text>
               </View>

@@ -6,12 +6,12 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
-  useColorScheme
+  ScrollView
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button, ProgressBar, EmptyState, PressableScale } from '../../components/ui';
-import { colors, typography, spacing, radius } from '../../theme/tokens';
+import { colors, typography, spacing, radius, monoText } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { RevitalizationCampaign } from '../../api/types';
 import { formatRupiah } from '../warga/wargaUtils';
@@ -192,7 +192,7 @@ export const DonaturExploreScreen: React.FC = () => {
               {/* Funding Progress Bar */}
               <View style={styles.fundingWrap}>
                 <View style={styles.fundingTopRow}>
-                  <Text style={[styles.fundingCollected, { color: theme.ink }]}>
+                  <Text style={[styles.fundingCollected, { color: theme.ink }, monoText]}>
                     {formatRupiah(camp.collectedAmount)}
                   </Text>
                   <Text style={[styles.fundingPercentage, { color: theme.accent }]}>
@@ -201,11 +201,11 @@ export const DonaturExploreScreen: React.FC = () => {
                 </View>
                 <ProgressBar progress={funding.percent} height={8} />
                 <View style={styles.fundingBottomRow}>
-                  <Text style={[styles.fundingTarget, { color: theme.muted }]}>
+                  <Text style={[styles.fundingTarget, { color: theme.muted }, monoText]}>
                     Target: {formatRupiah(camp.targetAmount)}
                   </Text>
                   {funding.remaining > 0 && (
-                    <Text style={[styles.fundingRemaining, { color: theme.muted }]}>
+                    <Text style={[styles.fundingRemaining, { color: theme.muted }, monoText]}>
                       Sisa {formatRupiah(funding.remaining)}
                     </Text>
                   )}
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
   filterChip: {
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: radius.full,
+    borderRadius: radius.sm,
     borderWidth: 1
   },
   filterChipText: {

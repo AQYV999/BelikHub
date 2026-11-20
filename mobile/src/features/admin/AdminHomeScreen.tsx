@@ -6,12 +6,12 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
-  useColorScheme
+  ScrollView
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button, ProgressBar, PressableScale } from '../../components/ui';
-import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
+import { colors, typography, spacing, radius, textStyles, monoText } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { SpringPublic, RoleSummary } from '../../api/types';
 import { formatRupiah } from '../warga/wargaUtils';
@@ -162,7 +162,7 @@ export const AdminHomeScreen: React.FC = () => {
             <View style={[styles.kpiIconWrap, { backgroundColor: '#f0fdf4' }]}>
               <Ionicons name="heart" size={20} color="#16a34a" />
             </View>
-            <Text style={[styles.kpiMainNumber, { color: theme.ink }]}>
+            <Text style={[styles.kpiMainNumber, { color: theme.ink }, monoText]}>
               {formatRupiah(totalDonations)}
             </Text>
           </View>
@@ -200,14 +200,14 @@ export const AdminHomeScreen: React.FC = () => {
         <View style={styles.retributionAmountsRow}>
           <View style={styles.retributionAmountCol}>
             <Text style={[styles.amountLabel, { color: theme.muted }]}>Total Tertagih</Text>
-            <Text style={[styles.amountValue, { color: theme.ink }]}>
+            <Text style={[styles.amountValue, { color: theme.ink }, monoText]}>
               {formatRupiah(totalBilled)}
             </Text>
           </View>
           <View style={styles.retributionDivider} />
           <View style={styles.retributionAmountCol}>
             <Text style={[styles.amountLabel, { color: theme.muted }]}>Terkumpul (Lunas)</Text>
-            <Text style={[styles.amountValue, { color: theme.success }]}>
+            <Text style={[styles.amountValue, { color: theme.success }, monoText]}>
               {formatRupiah(totalCollected)}
             </Text>
           </View>

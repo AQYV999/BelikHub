@@ -7,9 +7,9 @@ import {
   Text,
   StyleSheet,
   Image,
-  ScrollView,
-  useColorScheme
+  ScrollView
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import {
   Screen,
@@ -17,7 +17,7 @@ import {
   Badge,
   EmptyState
 } from '../../components/ui';
-import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
+import { colors, typography, spacing, radius, textStyles, monoText } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { Donation, RevitalizationUpdate } from '../../api/types';
 import { formatRupiah } from '../warga/wargaUtils';
@@ -113,7 +113,7 @@ export const DonaturHistoryScreen: React.FC = () => {
             <Text style={[styles.summaryLabel, { color: theme.muted }]}>
               Total Donasi Terverifikasi
             </Text>
-            <Text style={[styles.summaryValue, { color: theme.accent }]}>
+            <Text style={[styles.summaryValue, { color: theme.accent }, monoText]}>
               {formatRupiah(totalVerifiedDonations)}
             </Text>
           </View>
@@ -162,14 +162,14 @@ export const DonaturHistoryScreen: React.FC = () => {
 
               <View style={styles.donationBottomRow}>
                 <View>
-                  <Text style={[styles.donationAmount, { color: theme.ink }]}>
+                  <Text style={[styles.donationAmount, { color: theme.ink }, monoText]}>
                     {formatRupiah(don.amount)}
                   </Text>
                   <Text style={[styles.donorTypeLabel, { color: theme.muted }]}>
                     {don.donorType === 'organization'
                       ? `CSR: ${don.organizationName || 'Perusahaan'}`
                       : don.isAnonymous
-                      ? 'Hamba Allah (Anonim)'
+                      ? 'Penyetor Anonim'
                       : don.donorName}
                   </Text>
                 </View>

@@ -8,9 +8,9 @@ import {
   ScrollView,
   StyleSheet,
   LayoutAnimation,
-  ViewStyle,
-  useColorScheme
+  ViewStyle
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { Role } from '../../api/types';
 import { colors, radius, typography, spacing } from '../../theme/tokens';
 import { PressableScale } from './PressableScale';
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   chip: {
     paddingHorizontal: 14,
     paddingVertical: 7,
-    borderRadius: radius.full,
+    borderRadius: radius.sm,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center'

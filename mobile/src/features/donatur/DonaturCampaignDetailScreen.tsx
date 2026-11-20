@@ -8,12 +8,12 @@ import {
   StyleSheet,
   ScrollView,
   Modal,
-  Image,
-  useColorScheme
+  Image
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button, Input, ProgressBar, ImageUploadField, EmptyState, PressableScale, useToast } from '../../components/ui';
-import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
+import { colors, typography, spacing, radius, textStyles, monoText } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import {
   RevitalizationCampaign,
@@ -231,7 +231,7 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
         {/* Funding Progress Box */}
         <View style={[styles.fundingBox, { backgroundColor: theme.surface, borderColor: theme.border }]}>
           <View style={styles.fundingTop}>
-            <Text style={[styles.collectedAmount, { color: theme.accent }]}>
+            <Text style={[styles.collectedAmount, { color: theme.accent }, monoText]}>
               {formatRupiah(campaign.collectedAmount)}
             </Text>
             <Text style={[styles.fundingPercent, { color: theme.ink }]}>
@@ -242,11 +242,11 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
           <ProgressBar progress={funding.percent} height={10} />
 
           <View style={styles.fundingBottom}>
-            <Text style={[styles.targetLabel, { color: theme.muted }]}>
+            <Text style={[styles.targetLabel, { color: theme.muted }, monoText]}>
               dari target {formatRupiah(campaign.targetAmount)}
             </Text>
             {funding.remaining > 0 && (
-              <Text style={[styles.remainingLabel, { color: theme.muted }]}>
+              <Text style={[styles.remainingLabel, { color: theme.muted }, monoText]}>
                 sisa {formatRupiah(funding.remaining)}
               </Text>
             )}
@@ -325,7 +325,7 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
                   Dilaporkan oleh {update.authorName || 'Pengelola'} ({update.authorRole || 'pengelola'})
                 </Text>
                 {update.spentAmount ? (
-                  <Text style={[styles.updateSpent, { color: theme.accent }]}>
+                  <Text style={[styles.updateSpent, { color: theme.accent }, monoText]}>
                     Alokasi: {formatRupiah(update.spentAmount)}
                   </Text>
                 ) : null}
@@ -398,7 +398,7 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
                       style={[
                         styles.presetChipText,
                         { color: isSelected ? theme.accentInk : theme.ink }
-                      ]}
+                      , monoText]}
                     >
                       {formatRupiah(parseInt(amt, 10))}
                     </Text>
@@ -498,7 +498,7 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
                 color={isAnonymous ? theme.accent : theme.muted}
               />
               <Text style={[styles.anonToggleText, { color: theme.ink }]}>
-                Sembunyikan nama saya dari publik (Hamba Allah)
+                Sembunyikan nama saya dari publik (anonim)
               </Text>
             </PressableScale>
 
@@ -677,7 +677,7 @@ const styles = StyleSheet.create({
     gap: 6,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderRadius: radius.full
+    borderRadius: radius.sm
   },
   impactBadgeText: {
     ...textStyles.label,
@@ -843,7 +843,7 @@ const styles = StyleSheet.create({
   presetChip: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: radius.full,
+    borderRadius: radius.sm,
     borderWidth: 1
   },
   presetChipText: {

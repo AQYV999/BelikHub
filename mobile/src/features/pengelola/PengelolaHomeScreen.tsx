@@ -6,12 +6,12 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
-  useColorScheme
+  ScrollView
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button, ProgressBar, PressableScale, useToast } from '../../components/ui';
-import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
+import { colors, typography, spacing, radius, textStyles, monoText } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { SpringPublic, RetributionBill, RetributionSummary } from '../../api/types';
 import { formatRupiah, formatPeriod } from '../warga/wargaUtils';
@@ -229,14 +229,14 @@ export const PengelolaHomeScreen: React.FC = () => {
         <View style={styles.amountOverviewRow}>
           <View style={styles.amountOverviewItem}>
             <Text style={[styles.overviewLabel, { color: theme.muted }]}>Total Tertagih</Text>
-            <Text style={[styles.overviewValue, { color: theme.ink }]}>
+            <Text style={[styles.overviewValue, { color: theme.ink }, monoText]}>
               {formatRupiah(summary.totalBilled)}
             </Text>
           </View>
           <View style={styles.amountDivider} />
           <View style={styles.amountOverviewItem}>
             <Text style={[styles.overviewLabel, { color: theme.muted }]}>Sudah Terbayar</Text>
-            <Text style={[styles.overviewValue, { color: theme.success }]}>
+            <Text style={[styles.overviewValue, { color: theme.success }, monoText]}>
               {formatRupiah(summary.totalPaid)}
             </Text>
           </View>
@@ -253,7 +253,7 @@ export const PengelolaHomeScreen: React.FC = () => {
                 <View style={[styles.bullet, { backgroundColor: theme.accent }]} />
                 <Text style={[styles.breakdownColLabel, { color: theme.muted }]}>Tunai (Cash)</Text>
               </View>
-              <Text style={[styles.breakdownColValue, { color: theme.ink }]}>
+              <Text style={[styles.breakdownColValue, { color: theme.ink }, monoText]}>
                 {formatRupiah(summary.totalCash)}
               </Text>
             </View>
@@ -262,7 +262,7 @@ export const PengelolaHomeScreen: React.FC = () => {
                 <View style={[styles.bullet, { backgroundColor: '#3b82f6' }]} />
                 <Text style={[styles.breakdownColLabel, { color: theme.muted }]}>Non-Tunai (Bank/QRIS)</Text>
               </View>
-              <Text style={[styles.breakdownColValue, { color: theme.ink }]}>
+              <Text style={[styles.breakdownColValue, { color: theme.ink }, monoText]}>
                 {formatRupiah(summary.totalNonCash)}
               </Text>
             </View>
@@ -337,7 +337,7 @@ export const PengelolaHomeScreen: React.FC = () => {
               </View>
 
               <View style={styles.billBottomRow}>
-                <Text style={[styles.billAmount, { color: theme.ink }]}>
+                <Text style={[styles.billAmount, { color: theme.ink }, monoText]}>
                   {formatRupiah(bill.amount)}
                 </Text>
 
@@ -378,7 +378,7 @@ export const PengelolaHomeScreen: React.FC = () => {
                   <Text style={[styles.pendingName, { color: theme.ink }]}>
                     {pb.residentName || 'Warga'}
                   </Text>
-                  <Text style={[styles.pendingAmount, { color: theme.muted }]}>
+                  <Text style={[styles.pendingAmount, { color: theme.muted }, monoText]}>
                     {formatRupiah(pb.amount)} • {pb.paymentMethod || 'transfer'}
                   </Text>
                 </View>
@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
     gap: 6,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: radius.full,
+    borderRadius: radius.sm,
     borderWidth: 1,
     marginRight: 8
   },

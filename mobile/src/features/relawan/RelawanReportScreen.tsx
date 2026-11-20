@@ -7,9 +7,9 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  ActivityIndicator,
-  useColorScheme
+  ActivityIndicator
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button, Input, ImageUploadField, PressableScale, useToast } from '../../components/ui';
@@ -142,7 +142,7 @@ export const RelawanReportScreen: React.FC = () => {
 
       if (res.success) {
         setSuccessMessage(
-          `Laporan berhasil dikirim! ID: ${res.id}. Poin relawan bertambah +${res.points || 50}.`
+          `Laporan berhasil dikirim dan tercatat sebagai tiket ${res.id}. Menunggu verifikasi admin.`
         );
         // Reset form
         setLocationText('');
@@ -493,7 +493,7 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: radius.full,
+    borderRadius: radius.sm,
     borderWidth: 1.5
   },
   typeChipText: {

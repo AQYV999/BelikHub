@@ -8,12 +8,12 @@ import {
   StyleSheet,
   ScrollView,
   Modal,
-  Image,
-  useColorScheme
+  Image
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button, Input, ProgressBar, ImageUploadField, EmptyState, PressableScale, useToast } from '../../components/ui';
-import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
+import { colors, typography, spacing, radius, textStyles, monoText } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { RevitalizationCampaign, RevitalizationUpdate, SpringPublic } from '../../api/types';
 import { formatRupiah } from '../warga/wargaUtils';
@@ -287,13 +287,13 @@ export const PengelolaRevitalizationScreen: React.FC = () => {
             <View style={styles.fundingSummaryRow}>
               <View>
                 <Text style={[styles.fundingLabel, { color: theme.muted }]}>Terkumpul</Text>
-                <Text style={[styles.fundingValue, { color: theme.ink }]}>
+                <Text style={[styles.fundingValue, { color: theme.ink }, monoText]}>
                   {formatRupiah(selectedCampaign.collectedAmount || 0)}
                 </Text>
               </View>
               <View style={styles.fundingRightCol}>
                 <Text style={[styles.fundingLabel, { color: theme.muted }]}>Target Dana</Text>
-                <Text style={[styles.fundingValue, { color: theme.ink }]}>
+                <Text style={[styles.fundingValue, { color: theme.ink }, monoText]}>
                   {formatRupiah(selectedCampaign.targetAmount || 0)}
                 </Text>
               </View>
@@ -332,7 +332,7 @@ export const PengelolaRevitalizationScreen: React.FC = () => {
                 <View style={styles.timelineBadgeRow}>
                   <Badge label={`${upd.progressPercent}% Selesai`} variant="accent" size="sm" />
                   {upd.spentAmount ? (
-                    <Text style={[styles.timelineSpent, { color: theme.muted }]}>
+                    <Text style={[styles.timelineSpent, { color: theme.muted }, monoText]}>
                       Dana Terpakai: {formatRupiah(upd.spentAmount)}
                     </Text>
                   ) : null}
@@ -501,7 +501,7 @@ const styles = StyleSheet.create({
   campaignChip: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: radius.full,
+    borderRadius: radius.sm,
     borderWidth: 1,
     marginRight: 8,
     maxWidth: 240
@@ -692,7 +692,7 @@ const styles = StyleSheet.create({
     gap: 6,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: radius.full,
+    borderRadius: radius.sm,
     borderWidth: 1,
     marginRight: 8
   },

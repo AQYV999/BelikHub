@@ -2,55 +2,23 @@
 // Warga community & water monitoring dashboard:
 // hero telemetry -> quick actions -> digital-pass retribution -> light-weight sections.
 
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
   ScrollView,
-  Animated,
-  Easing,
-  StyleSheet,
-  useColorScheme
+  StyleSheet
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { useRouter } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Button, ProgressBar, PressableScale, useToast } from '../../components/ui';
-import { colors, typography, spacing, radius, textStyles, getShadow } from '../../theme/tokens';
+import { colors, typography, spacing, radius, textStyles, getShadow, monoText } from '../../theme/tokens';
+import { villageLabel } from '../../utils/format';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import { RoleSummary, SpringPublic, RevitalizationCampaign } from '../../api/types';
 import { formatRupiah, formatPeriod, getRetributionStatusMeta } from './wargaUtils';
-
-// The hero is always dark (deep teal -> night emerald) in both themes.
-const HERO_GRADIENT = ['#0f5257', '#0a3a3e', '#062a27'] as const;
-const LIVE_GREEN = '#4ade80';
-
-/** Pulsing "live telemetry" dot. */
-const LiveDot: React.FC<{ color: string }> = ({ color }) => {
-  const pulse = useRef(new Animated.Value(0)).current;
-  useEffect(() => {
-    const loop = Animated.loop(
-      Animated.timing(pulse, { toValue: 1, duration: 1600, easing: Easing.out(Easing.quad), useNativeDriver: true })
-    );
-    loop.start();
-    return () => loop.stop();
-  }, [pulse]);
-  return (
-    <View style={styles.dotWrap}>
-      <Animated.View
-        style={[
-          styles.dotRing,
-          {
-            backgroundColor: color,
-            opacity: pulse.interpolate({ inputRange: [0, 1], outputRange: [0.55, 0] }),
-            transform: [{ scale: pulse.interpolate({ inputRange: [0, 1], outputRange: [1, 2.6] }) }]
-          }
-        ]}
-      />
-      <View style={[styles.dotCore, { backgroundColor: color }]} />
-    </View>
-  );
-};
+import { TelemetryPanel } from '../field/FieldPanels';
 
 export const WargaHomeScreen: React.FC = () => {
   const toast = useToast();
@@ -153,51 +121,8 @@ export const WargaHomeScreen: React.FC = () => {
         </View>
       </View>
 
-      {/* Hero: live telemetry */}
-      <View style={[styles.heroShadow, getShadow('lg', isDark)]}>
-        <LinearGradient
-          colors={HERO_GRADIENT}
-          start={{ x: 0.1, y: 0 }}
-          end={{ x: 0.9, y: 1 }}
-          style={styles.hero}
-        >
-          {/* Ripple rings */}
-          <View pointerEvents="none" style={[styles.ring, { width: 260, height: 260, right: -90, top: -90 }]} />
-          <View pointerEvents="none" style={[styles.ring, { width: 160, height: 160, right: -40, top: -40 }]} />
-
-          <View style={styles.heroTop}>
-            <View style={styles.livePill}>
-              <LiveDot color={springActive ? LIVE_GREEN : '#fbbf24'} />
-              <Text style={styles.liveText}>{springActive ? 'LIVE · ALIRAN NORMAL' : 'LIVE · PEMULIHAN'}</Text>
-            </View>
-          </View>
-
-          <Text style={styles.heroName} numberOfLines={1}>
-            {spring?.name || 'Mata Air BelikHub'}
-          </Text>
-          <Text style={styles.heroLocation} numberOfLines={1}>
-            {spring?.village ? `Desa ${spring.village}, Kec. ${spring.district}` : 'Kabupaten Wonosobo'}
-          </Text>
-
-          <View style={styles.dischargeRow}>
-            <Text style={styles.dischargeValue}>{discharge}</Text>
-            <Text style={styles.dischargeUnit}>L/s</Text>
-          </View>
-          <Text style={styles.dischargeCaption}>Debit rata-rata</Text>
-
-          <View style={styles.heroStats}>
-            <View style={styles.heroStat}>
-              <Text style={styles.heroStatValue}>{spring?.beneficiaries_kk ?? 142}</Text>
-              <Text style={styles.heroStatLabel}>KK terlayani</Text>
-            </View>
-            <View style={styles.heroStatDivider} />
-            <View style={styles.heroStat}>
-              <Text style={styles.heroStatValue}>{spring?.uptime_percentage ?? 99.2}%</Text>
-              <Text style={styles.heroStatLabel}>Keandalan aliran</Text>
-            </View>
-          </View>
-        </LinearGradient>
-      </View>
+      {/* Telemetry & pressure dashboard */}
+      <TelemetryPanel spring={spring} />
 
       {/* Quick actions */}
       <ScrollView
@@ -256,7 +181,7 @@ export const WargaHomeScreen: React.FC = () => {
                   <Text style={[styles.passPeriod, { color: theme.muted }]}>
                     {formatPeriod(bill?.period || '2026-11')}
                   </Text>
-                  <Text style={[styles.passAmount, { color: theme.ink }]}>
+                  <Text style={[styles.passAmount, { color: theme.ink }, monoText]}>
                     {formatRupiah(bill?.amount ?? 25000)}
                   </Text>
                 </View>
@@ -344,7 +269,7 @@ export const WargaHomeScreen: React.FC = () => {
             </View>
             <View style={[styles.statVLine, { backgroundColor: theme.border }]} />
             <View style={styles.statCol}>
-              <Text style={[styles.statBig, { color: theme.success }]} numberOfLines={1} adjustsFontSizeToFit>
+              <Text style={[styles.statBig, { color: theme.success }, monoText]} numberOfLines={1} adjustsFontSizeToFit>
                 {formatRupiah(villageTransparency.totalCollectedThisMonth)}
               </Text>
               <Text style={[styles.statCaption, { color: theme.muted }]}>Kas terkumpul</Text>
@@ -378,10 +303,10 @@ export const WargaHomeScreen: React.FC = () => {
               style={styles.progressBar}
             />
             <View style={styles.campaignAmounts}>
-              <Text style={[styles.amountCollected, { color: theme.accent }]}>
+              <Text style={[styles.amountCollected, { color: theme.accent }, monoText]}>
                 {formatRupiah(campaign.collectedAmount)}
               </Text>
-              <Text style={[styles.amountTarget, { color: theme.muted }]}>
+              <Text style={[styles.amountTarget, { color: theme.muted }, monoText]}>
                 dari {formatRupiah(campaign.targetAmount)}
               </Text>
             </View>
@@ -415,78 +340,8 @@ const styles = StyleSheet.create({
   headerTextGroup: { flex: 1 },
   greeting: { ...textStyles.subtitle },
   userName: { ...textStyles.title, marginTop: 2 },
-  avatar: { width: 44, height: 44, borderRadius: radius.full, alignItems: 'center', justifyContent: 'center' },
+  avatar: { width: 44, height: 44, borderRadius: radius.sm, alignItems: 'center', justifyContent: 'center' },
   avatarText: { fontFamily: typography.fontFamilies.display, fontSize: typography.fontSizes.lg, fontWeight: '700' },
-
-  // Hero
-  heroShadow: { borderRadius: radius.xl },
-  hero: { borderRadius: radius.xl, padding: spacing.xl, paddingBottom: spacing.xl, overflow: 'hidden' },
-  ring: {
-    position: 'absolute',
-    borderRadius: radius.full,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.09)'
-  },
-  heroTop: { flexDirection: 'row' },
-  livePill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    paddingVertical: 6,
-    paddingHorizontal: spacing.md,
-    borderRadius: radius.full,
-    backgroundColor: 'rgba(255,255,255,0.10)'
-  },
-  liveText: {
-    fontFamily: typography.fontFamilies.mono,
-    fontSize: 10.5,
-    fontWeight: '700',
-    letterSpacing: 1,
-    color: 'rgba(255,255,255,0.88)'
-  },
-  dotWrap: { width: 8, height: 8, alignItems: 'center', justifyContent: 'center' },
-  dotRing: { position: 'absolute', width: 8, height: 8, borderRadius: 4 },
-  dotCore: { width: 8, height: 8, borderRadius: 4 },
-  heroName: {
-    marginTop: spacing.xl,
-    fontFamily: typography.fontFamilies.display,
-    fontSize: typography.fontSizes.xl,
-    fontWeight: '600',
-    letterSpacing: -0.2,
-    color: '#ffffff'
-  },
-  heroLocation: { ...textStyles.subtitle, color: 'rgba(255,255,255,0.68)', marginTop: 2 },
-  dischargeRow: { flexDirection: 'row', alignItems: 'flex-end', marginTop: spacing.xl },
-  dischargeValue: {
-    fontFamily: typography.fontFamilies.display,
-    fontSize: 64,
-    lineHeight: 68,
-    fontWeight: '800',
-    letterSpacing: -2.5,
-    color: '#ffffff',
-    fontVariant: ['tabular-nums']
-  },
-  dischargeUnit: {
-    fontFamily: typography.fontFamilies.display,
-    fontSize: typography.fontSizes.xl,
-    fontWeight: '600',
-    color: 'rgba(255,255,255,0.72)',
-    marginLeft: spacing.sm,
-    marginBottom: 10
-  },
-  dischargeCaption: { ...textStyles.label, color: 'rgba(255,255,255,0.6)', marginTop: 2 },
-  heroStats: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: spacing.xl,
-    paddingTop: spacing.lg,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: 'rgba(255,255,255,0.18)'
-  },
-  heroStat: { flex: 1 },
-  heroStatDivider: { width: StyleSheet.hairlineWidth, height: 28, backgroundColor: 'rgba(255,255,255,0.22)', marginHorizontal: spacing.lg },
-  heroStatValue: { fontFamily: typography.fontFamilies.display, fontSize: typography.fontSizes.lg, fontWeight: '700', color: '#ffffff' },
-  heroStatLabel: { ...textStyles.label, color: 'rgba(255,255,255,0.62)', marginTop: 2 },
 
   // Quick actions (bleed to the screen edges, keep 20px start/end)
   actionsScroll: { marginHorizontal: -20, marginTop: -spacing.sm },
@@ -497,7 +352,7 @@ const styles = StyleSheet.create({
     gap: 8,
     height: 44,
     paddingHorizontal: spacing.lg,
-    borderRadius: radius.full,
+    borderRadius: radius.sm,
     borderWidth: 1
   },
   pillText: { fontFamily: typography.fontFamilies.text, fontSize: typography.fontSizes.sm, fontWeight: '600' },
@@ -520,14 +375,14 @@ const styles = StyleSheet.create({
   },
   passPeriod: { ...textStyles.label, letterSpacing: 0.8 },
   passAmount: {
-    fontFamily: typography.fontFamilies.display,
-    fontSize: 34,
+    fontFamily: typography.fontFamilies.mono,
+    fontSize: 32,
     fontWeight: '800',
     letterSpacing: -1,
     marginTop: 4,
     fontVariant: ['tabular-nums']
   },
-  statusChip: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingVertical: 6, paddingHorizontal: 10, borderRadius: radius.full },
+  statusChip: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingVertical: 6, paddingHorizontal: 10, borderRadius: radius.sm },
   statusChipText: { ...textStyles.label },
   perforation: { height: 20, justifyContent: 'center' },
   dashes: { marginHorizontal: spacing.xl + 8, borderTopWidth: 1.5, borderStyle: 'dashed' },
@@ -543,7 +398,7 @@ const styles = StyleSheet.create({
   statRow: { flexDirection: 'row', alignItems: 'center' },
   statCol: { flex: 1 },
   statVLine: { width: StyleSheet.hairlineWidth, height: 40, marginHorizontal: spacing.lg },
-  statBig: { fontFamily: typography.fontFamilies.display, fontSize: typography.fontSizes.xl, fontWeight: '700', letterSpacing: -0.3 },
+  statBig: { fontFamily: typography.fontFamilies.mono, fontSize: typography.fontSizes.xl, fontWeight: '700', letterSpacing: -0.3 },
   statBigSub: { fontFamily: typography.fontFamilies.text, fontSize: typography.fontSizes.sm, fontWeight: '500' },
   statCaption: { ...textStyles.subtitle, marginTop: 2 },
 
@@ -555,7 +410,7 @@ const styles = StyleSheet.create({
   campaignDesc: { ...textStyles.subtitle, marginTop: spacing.md },
   progressBar: { marginTop: spacing.lg },
   campaignAmounts: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginTop: spacing.sm },
-  amountCollected: { fontFamily: typography.fontFamilies.display, fontSize: typography.fontSizes.lg, fontWeight: '700' },
+  amountCollected: { fontFamily: typography.fontFamilies.mono, fontSize: typography.fontSizes.lg, fontWeight: '700' },
   amountTarget: { ...textStyles.subtitle },
 
   // Note

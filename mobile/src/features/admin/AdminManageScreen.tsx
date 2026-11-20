@@ -8,12 +8,12 @@ import {
   StyleSheet,
   ScrollView,
   Modal,
-  Image,
-  useColorScheme
+  Image
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button, Input, ImageUploadField, EmptyState, PressableScale, useToast } from '../../components/ui';
-import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
+import { colors, typography, spacing, radius, textStyles, monoText } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import {
   SpringPublic,
@@ -122,19 +122,6 @@ export const AdminManageScreen: React.FC = () => {
   useEffect(() => {
     loadData();
   }, [loadData]);
-
-  // Handle Seed Baseline Springs
-  const handleSeedBaseline = async () => {
-    try {
-      const res = await api.createSpring({ seedBaseline: true });
-      if (res.success) {
-        toast.success('4 Mata Air Baseline berhasil dimuat!');
-        loadData();
-      }
-    } catch (e: any) {
-      toast.error(e?.message || 'Gagal memuat mata air baseline.');
-    }
-  };
 
   // Handle Add Spring
   const handleAddSpring = async () => {
@@ -512,16 +499,8 @@ export const AdminManageScreen: React.FC = () => {
       {/* SUB-TAB 1: MATA AIR & RETRIBUSI */}
       {activeTab === 'springs' && (
         <View style={styles.tabContent}>
-          {/* Top Actions: Seed Baseline + Add Spring */}
+          {/* Top Actions: Add Spring */}
           <View style={styles.springActionsRow}>
-            <Button
-              testID="btn-seed-baseline"
-              title="Muat 4 Mata Air Baseline"
-              variant="outline"
-              size="sm"
-              icon={<Ionicons name="refresh" size={14} color={theme.accent} />}
-              onPress={handleSeedBaseline}
-            />
             <Button
               testID="btn-add-spring"
               title="Tambah Mata Air"
@@ -605,7 +584,7 @@ export const AdminManageScreen: React.FC = () => {
                   <Text style={[styles.itemTitle, { color: theme.ink }]}>
                     {c.title}
                   </Text>
-                  <Text style={[styles.itemSub, { color: theme.muted }]}>
+                  <Text style={[styles.itemSub, { color: theme.muted }, monoText]}>
                     Mata Air {c.springName || c.springId} • Target {formatRupiah(c.targetAmount)}
                   </Text>
                 </View>
@@ -616,7 +595,7 @@ export const AdminManageScreen: React.FC = () => {
                 />
               </View>
 
-              <Text style={[styles.campaignProgressLabel, { color: theme.muted }]}>
+              <Text style={[styles.campaignProgressLabel, { color: theme.muted }, monoText]}>
                 Dana Terkumpul: {formatRupiah(c.collectedAmount)} • Progres Fisik: {c.progressPercent || 0}%
               </Text>
 
@@ -1486,7 +1465,7 @@ const styles = StyleSheet.create({
   modalChip: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: radius.full,
+    borderRadius: radius.sm,
     borderWidth: 1,
     marginRight: 8
   },
@@ -1506,7 +1485,7 @@ const styles = StyleSheet.create({
     gap: 6,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: radius.full,
+    borderRadius: radius.sm,
     borderWidth: 1
   },
   roleToggleText: {
@@ -1554,7 +1533,7 @@ const styles = StyleSheet.create({
   statusChip: {
     paddingHorizontal: 14,
     paddingVertical: 6,
-    borderRadius: radius.full,
+    borderRadius: radius.sm,
     borderWidth: 1
   },
   statusChipText: {

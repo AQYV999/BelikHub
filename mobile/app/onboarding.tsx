@@ -8,9 +8,9 @@ import {
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
-  Platform,
-  useColorScheme
+  Platform
 } from 'react-native';
+import { useColorScheme } from '../src/theme/useColorScheme';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button, Input, PressableScale } from '../src/components/ui';
@@ -114,7 +114,7 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <Screen safeBottom scrollable showDemoBanner={false} contentContainerStyle={styles.container}>
+    <Screen safeBottom scrollable contentContainerStyle={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.keyboardWrap}

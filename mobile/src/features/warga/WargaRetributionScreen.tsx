@@ -8,12 +8,12 @@ import {
   Modal,
   StyleSheet,
   ScrollView,
-  Image,
-  useColorScheme
+  Image
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button, Input, ImageUploadField, EmptyState, PressableScale, useToast } from '../../components/ui';
-import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
+import { colors, typography, spacing, radius, textStyles, monoText } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import {
   RetributionBill,
@@ -260,7 +260,7 @@ export const WargaRetributionScreen: React.FC = () => {
           <Card variant="flat" padding="md" style={styles.infoCard}>
             <View style={styles.infoRow}>
               <Ionicons name="information-circle" size={20} color={theme.accent} />
-              <Text style={[styles.infoText, { color: theme.ink }]}>
+              <Text style={[styles.infoText, { color: theme.ink }, monoText]}>
                 Iuran wajib dibayar setiap bulan sebelum tanggal 10. Tarif baku:{' '}
                 <Text style={{ fontWeight: 'bold' }}>
                   {formatRupiah(springSettings?.defaultMonthlyFee || 25000)}/KK
@@ -314,7 +314,7 @@ export const WargaRetributionScreen: React.FC = () => {
                   </View>
 
                   <View style={styles.billAmountRow}>
-                    <Text style={[styles.billAmountText, { color: theme.ink }]}>
+                    <Text style={[styles.billAmountText, { color: theme.ink }, monoText]}>
                       {formatRupiah(bill.amount)}
                     </Text>
                     {bill.paymentMethod && (
@@ -414,7 +414,7 @@ export const WargaRetributionScreen: React.FC = () => {
                 <Text style={[styles.totalAmountLabel, { color: theme.muted }]}>
                   Total Tagihan
                 </Text>
-                <Text style={[styles.totalAmountVal, { color: theme.accent }]}>
+                <Text style={[styles.totalAmountVal, { color: theme.accent }, monoText]}>
                   {selectedBill ? formatRupiah(selectedBill.amount) : 'Rp 0'}
                 </Text>
               </View>
@@ -572,7 +572,7 @@ export const WargaRetributionScreen: React.FC = () => {
 
                 <View style={styles.receiptRow}>
                   <Text style={[styles.receiptLabel, { color: theme.muted }]}>Jumlah Dibayar:</Text>
-                  <Text style={[styles.receiptVal, { color: theme.accent, fontWeight: 'bold' }]}>
+                  <Text style={[styles.receiptVal, { color: theme.accent, fontWeight: 'bold' }, monoText]}>
                     {formatRupiah(receiptBill.amount)}
                   </Text>
                 </View>

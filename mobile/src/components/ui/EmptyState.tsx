@@ -2,7 +2,8 @@
 // Component rendered when lists or data sets are empty
 
 import React from 'react';
-import { View, Text, StyleSheet, ViewStyle, useColorScheme } from 'react-native';
+import { View, Text, StyleSheet, ViewStyle } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, typography, spacing, radius } from '../../theme/tokens';
 import { Button } from './Button';

@@ -7,9 +7,9 @@ import {
   ActivityIndicator,
   StyleSheet,
   ViewStyle,
-  TextStyle,
-  useColorScheme
+  TextStyle
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { colors, radius, typography, spacing, getShadow } from '../../theme/tokens';
 import { PressableScale } from './PressableScale';
 

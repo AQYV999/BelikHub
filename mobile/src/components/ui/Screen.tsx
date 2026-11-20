@@ -9,14 +9,12 @@ import {
   StyleSheet,
   RefreshControl,
   StatusBar,
-  useColorScheme,
   ViewStyle
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../theme/tokens';
-import { DemoBanner } from './DemoBanner';
 import { ScreenSkeleton } from './Skeleton';
-import { useAuth } from '../../auth/AuthProvider';
 
 export interface ScreenProps {
   children?: ReactNode;
@@ -25,7 +23,6 @@ export interface ScreenProps {
   refreshing?: boolean;
   style?: ViewStyle;
   contentContainerStyle?: ViewStyle;
-  showDemoBanner?: boolean;
   /** Show a shimmering skeleton instead of children (first load). */
   loading?: boolean;
   /** Pad the bottom safe-area inset. Leave off inside tabs (the tab bar already handles it). */
@@ -39,7 +36,6 @@ export const Screen: React.FC<ScreenProps> = ({
   refreshing = false,
   style,
   contentContainerStyle,
-  showDemoBanner = true,
   loading = false,
   safeBottom = false
 }) => {
@@ -47,7 +43,6 @@ export const Screen: React.FC<ScreenProps> = ({
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   const theme = isDark ? colors.dark : colors.light;
-  const { isDemoMode } = useAuth();
 
   // Gentle fade/slide-in whenever content swaps from skeleton to real data.
   const enter = useRef(new Animated.Value(loading ? 1 : 0)).current;
@@ -80,7 +75,6 @@ export const Screen: React.FC<ScreenProps> = ({
         barStyle={isDark ? 'light-content' : 'dark-content'}
         backgroundColor={theme.bg}
       />
-      {showDemoBanner && isDemoMode && <DemoBanner />}
       {scrollable ? (
         <AnimatedScroll
           style={[styles.scroll, enterStyle]}

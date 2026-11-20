@@ -5,9 +5,9 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "belikhub",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "splash": {
-      "backgroundColor": "#0d7480"
+      "backgroundColor": "#0F766E"
     },
     "ios": {
       "supportsTablet": true,
@@ -15,7 +15,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#0d7480"
+        "backgroundColor": "#0F766E"
       },
       "package": "id.belikhub.mobile"
     },

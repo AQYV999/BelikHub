@@ -1,14 +1,15 @@
 // mobile/src/features/relawan/RelawanHomeScreen.tsx
 // Volunteer conservation home and monitoring map overview
 
+import { villageLabel } from '../../utils/format';
 import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
-  useColorScheme
+  ScrollView
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button, ProgressBar, PressableScale } from '../../components/ui';
 import { colors, typography, spacing, radius } from '../../theme/tokens';
@@ -62,7 +63,7 @@ export const RelawanHomeScreen: React.FC = () => {
     await loadData();
   };
 
-  const points = user?.points || summary?.stats?.points || 600;
+  const approvedReports = summary?.stats?.approvedReports ?? 0;
 
   return (
     <Screen
@@ -75,7 +76,7 @@ export const RelawanHomeScreen: React.FC = () => {
       {/* Volunteer Header */}
       <View style={styles.header}>
         <View style={styles.headerCol}>
-          <Text style={[styles.greeting, { color: theme.muted }]}>Semangat Konservasi,</Text>
+          <Text style={[styles.greeting, { color: theme.muted }]}>Tiket lapangan,</Text>
           <Text style={[styles.userName, { color: theme.ink }]}>
             {user?.name || 'Relawan BelikHub'}
           </Text>
@@ -88,14 +89,14 @@ export const RelawanHomeScreen: React.FC = () => {
         <View style={styles.pointsRow}>
           <View>
             <Text style={[styles.pointsLabel, { color: theme.muted }]}>
-              Poin Kontribusi Relawan
+              Laporan terverifikasi
             </Text>
             <Text style={[styles.pointsValue, { color: theme.accent }]}>
-              {points} Poin
+              {approvedReports} tiket
             </Text>
           </View>
           <View style={[styles.pointsBadge, { backgroundColor: theme.accentMuted }]}>
-            <Ionicons name="ribbon-outline" size={28} color={theme.accent} />
+            <Ionicons name="shield-checkmark-outline" size={28} color={theme.accent} />
           </View>
         </View>
 
@@ -199,7 +200,7 @@ export const RelawanHomeScreen: React.FC = () => {
             <View>
               <Text style={[styles.springTitle, { color: theme.ink }]}>{s.name}</Text>
               <Text style={[styles.springLoc, { color: theme.muted }]}>
-                Desa {s.village}, {s.district}
+                {villageLabel(s.village)}, {s.district}
               </Text>
             </View>
             <Badge

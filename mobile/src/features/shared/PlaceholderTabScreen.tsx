@@ -2,7 +2,8 @@
 // Typed placeholder screen for Pengelola, Donatur, and Admin tabs completed in Task 8
 
 import React from 'react';
-import { View, Text, StyleSheet, useColorScheme } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button } from '../../components/ui';
 import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';

@@ -11,9 +11,9 @@ import {
   ActivityIndicator,
   StyleSheet,
   Platform,
-  ViewStyle,
-  useColorScheme
+  ViewStyle
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import { PressableScale } from './PressableScale';

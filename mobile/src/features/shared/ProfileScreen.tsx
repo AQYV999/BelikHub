@@ -7,10 +7,11 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Alert,
-  useColorScheme
+  Alert
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { Screen, Card, Badge, Button, Input, RoleSwitcher, PressableScale, useToast } from '../../components/ui';
 import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
@@ -34,6 +35,7 @@ export const ProfileScreen: React.FC = () => {
     refreshProfile
   } = useAuth();
   const api = useApi();
+  const router = useRouter();
 
   // Profile edit state
   const [name, setName] = useState<string>(user?.name || '');
@@ -142,7 +144,6 @@ export const ProfileScreen: React.FC = () => {
             </Text>
             <View style={styles.badgeRow}>
               <Badge label={`Peran Aktif: ${activeRole.toUpperCase()}`} variant="accent" size="sm" />
-              <Badge label={`${user?.points ?? 150} Poin`} variant="neutral" size="sm" />
             </View>
           </View>
         </View>
@@ -325,6 +326,24 @@ export const ProfileScreen: React.FC = () => {
           </View>
         </Card>
       )}
+
+      {/* Navigation: back to the field console, or open the legacy role workspace */}
+      <Button
+        title="Role workspace"
+        variant="outline"
+        size="md"
+        fullWidth
+        onPress={() => router.navigate('/(tabs)')}
+        icon={<Ionicons name="apps-outline" size={16} color={theme.accent} />}
+      />
+      <Button
+        title="Back to field console"
+        variant="secondary"
+        size="md"
+        fullWidth
+        onPress={() => router.navigate('/(tabs)/showcase')}
+        icon={<Ionicons name="arrow-back" size={16} color={theme.ink} />}
+      />
 
       {/* Logout Action */}
       <Button

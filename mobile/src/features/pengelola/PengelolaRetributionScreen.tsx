@@ -8,12 +8,12 @@ import {
   StyleSheet,
   ScrollView,
   Modal,
-  Image,
-  useColorScheme
+  Image
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button, Input, EmptyState, PressableScale, useToast } from '../../components/ui';
-import { colors, typography, spacing, radius, textStyles } from '../../theme/tokens';
+import { colors, typography, spacing, radius, textStyles, monoText } from '../../theme/tokens';
 import { useAuth, useApi } from '../../auth/AuthProvider';
 import {
   RetributionBill,
@@ -551,7 +551,7 @@ export const PengelolaRetributionScreen: React.FC = () => {
                   </View>
 
                   <View style={styles.billActionRow}>
-                    <Text style={[styles.billAmount, { color: theme.ink }]}>
+                    <Text style={[styles.billAmount, { color: theme.ink }, monoText]}>
                       {formatRupiah(bill.amount)}
                     </Text>
 
@@ -700,7 +700,7 @@ export const PengelolaRetributionScreen: React.FC = () => {
                       <Text style={[styles.residentName, { color: theme.ink }]}>
                         {r.name}
                       </Text>
-                      <Text style={[styles.residentMeta, { color: theme.muted }]}>
+                      <Text style={[styles.residentMeta, { color: theme.muted }, monoText]}>
                         {r.phone} {r.kkLabel ? `• ${r.kkLabel}` : ''} • Iuran: {formatRupiah(r.monthlyFee)}/bln
                       </Text>
                     </View>
@@ -773,7 +773,7 @@ export const PengelolaRetributionScreen: React.FC = () => {
               <Text style={[styles.settingItemLabel, { color: theme.muted }]}>
                 Iuran Bulanan Standar:
               </Text>
-              <Text style={[styles.settingItemValue, { color: theme.ink }]}>
+              <Text style={[styles.settingItemValue, { color: theme.ink }, monoText]}>
                 {formatRupiah(springSettings?.defaultMonthlyFee || 15000)} / KK / bulan
               </Text>
             </View>
@@ -1173,7 +1173,7 @@ const styles = StyleSheet.create({
   filterChip: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: radius.full,
+    borderRadius: radius.sm,
     borderWidth: 1,
     marginRight: 8
   },
@@ -1463,7 +1463,7 @@ const styles = StyleSheet.create({
     gap: 6,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: radius.full,
+    borderRadius: radius.sm,
     borderWidth: 1,
     marginRight: 8
   },
@@ -1492,7 +1492,7 @@ const styles = StyleSheet.create({
   statusChip: {
     paddingHorizontal: 14,
     paddingVertical: 6,
-    borderRadius: radius.full,
+    borderRadius: radius.sm,
     borderWidth: 1
   },
   statusChipText: {

@@ -9,9 +9,9 @@ import {
   TextInputProps,
   StyleSheet,
   ViewStyle,
-  TextStyle,
-  useColorScheme
+  TextStyle
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { colors, radius, typography, spacing } from '../../theme/tokens';
 
 export interface InputProps extends TextInputProps {

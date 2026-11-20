@@ -7,9 +7,9 @@ import {
   Text,
   StyleSheet,
   KeyboardAvoidingView,
-  Platform,
-  useColorScheme
+  Platform
 } from 'react-native';
+import { useColorScheme } from '../src/theme/useColorScheme';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button, Input, PressableScale } from '../src/components/ui';
@@ -61,7 +61,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <Screen safeBottom scrollable showDemoBanner={false} contentContainerStyle={styles.container}>
+    <Screen safeBottom scrollable contentContainerStyle={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.keyboardWrap}
@@ -83,11 +83,6 @@ export default function LoginScreen() {
             <Text style={[styles.cardTitle, { color: theme.ink }]}>
               {isRegister ? 'Daftar Akun Baru' : 'Masuk ke Akun'}
             </Text>
-            <Badge
-              label={isRegister ? 'Registrasi' : 'Login'}
-              variant="accent"
-              size="sm"
-            />
           </View>
 
           {errorMessage ? (

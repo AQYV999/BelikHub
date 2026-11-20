@@ -2,7 +2,8 @@
 // Floating, animated toast notifications (replaces blocking Alert.alert for feedback).
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing, StyleSheet, Text, View, useColorScheme } from 'react-native';
+import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, getShadow, radius, spacing, textStyles } from '../../theme/tokens';

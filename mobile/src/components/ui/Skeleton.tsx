@@ -2,7 +2,8 @@
 // Shimmering placeholder blocks + a ready-made screen skeleton.
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, LayoutChangeEvent, StyleProp, StyleSheet, View, ViewStyle, useColorScheme } from 'react-native';
+import { Animated, Easing, LayoutChangeEvent, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { colors, getShadow, radius, spacing } from '../../theme/tokens';
 
 const STRIPS = 9;

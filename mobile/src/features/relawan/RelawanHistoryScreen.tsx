@@ -1,5 +1,5 @@
 // mobile/src/features/relawan/RelawanHistoryScreen.tsx
-// Volunteer report history list with status filtering, photo preview, and points tracking
+// Volunteer report history list with status filtering, photo preview, and ticket tracking
 
 import React, { useState, useEffect, useCallback } from 'react';
 import {
@@ -7,9 +7,9 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Image,
-  useColorScheme
+  Image
 } from 'react-native';
+import { useColorScheme } from '../../theme/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, Card, Badge, Button, EmptyState, PressableScale } from '../../components/ui';
 import { colors, typography, spacing, radius } from '../../theme/tokens';
@@ -202,12 +202,7 @@ export const RelawanHistoryScreen: React.FC = () => {
                   <View />
                 )}
 
-                <View style={styles.pointsWrap}>
-                  <Ionicons name="ribbon" size={14} color={theme.success} />
-                  <Text style={[styles.pointsText, { color: theme.success }]}>
-                    +{report.points ?? 50} Poin
-                  </Text>
-                </View>
+                <Text style={[styles.pointsText, { color: theme.muted }]}>{report.id}</Text>
               </View>
             </Card>
           );
@@ -245,7 +240,7 @@ const styles = StyleSheet.create({
   filterChip: {
     paddingHorizontal: 14,
     paddingVertical: 6,
-    borderRadius: radius.full,
+    borderRadius: radius.sm,
     borderWidth: 1.5
   },
   filterChipText: {

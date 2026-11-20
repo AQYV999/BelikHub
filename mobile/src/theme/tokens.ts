@@ -8,33 +8,33 @@ import { Platform } from 'react-native';
 
 export const colors = {
   light: {
-    bg: '#f7f9fa',
-    surface: '#ecf0f2',
-    surfaceHighlight: '#ffffff',
-    card: '#ffffff',
-    ink: '#1f3038',
-    muted: '#52626a',
-    accent: '#0d7480',
-    accentInk: '#ffffff',
-    accentMuted: '#e0f2f1',
-    border: '#dbe2e6',
-    borderStrong: '#b8c5cc',
-    line: 'rgba(31, 48, 56, 0.12)',
-    lineStrong: 'rgba(31, 48, 56, 0.22)',
-    tint: 'rgba(13, 116, 128, 0.08)',
-    // Status colors
-    success: '#16a34a',
-    successBg: '#f0fdf4',
-    successInk: '#14532d',
-    warning: '#d97706',
-    warningBg: '#fffbeb',
-    warningInk: '#78350f',
-    error: '#dc2626',
-    errorBg: '#fef2f2',
-    errorInk: '#7f1d1d',
-    info: '#0284c7',
-    infoBg: '#f0f9ff',
-    infoInk: '#075985',
+    bg: '#F8FAFC',
+    surface: '#F1F5F9',
+    surfaceHighlight: '#FFFFFF',
+    card: '#FFFFFF',
+    ink: '#0F172A',
+    muted: '#475569',
+    accent: '#0F766E',
+    accentInk: '#FFFFFF',
+    accentMuted: '#E6F4F1',
+    border: '#E2E8F0',
+    borderStrong: '#CBD5E1',
+    line: '#E2E8F0',
+    lineStrong: '#CBD5E1',
+    tint: '#F0F7F6',
+    // Status colors (high-contrast on white)
+    success: '#15803D',
+    successBg: '#ECFDF3',
+    successInk: '#14532D',
+    warning: '#B45309',
+    warningBg: '#FFF7E6',
+    warningInk: '#78350F',
+    error: '#B91C1C',
+    errorBg: '#FEF2F2',
+    errorInk: '#7F1D1D',
+    info: '#1E40AF',
+    infoBg: '#EFF4FF',
+    infoInk: '#1E3A8A',
   },
   dark: {
     bg: '#0c131a',
@@ -151,40 +151,22 @@ export const spacing = {
   huge: 48
 } as const;
 
-// Uniform corner scale: 16px for controls (buttons, inputs, chips), 20px for cards/sheets.
+// Field-instrument corners: 6-8px everywhere. `full` is reserved for dots/avatars only.
 export const radius = {
-  xs: 6,
-  sm: 12,
-  md: 16,
-  lg: 20,
-  xl: 24,
+  xs: 4,
+  sm: 6,
+  md: 8,
+  lg: 8,
+  xl: 10,
   full: 9999
 } as const;
 
 // Soft, diffused shadows tinted with the brand ink colour (never pure black).
 // Light theme only: on dark surfaces depth comes from borders / surface tone instead.
 export const shadows = {
-  sm: {
-    shadowColor: '#1f3038',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 1
-  },
-  md: {
-    shadowColor: '#1f3038',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.07,
-    shadowRadius: 16,
-    elevation: 2
-  },
-  lg: {
-    shadowColor: '#1f3038',
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.1,
-    shadowRadius: 28,
-    elevation: 4
-  }
+  sm: { shadowColor: '#0F172A', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 2, elevation: 0 },
+  md: { shadowColor: '#0F172A', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.06, shadowRadius: 3, elevation: 1 },
+  lg: { shadowColor: '#0F172A', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 6, elevation: 2 }
 } as const;
 
 export function getShadow(level: keyof typeof shadows, isDark: boolean) {
@@ -239,3 +221,9 @@ export const textStyles = {
 export function getTheme(isDark = false): ThemeColors {
   return isDark ? colors.dark : colors.light;
 }
+
+// Technical numerals (flow, pressure, asset IDs, rupiah) always use monospace + tabular figures.
+export const monoText = {
+  fontFamily: typography.fontFamilies.mono,
+  fontVariant: ['tabular-nums'] as ['tabular-nums']
+};
