@@ -20,7 +20,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   radiusSize = radius.sm,
   style
 }) => {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const [w, setW] = useState(0);
   const x = useRef(new Animated.Value(0)).current;
@@ -63,7 +63,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 };
 
 const SkeletonCard: React.FC<{ lines?: number }> = ({ lines = 3 }) => {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   return (
     <View

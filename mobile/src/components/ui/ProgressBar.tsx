@@ -20,7 +20,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   height = 8,
   style
 }) => {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
 
   const clamped = Math.min(Math.max(progress, 0), 100);

@@ -24,7 +24,7 @@ import { formatRupiah } from '../warga/wargaUtils';
 import { getDonationStatusMeta } from './donaturUtils';
 
 export const DonaturHistoryScreen: React.FC = () => {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const { user } = useAuth();
   const api = useApi();

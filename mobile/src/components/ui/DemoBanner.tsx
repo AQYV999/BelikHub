@@ -15,7 +15,7 @@ import { RoleSwitcher } from './RoleSwitcher';
 import { PressableScale } from './PressableScale';
 
 export const DemoBanner: React.FC = () => {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const { activeRole, setActiveRole, exitDemoMode } = useAuth();
 
@@ -24,13 +24,13 @@ export const DemoBanner: React.FC = () => {
   return (
     <View
       testID="demo-banner"
-      style={[styles.container, { backgroundColor: isDark ? '#451a03' : '#fffbeb', borderColor: '#f59e0b' }]}
+      style={[styles.container, { backgroundColor: '#FDF0DC', borderColor: 'rgba(217,119,6,0.25)' }]}
     >
       <View style={styles.topRow}>
         <View style={styles.badgeLabel}>
           <Text style={styles.badgeText}>MODE DEMO</Text>
         </View>
-        <Text style={[styles.title, { color: isDark ? '#fef3c7' : '#92400e' }]}>
+        <Text style={[styles.title, { color: '#9A5200' }]}>
           Data lokal terisolasi
         </Text>
         <PressableScale onPress={exitDemoMode} haptic="medium" hitSlop={8} style={styles.exitBtn}>
@@ -39,7 +39,7 @@ export const DemoBanner: React.FC = () => {
       </View>
 
       <View style={styles.switcherRow}>
-        <Text style={[styles.switchPrompt, { color: isDark ? '#fde68a' : '#78350f' }]}>
+        <Text style={[styles.switchPrompt, { color: '#9A5200' }]}>
           Ganti Peran:
         </Text>
         <RoleSwitcher
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   exitText: {
     fontFamily: typography.fontFamilies.text,
     fontSize: typography.fontSizes.xs,
-    color: '#d97706',
+    color: '#9A5200',
     fontWeight: typography.fontWeights.semibold
   },
   switcherRow: {

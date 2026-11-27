@@ -4,7 +4,7 @@
 import React from 'react';
 import { useAuth } from '../../src/auth/AuthProvider';
 import { getTabsForRole } from '../../src/navigation/roleTabs';
-import { WargaRetributionScreen } from '../../src/features/warga/WargaRetributionScreen';
+import { WargaHomeScreen } from '../../src/features/warga/WargaHomeScreen';
 import { RelawanHomeScreen } from '../../src/features/relawan/RelawanHomeScreen';
 import { PengelolaHomeScreen } from '../../src/features/pengelola/PengelolaHomeScreen';
 import { DonaturExploreScreen } from '../../src/features/donatur/DonaturExploreScreen';
@@ -17,7 +17,7 @@ export default function IndexTabScreen() {
   const tab0 = tabs[0] || { title: 'Beranda', icon: 'home-outline' };
 
   if (activeRole === 'warga') {
-    return <WargaRetributionScreen />;
+    return <WargaHomeScreen />;
   }
 
   if (activeRole === 'relawan') {

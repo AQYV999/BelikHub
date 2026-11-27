@@ -29,7 +29,7 @@ export const Card: React.FC<CardProps> = ({
   padding = 'md',
   testID
 }) => {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
 
   const paddingStyle = {
@@ -40,10 +40,9 @@ export const Card: React.FC<CardProps> = ({
   }[padding];
 
   const variantStyle: ViewStyle = {
-    backgroundColor: variant === 'flat' ? theme.surface : theme.card,
-    borderWidth: variant === 'outlined' ? 1 : 0,
-    borderColor: theme.border,
-    ...(variant === 'elevated' ? getShadow('md', isDark) : {})
+    backgroundColor: variant === 'flat' ? theme.accentMuted : theme.card,
+    borderWidth: 0,
+    ...(variant === 'elevated' ? getShadow('sm', isDark) : {})
   };
 
   if (onPress) {

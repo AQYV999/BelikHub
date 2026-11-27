@@ -42,7 +42,7 @@ const ROLE_OPTIONS: { role: PublicRole; title: string; subtitle: string; icon: k
 ];
 
 export default function OnboardingScreen() {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const router = useRouter();
   const { user, completeOnboarding } = useAuth();

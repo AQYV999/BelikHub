@@ -14,3 +14,4 @@ export * from './ImageUploadField';
 export * from './PressableScale';
 export * from './Skeleton';
 export * from './Toast';
+export * from './Board';

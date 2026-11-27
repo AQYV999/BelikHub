@@ -29,7 +29,7 @@ import {
 
 export const WargaRetributionScreen: React.FC = () => {
   const toast = useToast();
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const { user, refreshProfile } = useAuth();
   const api = useApi();

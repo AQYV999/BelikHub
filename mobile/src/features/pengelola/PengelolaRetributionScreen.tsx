@@ -30,7 +30,7 @@ type BillFilter = 'all' | 'unpaid' | 'pending_verification' | 'paid';
 
 export const PengelolaRetributionScreen: React.FC = () => {
   const toast = useToast();
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const { user } = useAuth();
   const api = useApi();

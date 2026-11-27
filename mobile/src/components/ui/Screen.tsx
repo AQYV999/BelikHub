@@ -44,7 +44,7 @@ export const Screen: React.FC<ScreenProps> = ({
   safeBottom = false
 }) => {
   const insets = useSafeAreaInsets();
-  const colorScheme = useColorScheme();
+  const colorScheme = 'light' as string;
   const isDark = colorScheme === 'dark';
   const theme = isDark ? colors.dark : colors.light;
   const { isDemoMode } = useAuth();

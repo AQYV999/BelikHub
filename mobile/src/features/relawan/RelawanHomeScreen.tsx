@@ -17,7 +17,7 @@ import { RoleSummary, SpringPublic, RevitalizationCampaign } from '../../api/typ
 import { formatRupiah } from '../warga/wargaUtils';
 
 export const RelawanHomeScreen: React.FC = () => {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const { user } = useAuth();
   const api = useApi();

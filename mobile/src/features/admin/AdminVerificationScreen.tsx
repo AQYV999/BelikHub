@@ -23,7 +23,7 @@ type VerificationTab = 'donations' | 'reports';
 
 export const AdminVerificationScreen: React.FC = () => {
   const toast = useToast();
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const { user } = useAuth();
   const api = useApi();

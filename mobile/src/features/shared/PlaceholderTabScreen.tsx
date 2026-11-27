@@ -20,7 +20,7 @@ export const PlaceholderTabScreen: React.FC<PlaceholderTabScreenProps> = ({
   tabTitle,
   tabIcon = 'construct-outline'
 }) => {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const { setActiveRole } = useAuth();
 

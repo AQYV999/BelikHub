@@ -21,7 +21,7 @@ const ALL_ROLES: Role[] = ['warga', 'pengelola', 'relawan', 'donatur', 'admin'];
 
 export const ProfileScreen: React.FC = () => {
   const toast = useToast();
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const {
     user,

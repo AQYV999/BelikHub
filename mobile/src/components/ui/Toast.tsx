@@ -38,7 +38,7 @@ const ICONS: Record<ToastType, keyof typeof Ionicons.glyphMap> = {
 };
 
 const ToastView: React.FC<{ item: ToastItem; onDone: () => void }> = ({ item, onDone }) => {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const insets = useSafeAreaInsets();
   const anim = useRef(new Animated.Value(0)).current;

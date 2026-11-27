@@ -20,7 +20,7 @@ import { getReportStatusMeta } from './relawanUtils';
 type FilterTab = 'all' | ReportStatus;
 
 export const RelawanHistoryScreen: React.FC = () => {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const { user } = useAuth();
   const api = useApi();

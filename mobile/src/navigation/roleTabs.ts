@@ -22,19 +22,19 @@ export function getTabsForRole(role: Role): TabConfig[] {
     case 'warga':
       return [
         {
-          name: 'retribusi',
-          title: 'Retribusi',
+          name: 'beranda',
+          title: 'Beranda',
+          icon: 'home-outline'
+        },
+        {
+          name: 'iuran',
+          title: 'Iuran',
           icon: 'receipt-outline'
         },
         {
           name: 'mata-air',
           title: 'Mata Air',
           icon: 'water-outline'
-        },
-        {
-          name: 'laporan',
-          title: 'Laporan',
-          icon: 'document-text-outline'
         },
         profileTab
       ];

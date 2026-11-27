@@ -29,7 +29,7 @@ type ManageTab = 'springs' | 'campaigns' | 'users';
 
 export const AdminManageScreen: React.FC = () => {
   const toast = useToast();
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const { user } = useAuth();
   const api = useApi();

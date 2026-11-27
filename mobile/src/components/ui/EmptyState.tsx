@@ -24,7 +24,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   onAction,
   style
 }) => {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
 
   return (

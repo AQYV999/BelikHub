@@ -4,7 +4,7 @@
 import React from 'react';
 import { useAuth } from '../../src/auth/AuthProvider';
 import { getTabsForRole } from '../../src/navigation/roleTabs';
-import { WargaSpringScreen } from '../../src/features/warga/WargaSpringScreen';
+import { WargaRetributionScreen } from '../../src/features/warga/WargaRetributionScreen';
 import { RelawanReportScreen } from '../../src/features/relawan/RelawanReportScreen';
 import { PengelolaRetributionScreen } from '../../src/features/pengelola/PengelolaRetributionScreen';
 import { DonaturHistoryScreen } from '../../src/features/donatur/DonaturHistoryScreen';
@@ -17,7 +17,7 @@ export default function SecondaryTabScreen() {
   const tab1 = tabs[1] || { title: 'Kedua', icon: 'layers-outline' };
 
   if (activeRole === 'warga') {
-    return <WargaSpringScreen />;
+    return <WargaRetributionScreen />;
   }
 
   if (activeRole === 'relawan') {

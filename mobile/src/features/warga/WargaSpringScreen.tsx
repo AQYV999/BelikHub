@@ -17,7 +17,7 @@ import { SpringPublic, SpringSettings } from '../../api/types';
 import { formatRupiah } from './wargaUtils';
 
 export const WargaSpringScreen: React.FC = () => {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const { user } = useAuth();
   const api = useApi();

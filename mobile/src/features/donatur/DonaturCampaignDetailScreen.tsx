@@ -35,7 +35,7 @@ export const DonaturCampaignDetailScreen: React.FC<DonaturCampaignDetailProps> =
   onDonationSuccess
 }) => {
   const toast = useToast();
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const { user, activeRole } = useAuth();
   const api = useApi();

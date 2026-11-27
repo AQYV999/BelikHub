@@ -21,7 +21,7 @@ import { DonaturCampaignDetailScreen } from './DonaturCampaignDetailScreen';
 type CampaignFilter = 'all' | 'active' | 'completed';
 
 export const DonaturExploreScreen: React.FC = () => {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const { user, activeRole } = useAuth();
   const api = useApi();

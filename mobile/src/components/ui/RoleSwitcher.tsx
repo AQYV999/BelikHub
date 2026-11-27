@@ -39,7 +39,7 @@ export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
   style,
   testID
 }) => {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
 
   return (
@@ -68,7 +68,7 @@ export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
               style={[
                 styles.chip,
                 {
-                  backgroundColor: isActive ? theme.accent : theme.surface,
+                  backgroundColor: isActive ? theme.accent : '#ffffff',
                   borderColor: isActive ? theme.accent : theme.border
                 }
               ]}
@@ -106,15 +106,15 @@ const styles = StyleSheet.create({
   },
   chip: {
     paddingHorizontal: 14,
-    paddingVertical: 7,
-    borderRadius: radius.full,
+    height: 34,
+    borderRadius: 17,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center'
   },
   chipText: {
     fontFamily: typography.fontFamilies.text,
-    fontSize: typography.fontSizes.xs,
-    letterSpacing: 0.2
+    fontSize: 13.5,
+    letterSpacing: 0
   }
 });

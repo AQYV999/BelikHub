@@ -19,7 +19,7 @@ import { calculateRetributionBreakdown } from './pengelolaUtils';
 
 export const PengelolaHomeScreen: React.FC = () => {
   const toast = useToast();
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const { user } = useAuth();
   const api = useApi();

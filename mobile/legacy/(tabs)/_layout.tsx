@@ -44,7 +44,7 @@ const tabIcon = (name: string, focused: boolean) =>
   (focused ? name.replace(/-outline$/, '') : name) as any;
 
 export default function TabsLayout() {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const insets = useSafeAreaInsets();
   const { activeRole } = useAuth();
@@ -61,23 +61,21 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: theme.accent,
-        tabBarInactiveTintColor: theme.muted,
+        tabBarInactiveTintColor: 'rgba(15, 23, 42, 0.45)',
         animation: 'fade',
         tabBarButton: (props) => <HapticTabButton {...props} />,
         tabBarStyle: {
-          backgroundColor: isDark ? theme.surface : '#ffffff',
-          borderTopColor: theme.border,
-          borderTopWidth: StyleSheet.hairlineWidth,
+          backgroundColor: 'rgba(248, 250, 252, 0.97)',
+          borderTopColor: theme.line,
+          borderTopWidth: 1,
           height: 54 + bottomInset,
           paddingBottom: bottomInset,
-          paddingTop: 8,
-          ...(isDark ? {} : { ...shadows.md, shadowOffset: { width: 0, height: -4 } })
+          paddingTop: 7
         },
         tabBarLabelStyle: {
-          fontSize: typography.fontSizes.xs,
+          fontSize: 10.5,
           fontFamily: typography.fontFamilies.text,
-          fontWeight: typography.fontWeights.semibold,
-          letterSpacing: 0.2
+          fontWeight: typography.fontWeights.semibold
         }
       }}
     >

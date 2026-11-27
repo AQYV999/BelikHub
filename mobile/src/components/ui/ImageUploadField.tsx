@@ -39,7 +39,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
   containerStyle
 }) => {
   const toast = useToast();
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const [compressing, setCompressing] = useState<boolean>(false);
   const [previewUri, setPreviewUri] = useState<string | null>(valueUri || null);

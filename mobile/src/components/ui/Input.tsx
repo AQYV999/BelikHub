@@ -33,7 +33,7 @@ export const Input: React.FC<InputProps> = ({
   style,
   ...textInputProps
 }) => {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const [isFocused, setIsFocused] = useState(false);
 
@@ -47,7 +47,7 @@ export const Input: React.FC<InputProps> = ({
         style={[
           styles.inputWrapper,
           {
-            backgroundColor: isFocused ? (isDark ? theme.surfaceHighlight : '#ffffff') : isDark ? theme.surface : theme.bg,
+            backgroundColor: '#ffffff',
             borderColor: error
               ? theme.error
               : isFocused

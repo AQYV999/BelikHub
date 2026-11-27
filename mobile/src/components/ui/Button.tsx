@@ -42,13 +42,13 @@ export const Button: React.FC<ButtonProps> = ({
   icon,
   testID
 }) => {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
 
   const sizeStyle: ViewStyle = {
     sm: { paddingVertical: 8, paddingHorizontal: 14, minHeight: 40 },
     md: { paddingVertical: 12, paddingHorizontal: 20, minHeight: 48 },
-    lg: { paddingVertical: 14, paddingHorizontal: 24, minHeight: 54 }
+    lg: { paddingVertical: 14, paddingHorizontal: 24, minHeight: 52 }
   }[size];
 
   const fontSize = {
@@ -73,13 +73,13 @@ export const Button: React.FC<ButtonProps> = ({
       case 'secondary':
         return {
           container: {
-            backgroundColor: theme.surface,
+            backgroundColor: theme.accentMuted,
             borderWidth: 0
           },
           text: {
-            color: theme.ink
+            color: theme.accent
           },
-          indicator: theme.ink
+          indicator: theme.accent
         };
       case 'outline':
         return {
@@ -134,8 +134,7 @@ export const Button: React.FC<ButtonProps> = ({
         styles.button,
         sizeStyle,
         vStyle.container,
-        variant === 'primary' && !isDisabled && getShadow('sm', isDark),
-        fullWidth && styles.fullWidth,
+                fullWidth && styles.fullWidth,
         style
       ]}
     >
@@ -175,6 +174,6 @@ const styles = StyleSheet.create({
     fontFamily: typography.fontFamilies.text,
     fontWeight: typography.fontWeights.semibold,
     textAlign: 'center',
-    letterSpacing: 0.1
+    letterSpacing: 0
   }
 });

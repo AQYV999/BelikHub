@@ -17,7 +17,7 @@ import { SpringPublic, RoleSummary } from '../../api/types';
 import { formatRupiah } from '../warga/wargaUtils';
 
 export const AdminHomeScreen: React.FC = () => {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
   const { user } = useAuth();
   const api = useApi();

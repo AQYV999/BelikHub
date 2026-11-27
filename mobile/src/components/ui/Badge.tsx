@@ -28,7 +28,7 @@ export const Badge: React.FC<BadgeProps> = ({
   style,
   textStyle
 }) => {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = false;
   const theme = isDark ? colors.dark : colors.light;
 
   const colorMap: Record<BadgeVariant, { bg: string; text: string; border?: string }> = {
@@ -48,9 +48,9 @@ export const Badge: React.FC<BadgeProps> = ({
       border: isDark ? 'transparent' : '#fecaca'
     },
     accent: {
-      bg: isDark ? 'rgba(45, 212, 191, 0.15)' : '#e0f2f1',
+      bg: '#E2ECE9',
       text: theme.accent,
-      border: isDark ? 'rgba(45, 212, 191, 0.3)' : '#b2dfdb'
+      border: 'transparent'
     },
     info: {
       bg: theme.infoBg,
@@ -58,17 +58,17 @@ export const Badge: React.FC<BadgeProps> = ({
       border: isDark ? 'transparent' : '#bae6fd'
     },
     neutral: {
-      bg: theme.surface,
+      bg: 'rgba(15, 23, 42, 0.07)',
       text: theme.muted,
-      border: theme.border
+      border: 'transparent'
     }
   };
 
   const currentColors = colorMap[variant];
 
   const sizeStyle: ViewStyle = size === 'sm'
-    ? { paddingHorizontal: 8, paddingVertical: 2 }
-    : { paddingHorizontal: 10, paddingVertical: 4 };
+    ? { paddingHorizontal: 8, minHeight: 20 }
+    : { paddingHorizontal: 9, minHeight: 22 };
 
   const fontSizeStyle: TextStyle = size === 'sm'
     ? { fontSize: typography.fontSizes.xs }
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   badge: {
     alignSelf: 'flex-start',
     borderRadius: radius.full,
-    borderWidth: 1,
+    borderWidth: 0,
     alignItems: 'center',
     justifyContent: 'center'
   },

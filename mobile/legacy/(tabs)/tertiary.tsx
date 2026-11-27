@@ -4,7 +4,7 @@
 import React from 'react';
 import { useAuth } from '../../src/auth/AuthProvider';
 import { getTabsForRole } from '../../src/navigation/roleTabs';
-import { WargaHomeScreen } from '../../src/features/warga/WargaHomeScreen';
+import { WargaSpringScreen } from '../../src/features/warga/WargaSpringScreen';
 import { RelawanHistoryScreen } from '../../src/features/relawan/RelawanHistoryScreen';
 import { PengelolaRevitalizationScreen } from '../../src/features/pengelola/PengelolaRevitalizationScreen';
 import { DonaturCampaignDetailScreen } from '../../src/features/donatur/DonaturCampaignDetailScreen';
@@ -17,7 +17,7 @@ export default function TertiaryTabScreen() {
   const tab2 = tabs[2] || { title: 'Ketiga', icon: 'grid-outline' };
 
   if (activeRole === 'warga') {
-    return <WargaHomeScreen />;
+    return <WargaSpringScreen />;
   }
 
   if (activeRole === 'relawan') {
