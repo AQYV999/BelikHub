@@ -1,0 +1,100 @@
+/* ==========================================================================
+   Landing motion
+   Frequency tier: seen once per visit (rare), so entrance motion is allowed.
+   Only transform and opacity move. Curves are the strong ease-out; nothing is ease-in.
+   ========================================================================== */
+
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes ls-rise {
+  from { opacity: 0; transform: translateY(16px); }
+}
+@keyframes ls-fade {
+  from { opacity: 0; }
+}
+@keyframes ls-bar {
+  from { transform: scaleY(0.12); }
+}
+
+/* ---------- Hero: stage rises in, controls follow ---------- */
+.doorway-stage {
+  animation: ls-rise 0.8s var(--ease-out) both;
+}
+.doorway-controls,
+.doorway-bottom-tag {
+  animation: ls-fade 0.6s var(--ease-out) 0.35s both;
+}
+
+/* ---------- Scroll reveal (class is added by landing-motion.js; no JS = no hiding) ---------- */
+.has-reveal [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.55s var(--ease-out) var(--d, 0ms),
+    transform 0.55s var(--ease-out) var(--d, 0ms);
+}
+.has-reveal [data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Steps: the rule above each step draws left to right */
+.has-reveal .ls-step[data-reveal]::before {
+  transform: scaleX(0);
+  transition: transform 0.8s var(--ease-out) calc(var(--d, 0ms) + 120ms);
+}
+.has-reveal .ls-step[data-reveal].is-in::before {
+  transform: none;
+}
+
+/* Photographs settle into their frame as the tile appears */
+.has-reveal .ls-tile[data-reveal] img {
+  transform: scale(1.06);
+  transition: transform 1.2s var(--ease-out) var(--d, 0ms);
+}
+.has-reveal .ls-tile[data-reveal].is-in img {
+  transform: none;
+}
+
+/* ---------- Telemetry: new bars grow from the baseline when a spring is picked ---------- */
+.trend-bar-fill {
+  transform-origin: bottom;
+  animation: ls-bar 0.5s var(--ease-out) both;
+}
+.trend-bar-col:nth-child(2) .trend-bar-fill { animation-delay: 30ms; }
+.trend-bar-col:nth-child(3) .trend-bar-fill { animation-delay: 60ms; }
+.trend-bar-col:nth-child(4) .trend-bar-fill { animation-delay: 90ms; }
+.trend-bar-col:nth-child(5) .trend-bar-fill { animation-delay: 120ms; }
+.trend-bar-col:nth-child(6) .trend-bar-fill { animation-delay: 150ms; }
+.trend-bar-col:nth-child(7) .trend-bar-fill { animation-delay: 180ms; }
+
+/* ---------- FAQ: answers open and close smoothly where the browser supports it ---------- */
+@supports selector(::details-content) {
+  .ls-faq { interpolate-size: allow-keywords; }
+  .ls-faq details::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size 0.3s var(--ease-out),
+      content-visibility 0.3s allow-discrete;
+  }
+  .ls-faq details[open]::details-content {
+    block-size: auto;
+  }
+}
+
+/* ---------- Reduced motion: keep comprehension, drop movement ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .doorway-stage { animation-name: ls-fade; }
+  .has-reveal [data-reveal] {
+    transform: none;
+    transition: opacity 0.3s ease var(--d, 0ms);
+  }
+  .has-reveal .ls-step[data-reveal]::before { transform: none; transition: none; }
+  .has-reveal .ls-tile[data-reveal] img { transform: none; transition: none; }
+  .trend-bar-fill { animation-name: ls-fade; }
+  .ls-faq details::details-content { transition: none; }
+}

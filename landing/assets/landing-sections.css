@@ -14,9 +14,18 @@
   list-style: none;
 }
 .ls-step {
-  border-top: 1px solid var(--color-charcoal);
   padding-top: 20px;
   position: relative;
+}
+.ls-step::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--color-charcoal);
+  transform-origin: left;
 }
 .ls-step-no {
   display: block;
@@ -55,7 +64,9 @@
   background: #ffffff;
   transition: background 0.25s ease;
 }
-.ls-feature:hover { background: var(--color-evergreen-soft); }
+@media (hover: hover) and (pointer: fine) {
+  .ls-feature:hover { background: var(--color-evergreen-soft); }
+}
 .ls-feature-tag {
   display: block;
   font-family: var(--font-regular);
@@ -115,7 +126,9 @@
   z-index: -1;
   background: linear-gradient(to top, rgba(10, 24, 18, 0.82) 0%, rgba(10, 24, 18, 0.15) 55%, rgba(10, 24, 18, 0) 100%);
 }
-.ls-tile:hover img { transform: scale(1.03); }
+@media (hover: hover) and (pointer: fine) {
+  .ls-tile:hover img { transform: scale(1.03); }
+}
 .ls-tile-text { padding: 24px; color: #ffffff; }
 .ls-tile-text h3 {
   font-family: var(--font-regular);
@@ -163,7 +176,9 @@
   transition: color 0.2s ease;
 }
 .ls-faq summary::-webkit-details-marker { display: none; }
-.ls-faq summary:hover { color: var(--color-evergreen); }
+@media (hover: hover) and (pointer: fine) {
+  .ls-faq summary:hover { color: var(--color-evergreen); }
+}
 .ls-faq summary:focus-visible { outline: 2px solid var(--color-evergreen); outline-offset: 2px; }
 .ls-faq summary::after {
   content: "+";
@@ -217,7 +232,9 @@
 }
 .ls-footer ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
 .ls-footer a { color: rgba(255, 255, 255, 0.88); font-size: 0.9375rem; transition: color 0.2s ease; }
-.ls-footer a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) {
+  .ls-footer a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 3px; }
+}
 .ls-footer-bottom {
   max-width: 1400px;
   margin: 56px auto 0;
