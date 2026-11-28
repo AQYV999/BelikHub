@@ -61,7 +61,8 @@
   --font-light: 'regola-light', -apple-system, BlinkMacSystemFont, sans-serif;
 
   --header-height: 72px;
-  --doorway-slide-height: min(720px, calc(100vh - 180px), calc((100vw - 64px) / 1.745));
+  --doorway-lane: 72px;
+  --doorway-slide-height: min(720px, calc(100vh - var(--header-height) - var(--doorway-lane) - 56px), calc((100vw - 64px) / 1.745));
   --radius-sm: 8px;
   --radius-md: 16px;
   --radius-lg: 24px;
@@ -344,8 +345,10 @@ button {
   height: calc(100vh - var(--header-height));
   min-height: 600px;
   overflow: hidden;
+  /* clip sideways only, so the slide shadows are never cut off at the bottom */
+  overflow-x: clip;
+  overflow-y: visible;
   margin-top: var(--header-height);
-  padding-bottom: 60px;
 }
 
 .doorway-slideshow {
@@ -353,9 +356,13 @@ button {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* bottom lane reserved for the arrows, dots and links so they never touch the slides */
+  padding-bottom: var(--doorway-lane);
 }
 
 .doorway-stage {
@@ -517,7 +524,7 @@ button {
 /* Doorway Controls */
 .doorway-controls {
   position: absolute;
-  bottom: 24px;
+  bottom: 16px;
   left: 32px;
   display: flex;
   align-items: center;
@@ -567,8 +574,9 @@ button {
 
 .doorway-bottom-tag {
   position: absolute;
-  bottom: 24px;
+  bottom: 16px;
   right: 32px;
+  height: 40px;
   display: flex;
   align-items: center;
   gap: 20px;
