@@ -5,6 +5,6 @@ Static copy of the landing deployed at https://belikhubweb.vercel.app, kept here
 
 The site on https://deploytovercel-nine.vercel.app is assembled from:
 
-- `landing/*` at `/` (landing) and `/board`
+- `landing/*` at `/` (landing) and `/board`; run `scripts/assemble-nine.sh` to build the deploy folder
 - `app/` at `/app` (web app: run `node scripts/sync-mobile-web.mjs` to rebuild it from `mobile/`)
 - `vercel.json` rewrites, without the `functions` block (no `api/` on that project)

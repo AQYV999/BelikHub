@@ -1,0 +1,256 @@
+/* ==========================================================================
+   Landing: extra sections (alur, fitur, sabuk hijau, akses, tanya jawab, footer)
+   Reuses the tokens and type scale from apple-samara.css.
+   ========================================================================== */
+
+.ls-section { padding-top: 100px; padding-bottom: 100px; }
+
+/* ---------- Alur: four numbered steps on hairlines ---------- */
+.ls-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0 32px;
+  counter-reset: step;
+  list-style: none;
+}
+.ls-step {
+  border-top: 1px solid var(--color-charcoal);
+  padding-top: 20px;
+  position: relative;
+}
+.ls-step-no {
+  display: block;
+  font-family: var(--font-regular);
+  font-size: 3.5rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--color-evergreen);
+  margin-bottom: 18px;
+}
+.ls-step h3 {
+  font-family: var(--font-regular);
+  font-size: 1.3rem;
+  line-height: 1.2;
+  margin-bottom: 10px;
+  color: var(--color-black);
+}
+.ls-step p {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-muted-gray);
+  max-width: 34ch;
+}
+
+/* ---------- Fitur: ruled grid, no boxes ---------- */
+.ls-features {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+}
+.ls-feature {
+  padding: 28px 24px 32px;
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  background: #ffffff;
+  transition: background 0.25s ease;
+}
+.ls-feature:hover { background: var(--color-evergreen-soft); }
+.ls-feature-tag {
+  display: block;
+  font-family: var(--font-regular);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-evergreen);
+  margin-bottom: 36px;
+}
+.ls-feature h3 {
+  font-family: var(--font-regular);
+  font-size: 1.15rem;
+  line-height: 1.25;
+  margin-bottom: 8px;
+  color: var(--color-black);
+}
+.ls-feature p {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-muted-gray);
+}
+.ls-note {
+  margin-top: 20px;
+  font-size: 0.8125rem;
+  color: var(--color-muted-gray);
+}
+
+/* ---------- Sabuk hijau: three photographs with a line each ---------- */
+.ls-mosaic {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 16px;
+}
+.ls-tile {
+  position: relative;
+  min-height: 460px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-dark-bronze);
+  display: flex;
+  align-items: flex-end;
+  isolation: isolate;
+}
+.ls-tile img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.ls-tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to top, rgba(10, 24, 18, 0.82) 0%, rgba(10, 24, 18, 0.15) 55%, rgba(10, 24, 18, 0) 100%);
+}
+.ls-tile:hover img { transform: scale(1.03); }
+.ls-tile-text { padding: 24px; color: #ffffff; }
+.ls-tile-text h3 {
+  font-family: var(--font-regular);
+  font-size: 1.5rem;
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+.ls-tile-text p {
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.78);
+  max-width: 38ch;
+}
+
+/* ---------- Akses: a plain ruled table ---------- */
+.ls-access { border-top: 1px solid var(--color-charcoal); }
+.ls-access-row {
+  display: grid;
+  grid-template-columns: 1.1fr 1.4fr 1.5fr;
+  gap: 24px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--color-border);
+  align-items: baseline;
+}
+.ls-access-role {
+  font-family: var(--font-regular);
+  font-size: 1.15rem;
+  color: var(--color-black);
+}
+.ls-access-how { font-size: 1rem; color: var(--color-charcoal); line-height: 1.5; }
+.ls-access-why { font-size: 0.9375rem; color: var(--color-muted-gray); line-height: 1.55; }
+
+/* ---------- Tanya jawab ---------- */
+.ls-faq { max-width: 860px; border-top: 1px solid var(--color-charcoal); }
+.ls-faq details { border-bottom: 1px solid var(--color-border); }
+.ls-faq summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 22px 48px 22px 0;
+  font-family: var(--font-regular);
+  font-size: 1.2rem;
+  line-height: 1.35;
+  color: var(--color-black);
+  position: relative;
+  transition: color 0.2s ease;
+}
+.ls-faq summary::-webkit-details-marker { display: none; }
+.ls-faq summary:hover { color: var(--color-evergreen); }
+.ls-faq summary:focus-visible { outline: 2px solid var(--color-evergreen); outline-offset: 2px; }
+.ls-faq summary::after {
+  content: "+";
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.6rem;
+  font-family: var(--font-light);
+  color: var(--color-evergreen);
+  transition: transform 0.25s ease;
+}
+.ls-faq details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+.ls-faq details p {
+  padding: 0 48px 24px 0;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--color-muted-gray);
+  max-width: 68ch;
+}
+
+/* ---------- Footer ---------- */
+.ls-footer {
+  background: var(--color-evergreen);
+  color: #ffffff;
+  padding: 72px 32px 36px;
+}
+.ls-footer-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: 40px;
+}
+.ls-footer-brand {
+  font-family: var(--font-regular);
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-bottom: 12px;
+}
+.ls-footer-tag { font-size: 0.9375rem; color: rgba(255, 255, 255, 0.7); max-width: 32ch; line-height: 1.55; }
+.ls-footer h4 {
+  font-family: var(--font-regular);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.ls-footer ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.ls-footer a { color: rgba(255, 255, 255, 0.88); font-size: 0.9375rem; transition: color 0.2s ease; }
+.ls-footer a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 3px; }
+.ls-footer-bottom {
+  max-width: 1400px;
+  margin: 56px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px) {
+  .ls-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 44px 32px; }
+  .ls-features { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ls-mosaic { grid-template-columns: 1fr 1fr; }
+  .ls-mosaic .ls-tile:first-child { grid-column: 1 / -1; min-height: 380px; }
+  .ls-footer-inner { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 720px) {
+  .ls-section { padding-top: 64px; padding-bottom: 64px; }
+  .ls-steps { grid-template-columns: 1fr; }
+  .ls-features { grid-template-columns: 1fr; }
+  .ls-feature-tag { margin-bottom: 20px; }
+  .ls-mosaic { grid-template-columns: 1fr; }
+  .ls-tile { min-height: 340px; }
+  .ls-access-row { grid-template-columns: 1fr; gap: 6px; padding: 18px 0; }
+  .ls-faq summary { font-size: 1.05rem; }
+  .ls-footer { padding: 56px 20px 28px; }
+  .ls-footer-inner { grid-template-columns: 1fr; gap: 32px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ls-tile img, .ls-feature, .ls-faq summary::after { transition: none; }
+}
