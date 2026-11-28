@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BelikHub — Konservasi Mata Air &amp; Tata Kelola Retribusi Batang</title>
+  <meta name="description" content="Platform integrasi pemantauan debit 5 mata air Batang, transparansi retribusi iuran BUMDes Rp 15.000/bulan, dan aksi sabuk hijau hulu bersama relawan dan PDAM Batang.">
+  <meta name="theme-color" content="#124734">
+
+  <!-- OpenGraph Metadata -->
+  <meta property="og:title" content="BelikHub — Dari Hulu Sampai ke Keran Desa">
+  <meta property="og:description" content="Pemantauan debit mata air, transparansi iuran BUMDes 70/30, dan aksi sabuk hijau Kabupaten Batang.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/images/bg-hero-mist.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23124734'/%3E%3Cpath d='M16 6C16 6 8 16 8 20a8 8 0 0 0 16 0c0-4-8-14-8-14z' fill='%23E2ECE9'/%3E%3Cpath d='M16 11c0 0-5 7-5 10a5 5 0 0 0 10 0c0-3-5-10-5-10z' fill='%23124734'/%3E%3C/svg%3E">
+
+  <!-- Apple / Samara Design System Stylesheet -->
+  <link rel="stylesheet" href="/assets/apple-samara.css">
+</head>
+<body class="page-standard">
+
+  <!-- ========================================================================
+       Apple / Samara Frosted-Glass Main Navigation Bar & Mega Panel
+       ======================================================================== -->
+  <nav class="main-navigation" id="main-navigation">
+    
+    <!-- Mega Dropdown Panel -->
+    <div class="main-navigation-panel mobile-hidden" id="nav-dropdown-panel" aria-hidden="true">
+      
+      <!-- Panel Mata Air -->
+      <div class="main-navigation-panel-content" id="panel-mata-air">
+        <div class="main-navigation-panel-inner">
+          <a class="main-navigation-panel-blurb" href="#mata-air">
+            <div class="main-navigation-panel-media">
+              <img src="/images/galeri-hulu.jpg" alt="Tuk Bismo Hulu Batang">
+            </div>
+            <h2><span class="type-alt">5 Mata Air</span> Batang</h2>
+            <p>Pemantauan telemetri debit &amp; kekeruhan<br> hulu lereng pegunungan secara terbuka.</p>
+            <span class="main-navigation-panel-blurb-link">Lihat Telemetri &rarr;</span>
+          </a>
+
+          <div class="main-navigation-panel-main-column">
+            <div class="main-navigation-panel-list">
+              <p class="panel-list-title">Mata Air Utama</p>
+              <a href="#mata-air">Tuk Bismo (Desa Bismo) · 4.8 L/s</a>
+              <a href="#mata-air">Tuk Kalisari (Desa Kalisari) · 6.1 L/s</a>
+              <a href="#mata-air">Tuk Pandansari · 3.7 L/s</a>
+              <a href="#mata-air">Tuk Gunungsari · 2.1 L/s (Waspada)</a>
+              <a href="#mata-air">Tuk Wonokerto · 4.7 L/s</a>
+            </div>
+            <div class="main-navigation-panel-list">
+              <p class="panel-list-title">Parameter IoT</p>
+              <a href="#mata-air">Debit Air (L/detik)</a>
+              <a href="#mata-air">Indeks Kekeruhan (NTU)</a>
+              <a href="#mata-air">Kapasitas Tandon Gravitasi</a>
+              <a href="#mata-air">Sensor Bertenaga Surya</a>
+            </div>
+            <div class="main-navigation-panel-list">
+              <p class="panel-list-title">Integrasi</p>
+              <a href="#mata-air">PDAM Kabupaten Batang</a>
+              <a href="#mata-air">BUMDes Tirta Bismo</a>
+              <a href="#mata-air">Komunitas Relawan Belik</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel Retribusi 70/30 -->
+      <div class="main-navigation-panel-content" id="panel-retribusi">
+        <div class="main-navigation-panel-inner">
+          <a class="main-navigation-panel-blurb" href="#retribusi">
+            <div class="main-navigation-panel-media">
+              <img src="/images/galeri-lanskap.jpg" alt="Transparansi Kas Retribusi">
+            </div>
+            <h2><span class="type-alt">Model Retribusi</span> 70/30</h2>
+            <p>Iuran Rp 15.000 terbagi akuntabel<br> untuk perbaikan pipa &amp; sabuk hijau.</p>
+            <span class="main-navigation-panel-blurb-link">Pelajari Alokasi &rarr;</span>
+          </a>
+
+          <div class="main-navigation-panel-main-column">
+            <div class="main-navigation-panel-list">
+              <p class="panel-list-title">Pos Alokasi</p>
+              <a href="#retribusi">70% (Rp 10.500) Operasional &amp; Pipa</a>
+              <a href="#retribusi">30% (Rp 4.500) Kas Konservasi Hulu</a>
+            </div>
+            <div class="main-navigation-panel-list">
+              <p class="panel-list-title">Metode Pembayaran</p>
+              <a href="/app">QRIS Dinamis 15 Menit</a>
+              <a href="/app">Pencatatan Kasir Tunai BUMDes</a>
+              <a href="/app">Struk Digital Cetak Termal</a>
+            </div>
+            <div class="main-navigation-panel-list">
+              <p class="panel-list-title">Dampak</p>
+              <a href="#dampak">Respon Bocor &lt; 24 Jam</a>
+              <a href="#dampak">Target 2.400 Bibit Aren</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 5 Peran -->
+      <div class="main-navigation-panel-content" id="panel-peran">
+        <div class="main-navigation-panel-inner">
+          <a class="main-navigation-panel-blurb" href="#peran">
+            <div class="main-navigation-panel-media">
+              <img src="/images/galeri-hutan.jpg" alt="5 Peran Komunitas Batang">
+            </div>
+            <h2><span class="type-alt">5 Peran</span> Terintegrasi</h2>
+            <p>Satu platform desa, setiap aktor<br> masuk sesuai tugas dan wewenangnya.</p>
+            <span class="main-navigation-panel-blurb-link">Lihat Alur Kerja &rarr;</span>
+          </a>
+
+          <div class="main-navigation-panel-main-column">
+            <div class="main-navigation-panel-list">
+              <p class="panel-list-title">Aktor Desa</p>
+              <a href="/app">Warga (Kartu Air &amp; Lapor Pipa)</a>
+              <a href="/app">Pengelola BUMDes (Meteran &amp; Kas)</a>
+              <a href="/app">Relawan (Patroli Geofence)</a>
+            </div>
+            <div class="main-navigation-panel-list">
+              <p class="panel-list-title">Aktor Luar &amp; Regulator</p>
+              <a href="/app">Donatur Hijau (Adopsi Bibit)</a>
+              <a href="/app">Admin PDAM (Audit &amp; Agregat)</a>
+            </div>
+            <div class="main-navigation-panel-list">
+              <p class="panel-list-title">Autentikasi</p>
+              <a href="/app">WhatsApp OTP Warga</a>
+              <a href="/app">PIN 6-Digit Petugas</a>
+              <a href="/app">NIP 2FA Petugas PDAM</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Navigation Header Bar -->
+    <div class="main-navigation-bar">
+      <!-- Left: Logo -->
+      <a class="main-navigation-brand" href="/" aria-label="BelikHub Beranda">
+        <div class="main-navigation-brand-badge" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+          </svg>
+        </div>
+        <span><span class="type-alt">Belik</span>Hub</span>
+      </a>
+
+      <!-- Center: Menu Pills -->
+      <div class="main-navigation-menu mobile-hidden" role="navigation" aria-label="Menu Utama">
+        <div class="main-navigation-menu-indicator" id="nav-indicator" aria-hidden="true"></div>
+        <a class="main-navigation-menu-link active" href="#showcase" data-nav-target="panel-mata-air">Mata Air</a>
+        <a class="main-navigation-menu-link" href="#retribusi" data-nav-target="panel-retribusi">Retribusi 70/30</a>
+        <a class="main-navigation-menu-link" href="#peran" data-nav-target="panel-peran">5 Peran</a>
+        <a class="main-navigation-menu-link" href="#dampak">Dampak</a>
+      </div>
+
+      <!-- Right: Action CTA -->
+      <div class="main-navigation-actions">
+        <a class="main-navigation-primary-cta" href="/app">
+          Buka Mobile App &rarr;
+        </a>
+        <button class="mobile-navigation-hamburger" id="mobile-nav-toggle" aria-label="Buka menu">
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========================================================================
+       Hero Section: Apple / Samara Doorway Horizontal Showcase
+       ======================================================================== -->
+  <main id="showcase">
+    <div class="doorway-container">
+      <div class="doorway-slideshow">
+        <div class="doorway-stage">
+          <div class="doorway-track" id="doorway-track">
+            
+            <!-- Slide 0: Tuk Bismo (Wide Showcase) -->
+            <div class="doorway-slide doorway-slide-image doorway-slide-wide current" data-slide-index="0">
+              <a class="doorway-slide-image-link" href="/app">
+                <img class="doorway-slide-background" src="/images/galeri-hulu.jpg" alt="Tuk Bismo Mata Air Utama Desa Bismo Batang">
+              </a>
+              <div class="doorway-slide-footer">
+                <span class="doorway-slide-caption">
+                  <span class="type-alt">Tuk Bismo</span>.
+                  <span class="color-white-60">Debit 4.8 L/s · Sumber hidup 280 kepala keluarga Desa Bismo.</span>
+                </span>
+                <a class="doorway-slide-learn-more" href="/app">Akses Data &rarr;</a>
+              </div>
+            </div>
+
+            <!-- Slide 1: Retribusi 70/30 (Medium Showcase) -->
+            <div class="doorway-slide doorway-slide-image doorway-slide-medium" data-slide-index="1">
+              <a class="doorway-slide-image-link" href="/app">
+                <img class="doorway-slide-background" src="/images/galeri-lanskap.jpg" alt="Bentang Alam dan Lereng Hutan Batang">
+              </a>
+              <div class="doorway-slide-footer">
+                <span class="doorway-slide-caption">
+                  <span class="type-alt">Retribusi 70/30</span>.
+                  <span class="color-white-60">Iuran Rp 15.000: 70% pipa BUMDes, 30% sabuk hijau hulu.</span>
+                </span>
+                <a class="doorway-slide-learn-more" href="/app">Simulasi &rarr;</a>
+              </div>
+            </div>
+
+            <!-- Slide 2: Relawan & Patroli Hutan (Narrow Showcase) -->
+            <div class="doorway-slide doorway-slide-image doorway-slide-narrow" data-slide-index="2">
+              <a class="doorway-slide-image-link" href="/app">
+                <img class="doorway-slide-background" src="/images/galeri-hutan.jpg" alt="Hutan Lindung Sabuk Hijau Tangkapan Air">
+              </a>
+              <div class="doorway-slide-footer">
+                <span class="doorway-slide-caption">
+                  <span class="type-alt">Patroli Geofence</span>.
+                  <span class="color-white-60">Menjaga resapan air hulu bersama relawan &amp; PDAM Batang.</span>
+                </span>
+                <a class="doorway-slide-learn-more" href="/app">Patroli &rarr;</a>
+              </div>
+            </div>
+
+            <!-- Slide 3: Samara-Style Statement Slide -->
+            <div class="doorway-slide doorway-slide-text" data-slide-index="3">
+              <p class="doorway-slide-statement">
+                <span class="statement-bold">BelikHub</span> menyatukan <a href="#mata-air" class="statement-link">pemantauan mata air</a>, <a href="#retribusi" class="statement-link">iuran warga desa</a>, dan <a href="#peran" class="statement-link">aksi sabuk hijau</a>.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Controls: Navigation Arrows & Dots -->
+        <div class="doorway-controls">
+          <button class="doorway-nav-arrow" id="doorway-prev" aria-label="Slide sebelumnya">&#8592;</button>
+          <div class="doorway-dots" id="doorway-dots">
+            <button class="doorway-dot active" data-index="0" aria-label="Slide 1"></button>
+            <button class="doorway-dot" data-index="1" aria-label="Slide 2"></button>
+            <button class="doorway-dot" data-index="2" aria-label="Slide 3"></button>
+            <button class="doorway-dot" data-index="3" aria-label="Slide 4"></button>
+          </div>
+          <button class="doorway-nav-arrow" id="doorway-next" aria-label="Slide berikutnya">&#8594;</button>
+        </div>
+
+        <!-- Bottom Tag -->
+        <div class="doorway-bottom-tag">
+          <span>&copy; 2026 BelikHub Batang</span>
+          <a href="#mata-air">5 Titik Belik</a>
+          <a href="#retribusi">Iuran 70/30</a>
+          <a href="/app">Aplikasi Mobile</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================
+         Section 1: Data Telemetri 5 Mata Air Batang
+         ======================================================================== -->
+    <section class="content-section" id="mata-air">
+      <span class="section-eyebrow">Data Hidrologi Realtime</span>
+      <h2 class="section-headline">Debit mata air terbuka. Tidak ada angka rahasia antara warga dan PDAM.</h2>
+      <p class="section-desc">
+        Sensor debit dan kekeruhan di hulu desa mengirimkan data tiap 15 menit untuk mendeteksi sedimentasi dan penurunan muka air sebelum kekeringan meluas.
+      </p>
+
+      <div class="telemetry-grid">
+        <div class="telemetry-table" role="list" aria-label="Daftar Mata Air Batang">
+          <button type="button" class="telemetry-row is-active" data-spring="bismo" role="listitem">
+            <div>
+              <div class="telemetry-name">Tuk Bismo</div>
+              <div class="telemetry-sub">Desa Bismo, Kec. Blado · 940 mdpl</div>
+            </div>
+            <div class="telemetry-value num">4.8 <span>L/s</span></div>
+          </button>
+          <button type="button" class="telemetry-row" data-spring="kalisari" role="listitem">
+            <div>
+              <div class="telemetry-name">Tuk Kalisari</div>
+              <div class="telemetry-sub">Desa Kalisari, Kec. Reban · 720 mdpl</div>
+            </div>
+            <div class="telemetry-value num">6.1 <span>L/s</span></div>
+          </button>
+          <button type="button" class="telemetry-row" data-spring="pandan" role="listitem">
+            <div>
+              <div class="telemetry-name">Tuk Pandansari</div>
+              <div class="telemetry-sub">Desa Pandansari · 310 mdpl</div>
+            </div>
+            <div class="telemetry-value num">3.7 <span>L/s</span></div>
+          </button>
+          <button type="button" class="telemetry-row" data-spring="gunung" role="listitem">
+            <div>
+              <div class="telemetry-name">Tuk Gunungsari</div>
+              <div class="telemetry-sub">Desa Gunungsari · 1.020 mdpl (Waspada Kekeruhan)</div>
+            </div>
+            <div class="telemetry-value num" style="color: #d97706;">2.1 <span>L/s</span></div>
+          </button>
+          <button type="button" class="telemetry-row" data-spring="wonokerto" role="listitem">
+            <div>
+              <div class="telemetry-name">Tuk Wonokerto</div>
+              <div class="telemetry-sub">Desa Wonokerto, Kec. Bandar · 510 mdpl</div>
+            </div>
+            <div class="telemetry-value num">4.7 <span>L/s</span></div>
+          </button>
+        </div>
+
+        <div id="spring-detail-card" class="telemetry-detail-card">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+              <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted-gray);">Tuk Bismo · 940 mdpl</span>
+              <span id="spring-badge" class="status-pill status-ok">Normal · 1.2 NTU</span>
+            </div>
+            <div class="num" style="font-family: var(--font-regular); font-size: 3.25rem; color: var(--color-evergreen); line-height: 1.1; margin: 10px 0 12px;">
+              <span id="spring-lps">4.8</span> <span style="font-size: 1.2rem; color: var(--color-muted-gray);">L/detik</span>
+            </div>
+            <p id="spring-desc" style="font-size: 0.9375rem; color: var(--color-muted-gray); line-height: 1.55; margin-bottom: 18px;">
+              Mata air utama pengisi 3 tandon gravitasi BUMDes Tirta Bismo. Menyuplai 280 sambungan rumah tangga di RT 01–04.
+            </p>
+            <div id="spring-trend" class="trend-bars" aria-label="Tren debit 7 hari"></div>
+          </div>
+          <div style="padding-top: 20px; border-top: 1px solid var(--color-border-subtle); display: flex; align-items: center; justify-content: space-between; margin-top: 20px;">
+            <span style="font-size: 0.8125rem; color: var(--color-muted-gray);">Akumulasi 5 Belik: <strong class="num" id="total-lps">21.4</strong> L/s</span>
+            <a href="/app" class="main-navigation-primary-cta" style="font-size: 0.8125rem; padding: 6px 16px;">Buka Dasbor &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         Section 2: Prinsip Transparansi Retribusi 70/30
+         ======================================================================== -->
+    <section class="content-section" id="retribusi">
+      <span class="section-eyebrow">Transparansi Keuangan Desa</span>
+      <h2 class="section-headline">Iuran air bukan sekadar bayar rekening. Ini investasi memulihkan hutan.</h2>
+      <p class="section-desc">
+        Setiap Rp 15.000 yang dibayarkan warga per bulan langsung terbelah secara otomatis dan transparan ke dalam dua pos terverifikasi.
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px;">
+        <div style="background: #ffffff; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 40px; box-shadow: 0 4px 16px rgba(0,0,0,0.03);">
+          <div class="num" style="font-size: 3rem; font-family: var(--font-regular); color: var(--color-evergreen); line-height: 1;">70%</div>
+          <div style="font-size: 0.9375rem; font-family: var(--font-regular); color: var(--color-muted-gray); margin: 6px 0 20px;">Rp 10.500 / sambungan rumah tangga</div>
+          <h3 style="font-family: var(--font-regular); font-size: 1.35rem; margin-bottom: 12px;">Operasional Jaringan &amp; Pipa BUMDes</h3>
+          <p style="font-size: 0.9375rem; color: var(--color-muted-gray); line-height: 1.6; margin-bottom: 20px;">
+            Memastikan air sampai ke dapur warga dengan lancar, higienis, dan tanpa gangguan pipa pecah berkepanjangan.
+          </p>
+          <ul style="list-style: none; font-size: 0.875rem; color: var(--color-charcoal); display: flex; flex-direction: column; gap: 8px;">
+            <li>✓ Perawatan berkala 3 bak penampung sedimentasi desa</li>
+            <li>✓ Penanganan pipa bocor &lt; 24 jam dari tiket aduan warga</li>
+            <li>✓ Upah operasional pencatat meteran BUMDes</li>
+          </ul>
+        </div>
+
+        <div style="background: var(--color-evergreen-soft); border: 1px solid var(--color-evergreen); border-radius: var(--radius-md); padding: 40px; box-shadow: 0 4px 16px rgba(0,0,0,0.03);">
+          <div class="num" style="font-size: 3rem; font-family: var(--font-regular); color: var(--color-evergreen); line-height: 1;">30%</div>
+          <div style="font-size: 0.9375rem; font-family: var(--font-regular); color: var(--color-muted-gray); margin: 6px 0 20px;">Rp 4.500 / sambungan rumah tangga</div>
+          <h3 style="font-family: var(--font-regular); font-size: 1.35rem; margin-bottom: 12px;">Dana Sabuk Hijau &amp; Konservasi Hulu</h3>
+          <p style="font-size: 0.9375rem; color: var(--color-muted-gray); line-height: 1.6; margin-bottom: 20px;">
+            Dana abadi konservasi yang dikelola bersama relawan untuk memulihkan resapan air di lereng hulu Batang.
+          </p>
+          <ul style="list-style: none; font-size: 0.875rem; color: var(--color-charcoal); display: flex; flex-direction: column; gap: 8px;">
+            <li>✓ Pembelian bibit pohon aren &amp; beringin (Rp 25.000/pohon)</li>
+            <li>✓ Dukungan logistik patroli pemantauan hutan lindung Bismo</li>
+            <li>✓ Pembuatan parit rorak penahan erosi di jalur lintasan pipa</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Simulasi Kalkulator Retribusi 70/30 -->
+      <div class="calc-card" style="margin-top: 32px;">
+        <div class="calc-header">
+          <div>
+            <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-evergreen); font-family: var(--font-regular);">Simulasi Dampak Iuran Desa</span>
+            <h3 style="font-family: var(--font-regular); font-size: 1.35rem; margin-top: 4px;">Hitung aliran dana untuk <span id="calc-kk-label" class="num" style="color: var(--color-evergreen);">280 KK</span> per bulan</h3>
+          </div>
+          <div style="font-size: 0.875rem; color: var(--color-muted-gray);">Iuran Rp 15.000 / KK / bulan</div>
+        </div>
+        <input id="calc-kk-slider" class="calc-slider" type="range" min="50" max="1000" step="10" value="280" aria-label="Jumlah sambungan rumah tangga">
+        <div class="calc-results">
+          <div class="calc-stat">
+            <span class="calc-stat-lbl">Total Kas Terkumpul</span>
+            <strong id="calc-total" class="calc-stat-val num">Rp 4.200.000</strong>
+          </div>
+          <div class="calc-stat">
+            <span class="calc-stat-lbl">70% Operasional Pipa BUMDes</span>
+            <strong id="calc-bumdes" class="calc-stat-val num">Rp 2.940.000</strong>
+          </div>
+          <div class="calc-stat">
+            <span class="calc-stat-lbl">30% Kas Konservasi Hulu</span>
+            <strong id="calc-konservasi" class="calc-stat-val num">Rp 1.260.000</strong>
+          </div>
+          <div class="calc-stat">
+            <span class="calc-stat-lbl">Setara Bibit Aren/Beringin</span>
+            <strong id="calc-trees" class="calc-stat-val num" style="color: var(--color-evergreen);">50 pohon / bln</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         Section 3: 5 Peran Komunitas
+         ======================================================================== -->
+    <section class="content-section" id="peran">
+      <span class="section-eyebrow">Arsitektur Multi-Peran</span>
+      <h2 class="section-headline">Satu ekosistem desa, lima peran yang saling mengunci.</h2>
+      <p class="section-desc">
+        Setiap pengguna masuk dengan otentikasi peran yang tepat untuk menghindari tumpang tindih wewenang di lapangan.
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+        <div style="background: #ffffff; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 24px;">
+          <h4 style="font-family: var(--font-regular); font-size: 1.15rem; margin-bottom: 6px;">Warga Batang</h4>
+          <p style="font-size: 0.875rem; color: var(--color-muted-gray); line-height: 1.5; margin-bottom: 16px;">Kartu pelanggan digital, pembayaran QRIS instan, struk transparan, dan lapor pipa bocor dengan foto.</p>
+          <a href="/app" style="font-size: 0.8125rem; font-family: var(--font-regular); color: var(--color-evergreen);">Buka Layar Warga &rarr;</a>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 24px;">
+          <h4 style="font-family: var(--font-regular); font-size: 1.15rem; margin-bottom: 6px;">Pengelola BUMDes</h4>
+          <p style="font-size: 0.875rem; color: var(--color-muted-gray); line-height: 1.5; margin-bottom: 16px;">Ring progress penagihan per RT, catat angka meteran kubikasi m³, dan terima pembayaran kas tunai.</p>
+          <a href="/app" style="font-size: 0.8125rem; font-family: var(--font-regular); color: var(--color-evergreen);">Buka Layar BUMDes &rarr;</a>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 24px;">
+          <h4 style="font-family: var(--font-regular); font-size: 1.15rem; margin-bottom: 6px;">Relawan Konservasi</h4>
+          <p style="font-size: 0.875rem; color: var(--color-muted-gray); line-height: 1.5; margin-bottom: 16px;">Peta patroli radius proteksi Tuk Bismo, lapor insiden longsor/sampah, dan log inventarisasi bibit.</p>
+          <a href="/app" style="font-size: 0.8125rem; font-family: var(--font-regular); color: var(--color-evergreen);">Buka Layar Relawan &rarr;</a>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 24px;">
+          <h4 style="font-family: var(--font-regular); font-size: 1.15rem; margin-bottom: 6px;">Donatur Hijau</h4>
+          <p style="font-size: 0.875rem; color: var(--color-muted-gray); line-height: 1.5; margin-bottom: 16px;">Danai bibit pohon sabuk hijau (Rp 25.000/pohon), terima sertifikat digital, dan pantau dokumentasi.</p>
+          <a href="/app" style="font-size: 0.8125rem; font-family: var(--font-regular); color: var(--color-evergreen);">Buka Layar Donatur &rarr;</a>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 24px;">
+          <h4 style="font-family: var(--font-regular); font-size: 1.15rem; margin-bottom: 6px;">Admin PDAM</h4>
+          <p style="font-size: 0.875rem; color: var(--color-muted-gray); line-height: 1.5; margin-bottom: 16px;">Monitor debit agregat Batang, validasi aduan pipa rusak, dan sinkronisasi neraca hidrologi regional.</p>
+          <a href="/app" style="font-size: 0.8125rem; font-family: var(--font-regular); color: var(--color-evergreen);">Buka Layar PDAM &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         Section 4: Dampak & Kemitraan (Conrad Challenge 2026)
+         ======================================================================== -->
+    <section class="content-section" id="dampak" style="padding-bottom: 140px;">
+      <span class="section-eyebrow">Inovasi Sosial &amp; Lingkungan</span>
+      <h2 class="section-headline">Dari kearifan lokal Belik menuju tata kelola hidrologi modern.</h2>
+      <p class="section-desc">
+        BelikHub menghubungkan tradisi gotong royong perawatan mata air pegunungan dengan akuntansi hidrologi digital yang dapat diuji dan direplikasi.
+      </p>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+        <a href="/board" class="main-navigation-primary-cta" style="padding: 12px 28px; font-size: 1rem;">
+          Lihat Design Board Mobile (18 Layar) &rarr;
+        </a>
+        <a href="/app" style="display: inline-flex; align-items: center; padding: 12px 24px; font-family: var(--font-regular); font-size: 0.9375rem; color: var(--color-charcoal); border: 1px solid var(--color-border); border-radius: var(--radius-full);">
+          Buka Web App (/app)
+        </a>
+        <a href="#mata-air" style="display: inline-flex; align-items: center; padding: 12px 24px; font-family: var(--font-regular); font-size: 0.9375rem; color: var(--color-muted-gray);">
+          Kembali ke Data Mata Air ↑
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Interactive Apple / Samara JavaScript -->
+  <script src="/assets/apple-samara.js"></script>
+</body>
+</html>

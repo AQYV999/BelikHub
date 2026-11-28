@@ -259,15 +259,15 @@ function Splash(){
   const {shared,patch,go}=useP();
   const role=shared.role;
   return html`<${Shell} bg="var(--forest)" dark under homeBg="#fff" homeBar="#0F172A">
-    <div style=${{position:'relative',height:'100%'}}>
+    <div style=${{position:'relative',minHeight:'100%',display:'flex',flexDirection:'column'}}>
       <${Contours} w=${390} h=${810} cx=${290} cy=${120} n=${13} gap=${30} op=${.13}/>
-      <div style=${{position:'absolute',top:80,left:0,right:0,textAlign:'center',color:'#fff'}}>
+      <div style=${{position:'relative',flex:1,minHeight:150,paddingTop:'clamp(28px,9vh,80px)',paddingBottom:18,textAlign:'center',color:'#fff'}}>
         <${Logo} s=${58}/>
         <div className="serif" style=${{fontSize:46,fontWeight:500,letterSpacing:'-.02em',lineHeight:1.05,marginTop:8}}>BelikHub</div>
         <div style=${{fontSize:15,opacity:.8,marginTop:6}}>Mata air terjaga, iuran transparan.</div>
         <div style=${{fontSize:12.5,opacity:.55,marginTop:3}}>Kabupaten Batang · bersama PDAM Batang</div>
       </div>
-      <div className="sheet" style=${{paddingTop:18,paddingBottom:10,animation:'rise .6s both'}}>
+      <div className="sheet" style=${{position:'relative',flex:'none',paddingTop:18,paddingBottom:14,animation:'rise .6s both'}}>
         <div className="serif" style=${{fontSize:25,fontWeight:500,marginBottom:10}}>Masuk sebagai</div>
         <div className="g" style=${{margin:0,background:'var(--canvas)'}}>
           ${ROLES.map(r=>html`<${Row} key=${r.id} icon=${r.ic} bg=${r.bg} title=${r.t} sub=${r.s} onClick=${()=>patch({role:r.id})} right=${role===r.id?html`<${Icon} n="check" s=${20} c="#124734" w=${2.6}/>`:null}/>`)}
